@@ -1,4 +1,6 @@
-# CRYSTAL - Calculation of Rates, Yield, and Stability of Avalanches
+# CRYSTAL
+
+Calculation of Rates, Yield, and Stability of Avalanches
 
 ## Requirements
 
