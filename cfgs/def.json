@@ -1,9 +1,9 @@
 {
-    "cfg": {
+    "cfg.load": {
         "path": null
     },
-    "gen": {
-        "path": null
+    "cfg.gen": {
+        "path": "Hello"
     },
     "man": {
         "cmd": null
