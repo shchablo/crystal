@@ -1,3 +1,11 @@
+# CRYSTAL
+*.json
+*.yaml
+*.yml
+!cfgs/def.json
+!cfgs/def.yaml
+!cfgs/def.yml
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
