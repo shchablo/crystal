@@ -7,7 +7,7 @@
 
 ```bash
 python3 -m build
-pip install --force-reinstall dist/crystal-0.1.0-py3-none-any.whl
+pip install --force-reinstall --break-system-packages dist/crystal-0.1.0-py3-none-any.whl
 ```
 
 ## Before Start
