@@ -2,9 +2,9 @@ import sys
 import inspect
 from typing import List, Dict, Any
 
-from modules.managers.ca_parser import CaParser
-from modules.managers.ca_configurator import CaConfigurator
-from modules.managers.ca_register import CaRegister
+from srcs.modules.managers.ca_parser import CaParser
+from srcs.modules.managers.ca_configurator import CaConfigurator
+from srcs.modules.managers.ca_register import CaRegister
 
 
 class CaCore:

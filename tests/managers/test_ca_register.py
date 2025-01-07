@@ -1,6 +1,6 @@
 import unittest
-from modules.managers.ca_configurator import CaConfigurator
-from modules.managers.ca_register import CaRegister
+from srcs.modules.managers.ca_configurator import CaConfigurator
+from srcs.modules.managers.ca_register import CaRegister
 
 
 class TestCaRegister(unittest.TestCase):

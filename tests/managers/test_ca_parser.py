@@ -1,5 +1,5 @@
 import unittest
-from modules.managers.ca_parser import CaParser
+from srcs.modules.managers.ca_parser import CaParser
 
 
 class TestCaParser(unittest.TestCase):

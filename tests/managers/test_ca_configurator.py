@@ -1,7 +1,7 @@
 import unittest
 import os
 import tempfile
-from modules.managers.ca_configurator import CaConfigurator
+from srcs.modules.managers.ca_configurator import CaConfigurator
 
 
 class TestCaConfigurator(unittest.TestCase):

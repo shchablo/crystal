@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "crystal"
+version = "0.1.0"
+requires-python = ">=3.7"
+authors = [
+    {name = "Shchablo Konstantin", email = "shchablo@gmail.com"},
+    {name = "Zhukova Elizaveta", email = "zhukova@mail.ru"},
+]
+description = "Calculation of Rates, Yield, and Stability of Avalanches in Locations"
+readme = "README.md"
+license = {file = "LICENSE.txt"}
+keywords = ["Avalanches"]
+
+[project.scripts]
+crystal = "srcs.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]

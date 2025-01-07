@@ -1,4 +1,4 @@
-from modules.managers.ca_core import CaCore
+from srcs.modules.managers.ca_core import CaCore
 
 
 def main():
