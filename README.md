@@ -6,8 +6,15 @@
 ## Installation
 
 ```bash
+git stash
+git pull
 python3 -m build
 pip install --force-reinstall --break-system-packages dist/crystal-0.1.0-py3-none-any.whl
+```
+
+```bash
+python3 -m build
+pip install dist/crystal-[0.0.0]-py3-none-any.whl
 ```
 
 ## Before Start
@@ -15,13 +22,13 @@ pip install --force-reinstall --break-system-packages dist/crystal-0.1.0-py3-non
 For a list of available commands, run:
 
 ```bash
-python crystal.py man
+crystal man
 ```
 
 For detailed help on a specific command, use:
 
 ```bash
-python crystal.py help --cmd <command_name>
+crystal help --cmd <command_name>
 ```
 
 
@@ -36,7 +43,7 @@ python crystal.py help --cmd <command_name>
 Run the program and input commands step-by-step:
 
 ```bash
-python crystal.py
+crystal
 ```
 
 Once the program starts, you can type commands like:
@@ -49,10 +56,14 @@ Once the program starts, you can type commands like:
 
 ### Command-Line Mode
 
-Run multiple actions in a single line. For example:
+Run multiple actions in a single line. For examples:
 
 ```bash
-python crystal.py cfg --path /path/to/config.json help --cmd gen gen --path /path/to/output/file/of/config.json
+crystal man
+```
+
+```bash
+crystal cfg --path /path/to/config.json help --cmd gen gen --path /path/to/output/file/of/config.json
 ```
 
 

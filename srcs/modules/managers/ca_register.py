@@ -10,9 +10,7 @@ class CaRegister:
     def __init__(self, configurator):
         """
         Initializes the command registry with an empty command dictionary and a configurator.
-
-        Args:
-            configurator (CaConfigurator): An instance of the configuration manager.
+        :param configurator (CaConfigurator): An instance of the configuration manager.
         """
         self.commands = {}
         self.configurator = configurator
@@ -20,13 +18,8 @@ class CaRegister:
     def add_command(self, name, func) -> None:
         """
         Registers a command or a list of commands with a corresponding function.
-
-        Args:
-            name (str | list): The name(s) of the command(s) to register.
-            func (callable): The function to associate with the command(s).
-
-        Raises:
-            TypeError: If the name is not a string or list of strings.
+        :param name (str | list): The name(s) of the command(s) to register.
+        :param func (callable): The function to associate with the command(s).
         """
         if isinstance(name, str):
             self.commands[name] = func
@@ -39,9 +32,7 @@ class CaRegister:
     def help_command(self, cmd: str = None) -> None:
         """
         Provides help for a specific command or lists all available commands.
-
-        Args:
-            cmd (str, optional): The name of the command to get help for. Defaults to None.
+        :param cmd (str, optional): The name of the command to get help for. Defaults to None.
         """
         if cmd:
             if cmd in self.commands:
@@ -58,17 +49,13 @@ class CaRegister:
                 doc = inspect.getdoc(func)
                 description = doc.strip().splitlines()[0] if doc else "No description available."
                 print(f"  {command}: {description}")
-            print("\nUse 'help_command(cmd_name)' for detailed descriptions.")
+            print("\nUse 'help --cmd [name]' for detailed descriptions (ex: help --cmd cfg.load).")
 
     def generate_config_file(self, path: str = None) -> None:
         """
         Generates a configuration file based on registered commands and their signatures.
+        :param path (str): The path to the output configuration file.
 
-        Args:
-            path (str): The path to the output configuration file.
-
-        Notes:
-            If a parameter exists in the loaded configuration, its value is used.
         """
         
         if not path:

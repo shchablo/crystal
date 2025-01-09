@@ -29,10 +29,8 @@ class CaCore:
     def execute_commands(self, parsed_commands: List[Dict[str, Any]], commands: Dict[str, Any]) -> None:
         """
         Executes a list of parsed commands with their arguments.
-
-        Args:
-            parsed_commands (list): List of parsed commands and their arguments.
-            commands (dict): A dictionary mapping command names to functions.
+        :param parsed_commands (list): List of parsed commands and their arguments.
+        :param commands (dict): A dictionary mapping command names to functions.
         """
         for command, command_args in parsed_commands:
             self.execute_command(command, command_args, commands)
@@ -40,15 +38,10 @@ class CaCore:
     def execute_command(self, command: str, command_args: Dict[str, Any], commands: Dict[str, Any]) -> None:
         """
         Executes a single command with its arguments.
+        :param command (str): The name of the command to execute.
+        :param command_args (dict): A dictionary of arguments for the command.
+        :param commands (dict): A dictionary mapping command names to functions.
 
-        Args:
-            command (str): The name of the command to execute.
-            command_args (dict): A dictionary of arguments for the command.
-            commands (dict): A dictionary mapping command names to functions.
-
-        Raises:
-            ValueError: If the command is not found.
-            TypeError: If the command's arguments are invalid.
         """
         if command not in commands:
             print(f"Command '{command}' not found.")
