@@ -1,6 +1,6 @@
 # CRYSTAL
 
-**Calculation of Rates, Yield, and Stability of Avalanches in Locations** is an application designed for analyzing avalanche characteristics in specified locations. 
+**Calculation of Rates, Yield, and Stability of Avalanches in Locations** is an application designed for analyzing avalanche characteristics in specified locations.
 
 
 ## Installation
@@ -16,6 +16,10 @@ pip install --force-reinstall --break-system-packages dist/crystal-0.1.0-py3-non
 python3 -m build
 pip install dist/crystal-[0.0.0]-py3-none-any.whl
 ```
+
+> ```bash
+> export PATH=$PATH:/path/to/your/bin
+> ```
 
 ## Before Start
 

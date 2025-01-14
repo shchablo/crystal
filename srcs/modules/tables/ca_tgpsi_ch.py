@@ -39,12 +39,14 @@ class CaTgPsiCh:
 
     def get_coefficient(self, tg: float, water_reserve: float) -> float:
         """
+
         Fetch the interpolated coefficient for the given tg and water reserve.
 
         :param tg: tg value.
         :param water_reserve: Water reserve value.
-        
+
         :return: Interpolated coefficient for the given tg and water reserve.
+
         """
         if tg is None or water_reserve is None:
             raise ValueError("Both 'tg' and 'water_reserve' must be provided.")
@@ -52,12 +54,14 @@ class CaTgPsiCh:
 
     def generate_table(self, tgs: List[float], waters: List[float]) -> List[Tuple[float, float, float]]:
         """
+
         Generate a table of tg, water reserve values, and corresponding coefficients.
-        
+
         :param tgs: List of tg values.
         :param waters: List of water reserve values.
-        
+
         :return: List of tuples (tg, water_reserve, coefficient).
+
         """
         return [
             (tg, water, self.get_coefficient(tg, water))
@@ -67,9 +71,11 @@ class CaTgPsiCh:
 
     def print(self, tg: float = None, w: float = None) -> None:
         """
+
         Print the interpolated coefficient for the given tg and water reserve.
-        
+
         :param tg: tg value.
         :param w: Water reserve value.
+
         """
         print(self.get_coefficient(tg, w))

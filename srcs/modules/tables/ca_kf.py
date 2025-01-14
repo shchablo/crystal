@@ -26,11 +26,11 @@ class CaKfCoefficientTable:
     coefficients: dict = field(default_factory=lambda: {
         "dry": [
             [0.15, 0.12, 0.10, 0.07, 0.05],
-            [0.30, 0.25, 0.20, 0.15, 0.10], 
-            [0.40, 0.35, 0.30, 0.20, 0.15], 
-            [0.60, 0.50, 0.40, 0.30, 0.20], 
-            [0.70, 0.60, 0.50, 0.40, 0.30], 
-            [0.80, 0.70, 0.60, 0.50, 0.40], 
+            [0.30, 0.25, 0.20, 0.15, 0.10],
+            [0.40, 0.35, 0.30, 0.20, 0.15],
+            [0.60, 0.50, 0.40, 0.30, 0.20],
+            [0.70, 0.60, 0.50, 0.40, 0.30],
+            [0.80, 0.70, 0.60, 0.50, 0.40],
             [0.80, 0.70, 0.60, 0.50, 0.50],
         ],
         "wet": [
@@ -64,13 +64,15 @@ class CaKf:
 
     def get_coefficient(self, height_zero: float, area: float, avalanche_type: str) -> float:
         """
+
         Fetch kF coefficient for a specific height and area.
-        
+
         :param height_zero: Snow height zero in meters.
         :param area: Avalanche area in hectares.
         :param avalanche_type: Avalanche type ('dry' or 'wet').
-        
+
         :return: Corresponding kF coefficient for the given height and area.
+
         """
         if avalanche_type not in self.table.coefficients:
             raise ValueError("Invalid avalanche type. Use 'dry' or 'wet'.")
@@ -81,27 +83,30 @@ class CaKf:
 
     def generate_table(self, heights_zero: List[float], areas: List[float], avalanche_type: str = "dry") -> List[Tuple[float, float, float]]:
         """
+
         Generates a table of heights, areas, and corresponding kF coefficients.
-        
+
         :param heights_zero: List of snow heights zero in meters.
         :param areas: List of avalanche areas in hectares.
         :param avalanche_type: Avalanche type ('dry' or 'wet').
-        
+
         :return: List of tuples (height, area, kF coefficient).
+
         """
         return [
             (h, area, self.get_coefficient(h, area, avalanche_type))
             for h in heights_zero
             for area in areas
         ]
-    
+
     def print(self, h0: float = None, area: float = None, atype: str = "dry") -> None:
         """
+
         Print the kF coefficient for a given height, area, and type.
-        
+
         :param h0: Snow height zero in meters.
         :param area: Avalanche area in hectares.
         :param atype: Avalanche type ('dry' or 'wet').
-        
+
         """
         print(self.get_coefficient(h0, area, atype))

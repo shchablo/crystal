@@ -9,17 +9,23 @@ class CaRegister:
 
     def __init__(self, configurator):
         """
+
         Initializes the command registry with an empty command dictionary and a configurator.
+
         :param configurator (CaConfigurator): An instance of the configuration manager.
+
         """
         self.commands = {}
         self.configurator = configurator
 
     def add_command(self, name, func) -> None:
         """
+
         Registers a command or a list of commands with a corresponding function.
+
         :param name (str | list): The name(s) of the command(s) to register.
         :param func (callable): The function to associate with the command(s).
+
         """
         if isinstance(name, str):
             self.commands[name] = func
@@ -31,8 +37,11 @@ class CaRegister:
 
     def help_command(self, cmd: str = None) -> None:
         """
+
         Provides help for a specific command or lists all available commands.
-        :param cmd (str, optional): The name of the command to get help for. Defaults to None.
+
+        :param cmd: The name of the command to get help for. Defaults to None.
+
         """
         if cmd:
             if cmd in self.commands:
@@ -53,14 +62,16 @@ class CaRegister:
 
     def generate_config_file(self, path: str = None) -> None:
         """
+
         Generates a configuration file based on registered commands and their signatures.
+
         :param path (str): The path to the output configuration file.
 
         """
-        
+
         if not path:
             raise ValueError("Please provide the path to the output configuration file using --path.")
-        
+
         generated_config = {}
 
         for command_name, func in self.commands.items():

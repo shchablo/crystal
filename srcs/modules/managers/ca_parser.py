@@ -9,10 +9,14 @@ class CaParser:
 
     def parse_commands(self, args: List[str], commands: Dict[str, Callable]) -> List[Tuple[str, Dict[str, Any]]]:
         """
+
         Parses commands and their arguments and returns a list of tuples with parsed arguments.
-        :param args (list): A list of command-line arguments.
-        :param commands (dict): A dictionary mapping command names to their respective functions.
+
+        :param args: A list of command-line arguments.
+        :param commands: A dictionary mapping command names to their respective functions.
+
         :return list: A list of tuples where each tuple contains the command name and a dictionary of its parsed arguments.
+
         """
         parsed_commands = []
         current_command = None
@@ -38,11 +42,15 @@ class CaParser:
 
     def _prepare_args(self, command: str, command_args: List[str], commands: Dict[str, Callable]) -> Dict[str, Any]:
         """
+
         Parses the arguments for a specific command.
-        :param command (str): The command name.
-        :param command_args (list): A list of arguments associated with the command.
-        :param commands (dict): A dictionary mapping command names to their respective functions.
+
+        :param command: The command name.
+        :param command_args A list of arguments associated with the command.
+        :param commands: A dictionary mapping command names to their respective functions.
+
         :return dict: A dictionary of parsed and validated arguments for the command.
+
         """
         if command not in commands:
             raise ValueError(f"Command '{command}' not found.")

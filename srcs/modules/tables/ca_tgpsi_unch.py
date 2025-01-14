@@ -99,13 +99,15 @@ class CaTgPsiUnCh:
 
     def get_coefficient(self, water: float, area: float, tg: float) -> float:
         """
+
         Fetch the interpolated coefficient for the given water reserve, area, and tg.
-        
+
         :param water: Water reserve value.
         :param area: Area value.
         :param tg: tg value.
-        
+
         :return: Interpolated coefficient.
+
         """
         if water is None or area is None or tg is None:
             raise ValueError("All parameters (water, area, tg) must be provided.")
@@ -115,13 +117,15 @@ class CaTgPsiUnCh:
         self, waters: List[float], areas: List[float], tgs: List[float]
     ) -> List[Tuple[float, float, float, float]]:
         """
+
         Generate a table of water reserve, area, tg values, and corresponding coefficients.
-        
+
         :param waters: List of water reserve values.
         :param areas: List of area values.
         :param tgs: List of tg values.
-        
+
         :return: List of tuples (water_reserve, area, tg, coefficient).
+
         """
         return [
             (water, area, tg, self.get_coefficient(water, area, tg))
@@ -129,13 +133,15 @@ class CaTgPsiUnCh:
             for area in areas
             for tg in tgs
         ]
-    
+
     def print(self, w: float = None, a: float = None, tg: float = None) -> None:
         """
+
         Print the interpolated coefficient for the given water reserve, area, and tg.
-        
+
         :param w: Water reserve value.
         :param a: Area value.
         :param tg: tg value.
+
         """
         print(self.get_coefficient(w, a, tg))

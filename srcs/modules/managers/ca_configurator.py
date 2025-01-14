@@ -17,8 +17,11 @@ class CaConfigurator:
 
     def load_config(self, path: str = None) -> None:
         """
+
         Loads a configuration file and updates the internal configuration.
+
         :paran path (str): The path to the configuration file.
+
         """
         file_path = Path(path)
 
@@ -38,8 +41,11 @@ class CaConfigurator:
 
     def upload_config(self, path: str = None) -> None:
         """
+
         Saves the current configuration to a specified file.
+
         :param path (str): The path to the output configuration file.
+
         """
         file_path = Path(path)
         extension = file_path.suffix.lower()
@@ -56,8 +62,11 @@ class CaConfigurator:
 
     def update_config(self, new_config: dict) -> None:
         """
+
         Updates the internal configuration with the given dictionary.
+
         :param new_config (dict): A dictionary containing new configuration values.
+
         """
         if not isinstance(new_config, dict):
             raise TypeError("The new configuration must be a dictionary.")
@@ -67,6 +76,8 @@ class CaConfigurator:
 
     def get_config(self) -> dict:
         """
+
         :param dict: The current configuration.
+
         """
         return self.config.copy()
