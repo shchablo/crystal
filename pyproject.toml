@@ -20,3 +20,6 @@ crystal = "srcs.main:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
+
+[tool.unittest]
+test_paths = ["tests"]

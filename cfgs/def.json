@@ -11,45 +11,23 @@
     "help": {
         "cmd": null
     },
+    "test": {},
     "kh.p": {
+        "h": null,
         "atype": "dry"
-    },
-    "kh.csv": {
-        "atype": "dry",
-        "height_col": "height",
-        "coefficient_col": "kH",
-        "delimiter": ","
     },
     "kf.p": {
+        "h0": null,
+        "a": null,
         "atype": "dry"
     },
-    "kf.csv": {
-        "atype": "dry",
-        "height_col": "height",
-        "area_col": "area",
-        "coefficient_col": "kF",
-        "delimiter": ","
-    },
-    "tgPsi.ch.p": {
+    "tgpsi.ch.p": {
         "tg": null,
-        "W": null
+        "w": null
     },
-    "tgPsi.ch.csv": {
-        "tg_col": "tg",
-        "water_col": "water_reserve",
-        "coefficient_col": "coefficient",
-        "delimiter": ","
-    },
-    "tgPsi.unch.p": {
-        "W": null,
-        "A": null,
+    "tgpsi.unch.p": {
+        "w": null,
+        "a": null,
         "tg": null
-    },
-    "tgPsi.unch.csv": {
-        "water_col": "water_reserve",
-        "area_col": "area",
-        "tg_col": "tg",
-        "coefficient_col": "coefficient",
-        "delimiter": ","
     }
 }

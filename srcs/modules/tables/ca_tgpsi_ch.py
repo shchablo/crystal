@@ -1,4 +1,3 @@
-
 from dataclasses import dataclass, field
 from typing import List, Tuple
 import numpy as np
@@ -37,20 +36,20 @@ class CaTgPsiCh:
             fill_value=None,
         )
 
-    def get_coefficient(self, tg: float, water_reserve: float) -> float:
+    def get_coefficient(self, tg: float, water: float) -> float:
         """
 
         Fetch the interpolated coefficient for the given tg and water reserve.
 
         :param tg: tg value.
-        :param water_reserve: Water reserve value.
+        :param water: Water reserve value.
 
         :return: Interpolated coefficient for the given tg and water reserve.
 
         """
-        if tg is None or water_reserve is None:
-            raise ValueError("Both 'tg' and 'water_reserve' must be provided.")
-        return float(self.interpolator((water_reserve, tg)))
+        if tg is None or water is None:
+            raise ValueError("Both 'tg' and 'water' must be provided.")
+        return float(self.interpolator((water, tg)))
 
     def generate_table(self, tgs: List[float], waters: List[float]) -> List[Tuple[float, float, float]]:
         """

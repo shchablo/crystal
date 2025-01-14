@@ -19,10 +19,10 @@ def main():
     core.register.add_command("kf.p", kF.print)
 
     tgpsi_ch = CaTgPsiCh()
-    core.register.add_command("tgPsi.ch.p", tgpsi_ch.print)
+    core.register.add_command("tgpsi.ch.p", tgpsi_ch.print)
     
     tgpsi_unch = CaTgPsiUnCh()
-    core.register.add_command("tgPsi.unch.p", tgpsi_unch.print)
+    core.register.add_command("tgpsi.unch.p", tgpsi_unch.print)
 
     core.run()
 

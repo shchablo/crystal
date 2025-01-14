@@ -99,14 +99,14 @@ class CaKf:
             for area in areas
         ]
 
-    def print(self, h0: float = None, area: float = None, atype: str = "dry") -> None:
+    def print(self, h0: float = None, a: float = None, atype: str = "dry") -> None:
         """
 
-        Print the kF coefficient for a given height, area, and type.
+        Print the coefficient for a given height, area, and type.
 
         :param h0: Snow height zero in meters.
-        :param area: Avalanche area in hectares.
+        :param a: Avalanche area in hectares.
         :param atype: Avalanche type ('dry' or 'wet').
 
         """
-        print(self.get_coefficient(h0, area, atype))
+        print(self.get_coefficient(h0, a, atype))

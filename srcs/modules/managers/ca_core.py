@@ -5,6 +5,7 @@ from typing import List, Dict, Any
 from srcs.modules.managers.ca_parser import CaParser
 from srcs.modules.managers.ca_configurator import CaConfigurator
 from srcs.modules.managers.ca_register import CaRegister
+from srcs.modules.managers.ca_test import ca_test
 
 
 class CaCore:
@@ -24,6 +25,7 @@ class CaCore:
         self.register.add_command("cfg.load", self.configurator.load_config)
         self.register.add_command("cfg.gen", self.register.generate_config_file)
         self.register.add_command(["man", "help"], self.register.help_command)
+        self.register.add_command(["test"], ca_test)
 
     def execute_commands(self, parsed_commands: List[Dict[str, Any]], commands: Dict[str, Any]) -> None:
         """

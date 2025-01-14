@@ -83,7 +83,7 @@ class CaKh:
     def print(self, h: float = None, atype: str = "dry") -> None:
         """
 
-        Print the kH coefficient for a given height and type.
+        Print the oefficient for a given height and type.
 
         :param h: Snow height in meters.
         :param atype: Avalanche type ('dry' or 'wet').
