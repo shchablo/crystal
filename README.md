@@ -29,6 +29,12 @@ For a list of available commands, run:
 crystal man
 ```
 
+For project tests using Crystal's built-in testing tools, run:
+
+```bash
+crystal test
+```
+
 For detailed help on a specific command, use:
 
 ```bash
