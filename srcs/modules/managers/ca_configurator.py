@@ -17,10 +17,9 @@ class CaConfigurator:
 
     def load_config(self, path: str = None) -> None:
         """
-
         Loads a configuration file and updates the internal configuration.
 
-        :paran path (str): The path to the configuration file.
+        :paran path: The path to the configuration file.
 
         """
         file_path = Path(path)
