@@ -71,14 +71,14 @@ class CaRegister:
             description = doc.strip().splitlines()[0] if doc else "No description available."
             print(f"  {command:<{max_command_length}} : {description}")
 
-        print("\nUse 'help --cmd [name]' for detailed descriptions (Example: 'help --cmd man').")
+        print("\nUse 'crystal help --cmd [name]' for detailed descriptions (Example: crystal help --cmd man).")
 
     def generate_config_file(self, path: str = None) -> None:
         """
 
         Generates a configuration file based on registered commands and their signatures.
 
-        :param path (str): The path to the output configuration file.
+        :param path: The path to the output configuration file.
 
         """
 

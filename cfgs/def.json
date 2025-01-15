@@ -22,36 +22,39 @@
         "atype": "dry"
     },
     "tgCh.print": {
-        "tg": null,
-        "w": null
-    },
-    "tgUnCh.print": {
         "w": null,
         "a": null,
         "tg": null
     },
-    "data.print": {
+    "tgUnCh.print": {
+        "tg": null,
+        "w": null
+    },
+    "handler.execute": {
         "path": null,
-        "mode": "head",
-        "profile_index": 0,
         "profiles_path_postfix": "profiles",
-        "input_path_postfix": "Input.csv",
-        "object_path_postfix": "Objects.csv",
+        "input_path_postfix": "input.csv",
+        "object_path_postfix": "objects.csv",
         "profile_extension": ".txt",
         "profile_separator": "\t",
         "profile_decimal": ",",
         "profile_column_aliases": {
             "X": "X",
-            "Feature Profile 1": "altitude"
+            "altitude": "Feature Profile 1"
         },
         "input_extension": ".csv",
-        "input_separator": ",",
-        "input_decimal": ".",
+        "input_separator": ";",
+        "input_decimal": ",",
         "input_column_aliases": null,
         "object_extension": ".csv",
         "object_separator": ",",
         "object_decimal": ".",
         "object_column_aliases": null
+    },
+    "handler.print": {
+        "path": null,
+        "mode": "head",
+        "index": 0
     },
     "cfg.load-gen": {}
 }

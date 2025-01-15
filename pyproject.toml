@@ -16,9 +16,9 @@ license = {file = "LICENSE.txt"}
 keywords = ["Avalanches"]
 
 dependencies = [
-    "scipy",
-    "pandas",
-    "numpy"
+    "scipy==1.15.1",
+    "pandas==2.2.3",
+    "numpy==1.23.5"
 ]
 
 [project.scripts]

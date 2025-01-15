@@ -2,12 +2,11 @@ from srcs.modules.managers.ca_core import CaCore
 
 from srcs.modules.tables.ca_kh import CaKh
 from srcs.modules.tables.ca_kf import CaKf
-from srcs.modules.tables.ca_tgpsi_ch import CaTgPsiCh
 from srcs.modules.tables.ca_tgpsi_unch import CaTgPsiUnCh
+from srcs.modules.tables.ca_tgpsi_ch import CaTgPsiCh
 
-from srcs.modules.analyzers.ca_data_handler import CaDataHandler
-
-from srcs.modules.ca_top import CaTop
+from srcs.modules.analyzers.ca_data_handler import CaDataHandler, CaTopDataHandler
+from srcs.modules.managers.ca_configurator import CaTopConfigurator
 
 def main():
     """
@@ -15,8 +14,7 @@ def main():
     Initializes and runs the core application.
     """
     core = CaCore()
-    top = CaTop(core)
-
+    
     kH = CaKh()
     core.register.add_command("kH.print", kH.print)
 
@@ -30,9 +28,12 @@ def main():
     core.register.add_command("tgUnCh.print", tgpsi_unch.print)
 
     data_handler = CaDataHandler()
-    core.register.add_command("data.print", data_handler.print)
+    top_data_handler = CaTopDataHandler(core, data_handler, print_cmds=["handler.execute"])
+    core.register.add_command("handler.execute", data_handler.execute)
+    core.register.add_command("handler.print", top_data_handler.print)
 
-    core.register.add_command("cfg.load-gen", top.load_conf_and_generate_conf_wrapper)
+    top_configurator = CaTopConfigurator(core)
+    core.register.add_command("cfg.load-gen", top_configurator.load_conf_and_generate_conf)
 
     core.run()
 

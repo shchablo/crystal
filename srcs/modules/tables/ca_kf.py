@@ -88,7 +88,7 @@ class CaKf:
 
         :param heights_zero: List of snow heights zero in meters.
         :param areas: List of avalanche areas in hectares.
-        :param avalanche_type: Avalanche type ('dry' or 'wet').
+        :param avalanche_type: Avalanche type ('dry' or 'wet'). default: dry.
 
         :return: List of tuples (height, area, kF coefficient).
 
@@ -106,7 +106,7 @@ class CaKf:
 
         :param h0: Snow height zero in meters.
         :param a: Avalanche area in hectares.
-        :param atype: Avalanche type ('dry' or 'wet').
+        :param atype: Avalanche type ('dry' or 'wet'). default: dry. default: dry.
 
         """
         print(self.get_coefficient(h0, a, atype))

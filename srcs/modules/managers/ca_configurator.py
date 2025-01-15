@@ -2,6 +2,54 @@ import json
 import yaml
 from pathlib import Path
 
+from typing import Dict, Any
+
+
+class CaTopConfigurator:
+
+    def __init__(self, core):
+        """
+
+        Initializes the top-level class with entry points for various actions.
+
+        :param core (CaCore): An instance of the core manager.
+
+        """
+        self.core = core
+
+    def load_conf_and_generate_conf(self, **kwargs) -> None:
+        """
+        Wrapper command to load the configuration and generate a configuration file.
+
+        :param kwargs: Additional arguments to pass to the included commands.
+        """
+
+        print(kwargs)
+
+        load_args: Dict[str, Any] = {
+            key[5:]: value[0] if isinstance(value, list) else value
+            for key, value in kwargs.items()
+            if key.startswith("load_")
+        }
+        print("Executing 'cfg.load' command with arguments:", load_args)
+        self.core.execute_command(
+            command="cfg.load",
+            command_args=load_args,
+            commands=self.core.register.commands
+        )
+
+        gen_args: Dict[str, Any] = {
+            key[4:]: value[0] if isinstance(value, list) else value
+            for key, value in kwargs.items()
+            if key.startswith("gen_")
+        }
+        print("Executing 'cfg.gen' command with arguments:", gen_args)
+        self.core.execute_command(
+            command="cfg.gen",
+            command_args=gen_args,
+            commands=self.core.register.commands
+        )
+
 
 class CaConfigurator:
     """
@@ -43,7 +91,7 @@ class CaConfigurator:
 
         Saves the current configuration to a specified file.
 
-        :param path (str): The path to the output configuration file.
+        :param path: The path to the output configuration file.
 
         """
         file_path = Path(path)
@@ -64,7 +112,7 @@ class CaConfigurator:
 
         Updates the internal configuration with the given dictionary.
 
-        :param new_config (dict): A dictionary containing new configuration values.
+        :param new_config: A dictionary containing new configuration values.
 
         """
         if not isinstance(new_config, dict):
@@ -76,7 +124,7 @@ class CaConfigurator:
     def get_config(self) -> dict:
         """
 
-        :param dict: The current configuration.
+        :param new_config: The current configuration.
 
         """
         return self.config.copy()

@@ -49,10 +49,10 @@ class CaKh:
     def get_coefficient(self, height: float, avalanche_type: str) -> float:
         """
 
-        Fetch kH coefficient for a specific height and type.
+        Fetch kH coefficients for a specific height and type.
 
         :param height: Snow height in meters.
-        :param avalanche_type: Avalanche type ('dry' or 'wet').
+        :param avalanche_type: Avalanche type ('dry' or 'wet'). default: dry.
 
         :return: Corresponding kH coefficient for the given height and type.
 
@@ -68,7 +68,7 @@ class CaKh:
         Generates a table of heights and corresponding kH coefficients.
 
         :param heights: List of snow heights in meters.
-        :param avalanche_type: Avalanche type ('dry' or 'wet').
+        :param avalanche_type: Avalanche type ('dry' or 'wet'). default: dry.
 
         :return: List of tuples (height, kH coefficient).
 
@@ -82,10 +82,10 @@ class CaKh:
     def print(self, h: float = None, atype: str = "dry") -> None:
         """
 
-        Print the oefficient for a given height and type.
+        Print the coefficient for a given height and type.
 
         :param h: Snow height in meters.
-        :param atype: Avalanche type ('dry' or 'wet').
+        :param atype: Avalanche type ('dry' or 'wet'). default: dry.
 
         """
         print(self.get_coefficient(h, atype))

@@ -1,11 +1,11 @@
 import unittest
-from srcs.modules.tables.ca_tgpsi_unch import CaTgPsiUnCh
+from srcs.modules.tables.ca_tgpsi_ch import CaTgPsiCh
 
 
-class TestCaTgPsiUnCh(unittest.TestCase):
+class TestCaTgPsiCh(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.kh = CaTgPsiUnCh()
+        cls.kh = CaTgPsiCh()
 
     table_data = {
         100: {
