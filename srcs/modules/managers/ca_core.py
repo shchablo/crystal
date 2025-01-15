@@ -44,9 +44,9 @@ class CaCore:
 
         Executes a single command with its arguments.
 
-        :param command (str): The name of the command to execute.
-        :param command_args (dict): A dictionary of arguments for the command.
-        :param commands (dict): A dictionary mapping command names to functions.
+        :param command: The name of the command to execute.
+        :param command_args: A dictionary of arguments for the command.
+        :param commands: A dictionary mapping command names to functions.
 
         """
         if command not in commands:
@@ -58,10 +58,18 @@ class CaCore:
         kwargs = {}
 
         # Build arguments for the function
-        for param_name, param in func_signature.parameters.items():
-            # Priority: Command arguments > Config file > Default value
-            config_value = self.configurator.config.get(command, {}).get(param_name, param.default)
-            kwargs[param_name] = command_args.get(param_name, config_value)
+        accepts_kwargs = any(
+            param.kind == inspect.Parameter.VAR_KEYWORD
+            for param in func_signature.parameters.values()
+        )
+        if accepts_kwargs:
+            for key, value in command_args.items():
+                kwargs[key] = value
+        else:
+            for param_name, param in func_signature.parameters.items():
+                # Priority: Command arguments > Config file > Default value
+                config_value = self.configurator.config.get(command, {}).get(param_name, param.default)
+                kwargs[param_name] = command_args.get(param_name, config_value)
 
         try:
             func(**kwargs)

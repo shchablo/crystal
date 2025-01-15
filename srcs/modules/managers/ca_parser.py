@@ -42,24 +42,28 @@ class CaParser:
 
     def _prepare_args(self, command: str, command_args: List[str], commands: Dict[str, Callable]) -> Dict[str, Any]:
         """
-
         Parses the arguments for a specific command.
 
         :param command: The command name.
-        :param command_args A list of arguments associated with the command.
+        :param command_args: A list of arguments associated with the command.
         :param commands: A dictionary mapping command names to their respective functions.
 
-        :return dict: A dictionary of parsed and validated arguments for the command.
-
+        :return: A dictionary of parsed and validated arguments for the command.
         """
         if command not in commands:
             raise ValueError(f"Command '{command}' not found.")
 
         func = commands[command]
         func_signature = inspect.signature(func)
-        parsed_args = {}
 
-        # Iterate over command arguments to parse key-value pairs
+        # Check if the function accepts **kwargs
+        accepts_kwargs = any(
+            param.kind == inspect.Parameter.VAR_KEYWORD
+            for param in func_signature.parameters.values()
+        )
+
+        # Parse arguments into a dictionary
+        parsed_args = {}
         i = 0
         while i < len(command_args):
             arg = command_args[i]
@@ -73,7 +77,11 @@ class CaParser:
                 parsed_args[key] = value
             i += 1
 
-        # Match parsed arguments to the function's signature
+        # If the function accepts **kwargs, return parsed_args without filtering
+        if accepts_kwargs:
+            return {key: [value] for key, value in parsed_args.items()}
+
+        # Otherwise, filter parsed_args based on the function's signature
         final_args = {}
         for param_name, param in func_signature.parameters.items():
             if param_name in parsed_args:

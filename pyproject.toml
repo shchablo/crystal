@@ -15,6 +15,12 @@ readme = "README.md"
 license = {file = "LICENSE.txt"}
 keywords = ["Avalanches"]
 
+dependencies = [
+    "scipy",
+    "pandas",
+    "numpy"
+]
+
 [project.scripts]
 crystal = "srcs.main:main"
 

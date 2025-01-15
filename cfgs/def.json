@@ -12,22 +12,46 @@
         "cmd": null
     },
     "test": {},
-    "kh.p": {
+    "kH.print": {
         "h": null,
         "atype": "dry"
     },
-    "kf.p": {
+    "kF.print": {
         "h0": null,
         "a": null,
         "atype": "dry"
     },
-    "tgpsi.ch.p": {
+    "tgCh.print": {
         "tg": null,
         "w": null
     },
-    "tgpsi.unch.p": {
+    "tgUnCh.print": {
         "w": null,
         "a": null,
         "tg": null
-    }
+    },
+    "data.print": {
+        "path": null,
+        "mode": "head",
+        "profile_index": 0,
+        "profiles_path_postfix": "profiles",
+        "input_path_postfix": "Input.csv",
+        "object_path_postfix": "Objects.csv",
+        "profile_extension": ".txt",
+        "profile_separator": "\t",
+        "profile_decimal": ",",
+        "profile_column_aliases": {
+            "X": "X",
+            "Feature Profile 1": "altitude"
+        },
+        "input_extension": ".csv",
+        "input_separator": ",",
+        "input_decimal": ".",
+        "input_column_aliases": null,
+        "object_extension": ".csv",
+        "object_separator": ",",
+        "object_decimal": ".",
+        "object_column_aliases": null
+    },
+    "cfg.load-gen": {}
 }

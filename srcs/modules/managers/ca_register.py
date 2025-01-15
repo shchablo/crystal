@@ -47,18 +47,31 @@ class CaRegister:
             if cmd in self.commands:
                 doc = inspect.getdoc(self.commands[cmd])
                 if doc:
-                    print(f"Help for command '{cmd}':\n{doc}")
+                    print(f"Help for command '{cmd}': {doc}")
                 else:
                     print(f"Command '{cmd}' does not have a description.")
             else:
                 print(f"Command '{cmd}' not found.")
         else:
-            print("Available commands:")
-            for command, func in self.commands.items():
-                doc = inspect.getdoc(func)
-                description = doc.strip().splitlines()[0] if doc else "No description available."
-                print(f"  {command}: {description}")
-            print("\nUse 'help --cmd [name]' for detailed descriptions (ex: help --cmd cfg.load).")
+            self._print_commands(self.commands)
+
+    def _print_commands(self, commands):
+        """
+        Prints a list of available commands with descriptions, dynamically aligned by the longest command name.
+
+        :param commands: dict, where keys are command names and values are functions
+        """
+        max_command_length = max(len(command) for command in commands.keys())
+
+        print(f"  {'Command':<{max_command_length}} : Description")
+        print("-" * (max_command_length + 15))
+
+        for command, func in commands.items():
+            doc = inspect.getdoc(func)
+            description = doc.strip().splitlines()[0] if doc else "No description available."
+            print(f"  {command:<{max_command_length}} : {description}")
+
+        print("\nUse 'help --cmd [name]' for detailed descriptions (Example: 'help --cmd man').")
 
     def generate_config_file(self, path: str = None) -> None:
         """
