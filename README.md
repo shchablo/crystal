@@ -38,7 +38,7 @@ crystal test
 For detailed help on a specific command, use:
 
 ```bash
-crystal help --cmd <command_name>
+crystal help --cmd [command_name]
 ```
 
 
@@ -60,8 +60,8 @@ Once the program starts, you can type commands like:
 
 ```plaintext
 >> man
->> help cfg
->> cfg --path /path/to/config.json
+>> help --cmd man
+>> cfg.load --path /path/to/config.json
 ```
 
 ### Command-Line Mode
@@ -73,7 +73,7 @@ crystal man
 ```
 
 ```bash
-crystal cfg --path /path/to/config.json help --cmd gen gen --path /path/to/output/file/of/config.json
+crystal cfg.load --path /path/to/config.json help --cmd cfg.gen cfg.gen --path /path/to/output/file/of/config.json
 ```
 
 
