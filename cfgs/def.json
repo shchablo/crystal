@@ -12,6 +12,7 @@
         "cmd": null
     },
     "test": {},
+    "cfg.load-gen": {},
     "kH.print": {
         "h": null,
         "atype": "dry"
@@ -55,6 +56,5 @@
         "path": null,
         "mode": "head",
         "index": 0
-    },
-    "cfg.load-gen": {}
+    }
 }

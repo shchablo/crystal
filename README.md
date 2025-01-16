@@ -6,13 +6,6 @@
 ## Installation
 
 ```bash
-git stash
-git pull
-python3 -m build
-pip install --force-reinstall --break-system-packages dist/crystal-0.5.0-py3-none-any.whl
-```
-
-```bash
 python3 -m build
 pip install dist/crystal-[0.0.0]-py3-none-any.whl
 ```
@@ -38,7 +31,7 @@ crystal test
 For detailed help on a specific command, use:
 
 ```bash
-crystal help --cmd [command_name]
+crystal help --cmd [name]
 ```
 
 
@@ -73,7 +66,7 @@ crystal man
 ```
 
 ```bash
-crystal cfg.load --path /path/to/config.json help --cmd cfg.gen cfg.gen --path /path/to/output/file/of/config.json
+crystal cfg.load --path /path/to/config.json help --cmd cfg.gen cfg.gen --path /path/to/output/file/of/config.yaml
 ```
 
 
@@ -81,11 +74,21 @@ crystal cfg.load --path /path/to/config.json help --cmd cfg.gen cfg.gen --path /
 
 The program processes input data in the following formats:
 
-- **Argis Data**: Spatial and geographical data.
-- **Profiles Data**: Data containing details about avalanches or terrain profiles.
-- **Object List**: A list of objects or locations to analyze.
+- **Argis Data (input.csv)**: Spatial and geographical data.
+- **Profiles Data (profiles)**: Data containing details about avalanches or terrain profiles.
+- **Object List (objects.csv)**: A list of objects or locations to analyze.
 
-Make sure your input data complies with the required format to ensure accurate results.
+```bash
+|-- input.csv
+|-- objects.csv
+|-- profiles
+       |-- 1.txt
+       |-- 2.txt
+       |-- ...
+       |-- n.txt
+```
+
+> Make sure your input data complies with the required format to ensure accurate results.
 
 
 ## Unit Tests
@@ -102,3 +105,12 @@ We welcome contributions to the [GitHub repository](https://github.com/shchablo/
 - **Authors**: Konstantin Shchablo, Elizaveta Zhukova
 
 For questions or support, don't hesitate to reach out.
+
+## Extra
+
+```bash
+git stash
+git pull
+python3 -m build
+pip install --force-reinstall --break-system-packages dist/crystal-0.5.0-py3-none-any.whl
+```

@@ -53,7 +53,7 @@ class CaTgPsiUnCh:
         """
         if tg is None or water is None:
             raise ValueError("Both 'tg' and 'water' must be provided.")
-        
+
         # Clamp values to the nearest range
         water = max(min(water, max(self.table.water_reserve)), min(self.table.water_reserve))
         tg = max(min(tg, max(self.table.tg_values)), min(self.table.tg_values))
@@ -79,11 +79,16 @@ class CaTgPsiUnCh:
 
     def print(self, tg: float = None, w: float = None) -> None:
         """
+        Display the interpolated tgPsi of a unchanneled avalanche for given tg and water reserve.
 
-        Print the interpolated coefficient for the given tg and water reserve.
+          This command calculates and prints the interpolated tgPsi based on the provided tg and water reserve values.
 
-        :param tg: tg value.
-        :param w: Water reserve value.
+          Options:
+            --tg | FLOAT | tg value (default: None).
+            --w  | FLOAT | Water reserve value (default: None).
+
+          Example:
+            crystal [cmd] --tg 0.7 --w 100.0
 
         """
         print(self.get_coefficient(tg, w))

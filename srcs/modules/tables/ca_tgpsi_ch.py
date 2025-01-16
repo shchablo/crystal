@@ -99,9 +99,9 @@ class CaTgPsiCh:
 
     def get_coefficient(self, water: float, area: float, tg: float) -> float:
         """
-    
+
         Fetch the interpolated coefficient for the given water reserve, area, and tg values.
-    
+
         The function ensures that the input parameters are within the predefined ranges:
         - If the water value exceeds the maximum or minimum in water_reserve, it is clamped to the nearest boundary.
         - If the area value exceeds the maximum or minimum in area_values, it is clamped to the nearest boundary.
@@ -112,9 +112,9 @@ class CaTgPsiCh:
         :param tg: Angle value to be used in the interpolation.
 
         :return: Interpolated coefficient for the provided inputs.
-        
+
         :raises ValueError: If any of the input parameters (water, area, or tg) is not provided.
-        
+
         """
 
         if water is None or area is None or tg is None:
@@ -151,11 +151,17 @@ class CaTgPsiCh:
     def print(self, w: float = None, a: float = None, tg: float = None) -> None:
         """
 
-        Print the interpolated coefficient for the given water reserve, area, and tg.
+        Display the interpolated tgPsi of a channeled avalanche for given water reserve, area, and tg.
 
-        :param w: Water reserve value.
-        :param a: Area value.
-        :param tg: tg value.
+          This command calculates and prints the interpolated tgPsi based on the provided water reserve, area, and tg values.
+
+          Options:
+            --w  | FLOAT | Water reserve value (default: None).
+            --a  | FLOAT | Area value (default: None).
+            --tg | FLOAT | tg value (default: None).
+
+          Example:
+            crystal [cmd] --w 150.0 --a 20.0 --tg 0.5
 
         """
         print(self.get_coefficient(w, a, tg))

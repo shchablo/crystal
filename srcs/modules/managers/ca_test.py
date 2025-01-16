@@ -5,12 +5,13 @@ import sys
 def ca_test():
     """
 
-    Executes all unit tests in the 'tests' directory.
+    Execute all unit tests in the 'tests' directory.
 
-    This function uses the unittest module to discover and run all tests located in the "tests" directory.
-    If any test fails, the function terminates the program with a non-zero exit code.
+      This command discovers and runs all unit tests located in the "tests" directory using the unittest module.
+      If any test fails, the program exits with a non-zero status code.
 
-    :return: None
+      Options:
+        No additional options.
 
     """
 

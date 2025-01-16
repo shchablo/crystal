@@ -101,12 +101,18 @@ class CaKf:
 
     def print(self, h0: float = None, a: float = None, atype: str = "dry") -> None:
         """
+        Display the coefficient for a given height, area, and avalanche type.
 
-        Print the coefficient for a given height, area, and type.
+          This command calculates and prints the coefficient based on the provided snow height, avalanche area, and type.
 
-        :param h0: Snow height zero in meters.
-        :param a: Avalanche area in hectares.
-        :param atype: Avalanche type ('dry' or 'wet'). default: dry. default: dry.
+          Options:
+            --h0    | FLOAT | Snow height zero in meters (default: None).
+            --a     | FLOAT | Avalanche area in hectares (default: None).
+            --atype | TEXT  | Avalanche type 'dry' or 'wet' (default: 'dry').
+
+          Example:
+            crystal [cmd] --h0 3.5 --a 15
+            crystal [cmd] --h0 2.0 --a 10 --atype wet
 
         """
         print(self.get_coefficient(h0, a, atype))

@@ -20,16 +20,27 @@ class CaTopDataHandler:
 
     def print(self, path: str = None, mode: str = "head", index: int = 0, **kwargs) -> None:
         """
-        Load and display a summary of the processed data.
-      
-        :param path: Path to the folder or ZIP file containing the data.
-        :param mode: Display mode for the data. Options are "head" or "tail" (default: head).
-        :param index: Index of the profile to display (0-based).
+        Display a summary of the processed data.
 
-        :param kwargs: Additional arguments to pass to the included commands (See: handler.execute).
+          This command loads data from a specified path and displays a summary based on the chosen mode.
+          The display mode can show either the "head" or "tail" of the data.
+          Supports specifying the index of the profile to display.
+
+          Options:
+            --path   | TEXT    | Path to the folder or ZIP file containing the data (default: None).
+            --mode   | TEXT    | Display mode for the data. Options are "head" or "tail" (default: head).
+            --index  | INTEGER | Index of the profile to display (default: 0).
+            **kwargs | ARGS    | Additional arguments passed to the internal execution command.
+
+          Example:
+            crystal [cmd] --path path/to/data
+            crystal [cmd] --path path/to/data.zip
+            crystal [cmd] --path path/to/data.zip --input_extension .txt
+
+          Note: For a detailed list of keys, refer to the help section: 'crystal help --cmd handler.execute'.
 
         """
-        
+
         args: Dict[str, Any] = {
             key: value[0] if isinstance(value, list) else value
             for key, value in kwargs.items()
@@ -40,7 +51,7 @@ class CaTopDataHandler:
             command_args=args,
             commands=self.core.register.commands
         )
-        
+
         # Print loaded data
         if mode == "head":
             profile_key = list(self.data_handler.profiles.keys())[index]
@@ -156,30 +167,34 @@ class CaDataHandler:
 
         Prepare the folder or archive for processing and load all data.
 
-        :param path: Path to a ZIP archive or a folder containing the data.
+          This command processes a folder or ZIP archive containing data files and loads profiles, input CSV, and objects CSV into memory.
+          Supports configuring file extensions, separators, decimals, and column aliases for each data type.
 
-        :param profiles_path_postfix: Subfolder name where profiles are stored.
-        :param input_path_postfix: Filename for the input CSV.
-        :param object_path_postfix: Filename for the objects CSV.
+          Options:
+            --path                   | TEXT | Path to a ZIP archive or a folder containing the data.
 
-        :param profile_extension: Expected file extension for profile files.
-        :param profile_separator: Separator for profile files.
-        :param profile_decimal: Decimal character for profile files.
-        :param profile_column_aliases: Optional column renaming dictionary for profiles.
+            --profiles_path_postfix  | TEXT | Subfolder name where profiles are stored (default: profiles).
+            --input_path_postfix     | TEXT | Filename for the input CSV (default: input.csv).
+            --object_path_postfix    | TEXT | Filename for the objects CSV (default: objects.csv).
 
-        :param input_extension: Expected file extension for the input CSV.
-        :param input_separator: Separator for the input CSV.
-        :param input_decimal: Decimal character for the input CSV.
-        :param input_column_aliases: Optional column renaming dictionary for the input CSV.
+            --profile_extension      | TEXT | File extension for profile files (default: .txt).
+            --profile_separator      | TEXT | Separator for profile files (default: \t).
+            --profile_decimal        | TEXT | Decimal character for profile files (default: ,).
+            --profile_column_aliases | DICT | Optional column renaming dictionary for profiles.
 
-        :param object_extension: Expected file extension for the objects CSV.
-        :param object_separator: Separator for the objects CSV.
-        :param object_decimal: Decimal character for the objects CSV.
-        :param object_column_aliases: Optional column renaming dictionary for the objects CSV.
+            --input_extension        | TEXT | File extension for the input CSV (default: .csv).
+            --input_separator        | TEXT | Separator for the input CSV (default: ;).
+            --input_decimal          | TEXT | Decimal character for the input CSV (default: ,).
+            --input_column_aliases   | DICT | Optional column renaming dictionary for the input CSV.
 
-        :return: None
-        """
-        
+            --object_extension       | TEXT | File extension for the objects CSV (default: .csv).
+            --object_separator       | TEXT | Separator for the objects CSV (default: ,).
+            --object_decimal         | TEXT | Decimal character for the objects CSV (default: .).
+            --object_column_aliases  | DICT | Optional column renaming dictionary for the objects CSV.
+
+          Note: This is a command for running an internal script.
+            """
+
         # Extract directory and archive name
         archive_dir = os.path.dirname(path)
         archive_name = os.path.splitext(os.path.basename(path))[0]

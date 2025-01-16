@@ -38,9 +38,16 @@ class CaRegister:
     def help_command(self, cmd: str = None) -> None:
         """
 
-        Provides help for a specific command or lists all available commands.
+        Display help for a specific command or list all commands.
 
-        :param cmd: The name of the command to get help for. Defaults to None.
+          This command provides detailed help for a specified command if its name is given.
+          If no command name is provided, it lists all available commands.
+
+          Options:
+            --cmd | TEXT | Name of the command to display help for (default: None).
+
+          Example:
+            crystal [cmd] --cmd man
 
         """
         if cmd:
@@ -57,29 +64,56 @@ class CaRegister:
 
     def _print_commands(self, commands):
         """
-        Prints a list of available commands with descriptions, dynamically aligned by the longest command name.
+        Display a list of available commands with their descriptions.
 
-        :param commands: dict, where keys are command names and values are functions
+        This function dynamically formats and displays a list of registered commands.
+        Each command is aligned based on the longest command name and includes a brief description.
+        If a command does not have a description, it is marked as "No description available."
+
+        :param commands: dict, A dictionary where keys are command names and values are functions.
+
+        :return: None
         """
+
+        # Calculate the maximum command name length for alignment
         max_command_length = max(len(command) for command in commands.keys())
+        header = f"{'Command':<{max_command_length}} : Description"
+        separator = "-" * len(header)
 
-        print(f"  {'Command':<{max_command_length}} : Description")
-        print("-" * (max_command_length + 15))
+        # Print header and separator
+        print(header)
+        print(separator)
 
+        # Print each command with its description
         for command, func in commands.items():
             doc = inspect.getdoc(func)
             description = doc.strip().splitlines()[0] if doc else "No description available."
-            print(f"  {command:<{max_command_length}} : {description}")
+            print(f"{command:<{max_command_length}} : {description}")
 
-        print("\nUse 'crystal help --cmd [name]' for detailed descriptions (Example: crystal help --cmd man).")
+        # Provide usage examples
+        print("\nUsage:")
+        print("  To view all available commands:")
+        print("    crystal man")
+        print("  To get detailed help for a specific command:")
+        print("    crystal help --cmd [name]")
+
+        print("\nExample:")
+        print("  crystal help --cmd man")
 
     def generate_config_file(self, path: str = None) -> None:
         """
 
-        Generates a configuration file based on registered commands and their signatures.
+        Save the current configuration to a specified file.
 
-        :param path: The path to the output configuration file.
+          This command saves the current configuration to a file.
+          It supports saving in JSON or YAML formats.
+          Requires a valid file path as input.
 
+          Options:
+            --path | TEXT | Path to save the configuration file (e.g., output.json or output.yaml).
+
+          Example:
+            crystal [cmd] --path /path/to/output/file.json
         """
 
         if not path:

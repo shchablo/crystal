@@ -82,10 +82,18 @@ class CaKh:
     def print(self, h: float = None, atype: str = "dry") -> None:
         """
 
-        Print the coefficient for a given height and type.
+        Display the coefficient for a given height and avalanche type.
 
-        :param h: Snow height in meters.
-        :param atype: Avalanche type ('dry' or 'wet'). default: dry.
+          This command calculates and prints the coefficient based on the provided snow height and type.
+          Supports specifying the avalanche type as 'dry' or 'wet'.
+
+          Options:
+            --h     | FLOAT | Snow height in meters (default: None).
+            --atype | TEXT  | Avalanche type 'dry' or 'wet' (default: 'dry').
+
+          Example:
+            crystal [cmd] --h 2.5
+            crystal [cmd] --h 1.8 --atype wet
 
         """
         print(self.get_coefficient(h, atype))

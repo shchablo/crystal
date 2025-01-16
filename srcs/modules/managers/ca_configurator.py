@@ -19,12 +19,23 @@ class CaTopConfigurator:
 
     def load_conf_and_generate_conf(self, **kwargs) -> None:
         """
-        Wrapper command to load the configuration and generate a configuration file.
+        Load configuration and generate a new file in one command.
 
-        :param kwargs: Additional arguments to pass to the included commands.
+          A wrapper command that executes cfg.load and cfg.gen sequentially.
+          Allows separate arguments for loading and generating configurations using prefixes load_ and gen_.
+
+          Options:
+            --load_<KEY> | VALUE | Arguments for loading configuration (default: None, e.g., --load_path path/to/file).
+            --gen_<KEY>  | VALUE | Arguments for generating configuration (default: None, e.g., --gen_path path/to/file).
+            **kwargs     | ARGS  | Additional arguments passed to the internal execution command.
+                                   Need to add prefix load_ or gen_ for corresponding execution command.
+
+          Example:
+            crystal [cmd] --load_path path/to/file.json --gen_path path/to/file.yamp
+
+          Note: For a detailed list of keys, refer to the help section: 'crystal help --cmd cfg.load'.
+
         """
-
-        print(kwargs)
 
         load_args: Dict[str, Any] = {
             key[5:]: value[0] if isinstance(value, list) else value
@@ -65,10 +76,17 @@ class CaConfigurator:
 
     def load_config(self, path: str = None) -> None:
         """
-        Loads a configuration file and updates the internal configuration.
+        Load a configuration file into the manager.
 
-        :paran path: The path to the configuration file.
+          This command loads a configuration file in JSON or YAML format.
+          It validates the file's existence and checks its format.
+          Supported formats: .json, .yaml, .yml.
 
+          Options:
+            --path | TEXT | Path to the configuration file (default: None, e.g., config.json or config.yaml).
+
+          Example:
+            crystal [cmd] --path path/to/file.json
         """
         file_path = Path(path)
 

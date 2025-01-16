@@ -14,7 +14,10 @@ def main():
     Initializes and runs the core application.
     """
     core = CaCore()
-    
+
+    top_configurator = CaTopConfigurator(core)
+    core.register.add_command("cfg.load-gen", top_configurator.load_conf_and_generate_conf)
+
     kH = CaKh()
     core.register.add_command("kH.print", kH.print)
 
@@ -28,12 +31,12 @@ def main():
     core.register.add_command("tgUnCh.print", tgpsi_unch.print)
 
     data_handler = CaDataHandler()
-    top_data_handler = CaTopDataHandler(core, data_handler, print_cmds=["handler.execute"])
     core.register.add_command("handler.execute", data_handler.execute)
+
+    top_data_handler = CaTopDataHandler(core, data_handler, print_cmds=["handler.execute"])
     core.register.add_command("handler.print", top_data_handler.print)
 
-    top_configurator = CaTopConfigurator(core)
-    core.register.add_command("cfg.load-gen", top_configurator.load_conf_and_generate_conf)
+
 
     core.run()
 
