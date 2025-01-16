@@ -54,7 +54,7 @@ The program processes input data in the following formats:
 
 > Make sure your input data complies with the required format to ensure accurate results.
 
-## Quick Start
+## Getting Started
 
 1. **Interactive Mode**: Enter commands step-by-step during runtime.
 2. **Command-Line Mode**: Execute predefined commands in a single line.
