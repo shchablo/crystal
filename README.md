@@ -34,6 +34,25 @@ For detailed help on a specific command, use:
 crystal help --cmd [name]
 ```
 
+## Input Data Formats
+
+The program processes input data in the following formats:
+
+- **Argis Data (input.csv)**: Spatial and geographical data.
+- **Profiles Data (profiles)**: Data containing details about avalanches or terrain profiles.
+- **Object List (objects.csv)**: A list of objects or locations to analyze.
+
+```bash
+|-- input.csv
+|-- objects.csv
+|-- profiles
+       |-- 1.txt
+       |-- 2.txt
+       |-- ...
+       |-- n.txt
+```
+
+> Make sure your input data complies with the required format to ensure accurate results.
 
 ## Quick Start
 
@@ -56,26 +75,6 @@ Once the program starts, you can type commands like:
 >> help --cmd man
 >> cfg.load --path /path/to/config.json
 ```
-
-## Input Data Formats
-
-The program processes input data in the following formats:
-
-- **Argis Data (input.csv)**: Spatial and geographical data.
-- **Profiles Data (profiles)**: Data containing details about avalanches or terrain profiles.
-- **Object List (objects.csv)**: A list of objects or locations to analyze.
-
-```bash
-|-- input.csv
-|-- objects.csv
-|-- profiles
-       |-- 1.txt
-       |-- 2.txt
-       |-- ...
-       |-- n.txt
-```
-
-> Make sure your input data complies with the required format to ensure accurate results.
 
 
 ### Command-Line Mode
