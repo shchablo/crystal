@@ -1,3 +1,6 @@
+import contextlib
+import io
+
 import unittest
 import os
 import tempfile
@@ -17,25 +20,25 @@ class TestCaConfigurator(unittest.TestCase):
         self.test_dir.cleanup()
 
     def test_upload_config_json(self):
-        print(f"\n{'-' * 80}\n{self.__class__.__name__}.{self._testMethodName}")
         self.configurator.config = {"key": "value"}
-        self.configurator.upload_config(self.test_json)
+        with io.StringIO() as buf, contextlib.redirect_stdout(buf):
+            self.configurator.upload_config(self.test_json)
 
     def test_load_config_json(self):
-        print(f"\n{'-' * 80}\n{self.__class__.__name__}.{self._testMethodName}")
         with open(self.test_json, "w") as f:
             f.write('{"key": "value"}')
-        self.configurator.load_config(self.test_json)
+        with io.StringIO() as buf, contextlib.redirect_stdout(buf):
+            self.configurator.load_config(self.test_json)
         self.assertEqual(self.configurator.config["key"], "value")
 
     def test_upload_config_yaml(self):
-        print(f"\n{'-' * 80}\n{self.__class__.__name__}.{self._testMethodName}")
         self.configurator.config = {"key": "value"}
-        self.configurator.upload_config(self.test_yaml)
+        with io.StringIO() as buf, contextlib.redirect_stdout(buf):
+            self.configurator.upload_config(self.test_yaml)
 
     def test_load_config_yaml(self):
-        print(f"\n{'-' * 80}\n{self.__class__.__name__}.{self._testMethodName}")
         with open(self.test_yaml, "w") as f:
             f.write("key: value\n")
-        self.configurator.load_config(self.test_yaml)
+        with io.StringIO() as buf, contextlib.redirect_stdout(buf):
+            self.configurator.load_config(self.test_yaml)
         self.assertEqual(self.configurator.config["key"], "value")

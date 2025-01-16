@@ -9,7 +9,6 @@ class TestCaRegister(unittest.TestCase):
         self.register = CaRegister(self.configurator)
 
     def test_register_single_command(self):
-        print(f"\n{'-' * 80}\n{self.__class__.__name__}.{self._testMethodName}")
         def test_func(): pass
         self.register.add_command("test", test_func)
         self.assertIn("test", self.register.commands)

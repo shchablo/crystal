@@ -7,14 +7,10 @@ class TestCaParser(unittest.TestCase):
         self.parser = CaParser()
 
     def test_parse_single_command(self):
-        print(f"\n{'-' * 80}\n{self.__class__.__name__}.{self._testMethodName}")
-
         commands = {"test": lambda arg1=None: {"arg1": arg1}}
         args = ["test", "--arg1", "value1"]
 
         parsed = self.parser.parse_commands(args, commands)
-
-        print(f"Parsed output: {parsed}")
 
         self.assertEqual(len(parsed), 1, "Parsed output does not contain exactly one command.")
         self.assertEqual(parsed[0][0], "test", "Parsed command name is incorrect.")

@@ -5,7 +5,7 @@ from srcs.modules.tables.ca_kf import CaKf
 from srcs.modules.tables.ca_tgpsi_unch import CaTgPsiUnCh
 from srcs.modules.tables.ca_tgpsi_ch import CaTgPsiCh
 
-from srcs.modules.analyzers.ca_data_handler import CaDataHandler, CaTopDataHandler
+from srcs.modules.analyzers.ca_handler import CaHandler, CaTopHandler
 from srcs.modules.managers.ca_configurator import CaTopConfigurator
 
 def main():
@@ -30,13 +30,11 @@ def main():
     tgpsi_unch = CaTgPsiUnCh()
     core.register.add_command("tgUnCh.print", tgpsi_unch.print)
 
-    data_handler = CaDataHandler()
+    data_handler = CaHandler()
     core.register.add_command("handler.execute", data_handler.execute)
 
-    top_data_handler = CaTopDataHandler(core, data_handler, print_cmds=["handler.execute"])
+    top_data_handler = CaTopHandler(core, data_handler, print_cmds=["handler.execute"])
     core.register.add_command("handler.print", top_data_handler.print)
-
-
 
     core.run()
 

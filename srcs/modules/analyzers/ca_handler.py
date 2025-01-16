@@ -3,9 +3,9 @@ import zipfile
 import pandas as pd
 from typing import Optional, Dict, Any
 
-class CaTopDataHandler:
+class CaTopHandler:
 
-    def __init__(self, core, data_handler, print_cmds):
+    def __init__(self, core, handler, print_cmds):
         """
 
         Initializes the top-level class with entry points for various actions.
@@ -15,7 +15,7 @@ class CaTopDataHandler:
 
         """
         self.core = core
-        self.data_handler = data_handler
+        self.handler = handler
         self.print_cmds = print_cmds
 
     def print(self, path: str = None, mode: str = "head", index: int = 0, **kwargs) -> None:
@@ -54,17 +54,17 @@ class CaTopDataHandler:
 
         # Print loaded data
         if mode == "head":
-            profile_key = list(self.data_handler.profiles.keys())[index]
-            print(f"Profiles Index {index}:\n", self.data_handler.profiles[profile_key].head())
-            print("\nInput CSV:\n", self.data_handler.input_csv.head())
-            print("\nObject CSV:\n", self.data_handler.object_csv.head())
+            profile_key = list(self.handler.profiles.keys())[index]
+            print(f"Profiles {profile_key}:\n", self.handler.profiles[profile_key].head())
+            print("\nInput CSV:\n", self.handler.inputs.head())
+            print("\nObject CSV:\n", self.handler.objects.head())
         elif mode == "tail":
-            profile_key = list(self.data_handler.profiles.keys())[index]
-            print(f"Profiles Index {index}:\n", self.data_handler.profiles[profile_key].tail())
-            print("\nInput CSV:\n", self.data_handler.input_csv.tail())
-            print("\nObject CSV:\n", self.data_handler.object_csv.tail())
+            profile_key = list(self.handler.profiles.keys())[index]
+            print(f"Profiles {profile_key}:\n", self.handler.profiles[profile_key].tail())
+            print("\nInput CSV:\n", self.handler.inputs.tail())
+            print("\nObject CSV:\n", self.handler.objects.tail())
 
-class CaDataHandler:
+class CaHandler:
 
     """
     A class to handle data processing tasks such as loading profiles and CSV files, extracting ZIP archives, and preparing data for analysis.
@@ -73,13 +73,13 @@ class CaDataHandler:
     def __init__(self):
 
         """
-        Initializes the CaDataHandler instance with empty profiles and CSV placeholders.
+        Initializes the CaHandler instance with empty profiles and CSV placeholders.
         """
 
         self.profiles = {}
-        self.input_csv = None
-        self.object_csv = None
-
+        self.inputs = None
+        self.objects = None
+    
     def _reverse_dict(self, input_dict):
         return {value: key for key, value in input_dict.items()}
 
@@ -111,6 +111,7 @@ class CaDataHandler:
                 df = pd.read_csv(filepath, sep=separator, decimal=decimal)
                 if column_aliases:
                     df.rename(columns=self._reverse_dict(column_aliases), inplace=True)
+                filename = os.path.splitext(os.path.basename(filepath))[0]
                 profiles[filename] = df
         return profiles
 
@@ -221,9 +222,9 @@ class CaDataHandler:
         )
 
         # Load input.csv
-        input_csv_path = os.path.join(folder_path, input_path_postfix)
-        self.input_csv = self.load_csv(
-            input_csv_path,
+        inputs_path = os.path.join(folder_path, input_path_postfix)
+        self.inputs = self.load_csv(
+            inputs_path,
             file_extension=input_extension,
             separator=input_separator,
             decimal=input_decimal,
@@ -231,9 +232,9 @@ class CaDataHandler:
         )
 
         # Load object.csv
-        object_csv_path = os.path.join(folder_path, object_path_postfix)
-        self.object_csv = self.load_csv(
-            object_csv_path,
+        objects_path = os.path.join(folder_path, object_path_postfix)
+        self.objects = self.load_csv(
+            objects_path,
             file_extension=object_extension,
             separator=object_separator,
             decimal=object_decimal,

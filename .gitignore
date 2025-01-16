@@ -7,9 +7,6 @@
 !cfgs/def.yml
 
 
-tests/analyzers/*
-!tests/analyzers/data.zip
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

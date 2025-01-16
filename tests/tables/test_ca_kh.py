@@ -6,7 +6,6 @@ class TestCaKh(unittest.TestCase):
         self.kh = CaKh()
 
     def test_get_coefficient(self):
-        print(f"\n{'-' * 80}\n{self.__class__.__name__}.{self._testMethodName}")
         
         coefficient_dry = self.kh.get_coefficient(height=0.5, avalanche_type="dry")
         coefficient_wet = self.kh.get_coefficient(height=1.0, avalanche_type="wet")
