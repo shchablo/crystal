@@ -49,6 +49,8 @@ The program processes input data in the following formats:
        |-- 1.txt
        |-- 2.txt
        |-- ...
+       |-- [name].txt
+       |-- ...
        |-- n.txt
 ```
 
