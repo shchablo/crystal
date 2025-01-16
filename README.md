@@ -57,19 +57,6 @@ Once the program starts, you can type commands like:
 >> cfg.load --path /path/to/config.json
 ```
 
-### Command-Line Mode
-
-Run multiple actions in a single line. For examples:
-
-```bash
-crystal man
-```
-
-```bash
-crystal cfg.load --path /path/to/config.json help --cmd cfg.gen cfg.gen --path /path/to/output/file/of/config.yaml
-```
-
-
 ## Input Data Formats
 
 The program processes input data in the following formats:
@@ -90,6 +77,18 @@ The program processes input data in the following formats:
 
 > Make sure your input data complies with the required format to ensure accurate results.
 
+
+### Command-Line Mode
+
+Run multiple actions in a single line. For examples:
+
+```bash
+crystal man
+```
+
+```bash
+crystal cfg.load --path /path/to/config.json help --cmd cfg.gen cfg.gen --path /path/to/output/file/of/config.yaml
+```
 
 ## Unit Tests
 
