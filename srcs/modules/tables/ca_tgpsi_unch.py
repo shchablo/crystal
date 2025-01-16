@@ -81,7 +81,11 @@ class CaTgPsiUnCh:
         """
         Display the interpolated tgPsi of a unchanneled avalanche for given tg and water reserve.
 
-          This command calculates and prints the interpolated tgPsi based on the provided tg and water reserve values.
+        The function ensures that the input parameters are within the predefined ranges:
+        - If the water value exceeds the maximum or minimum in water_reserve, it is clamped to the nearest boundary.
+        - If the tg value exceeds the maximum or minimum in tg_values, it is clamped to the nearest boundary.
+
+            This command calculates and prints the interpolated tgPsi based on the provided tg and water reserve values.
 
           Options:
             --tg | FLOAT | tg value (default: None).

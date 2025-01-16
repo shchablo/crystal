@@ -153,6 +153,11 @@ class CaTgPsiCh:
 
         Display the interpolated tgPsi of a channeled avalanche for given water reserve, area, and tg.
 
+        The function ensures that the input parameters are within the predefined ranges:
+        - If the water value exceeds the maximum or minimum in water_reserve, it is clamped to the nearest boundary.
+        - If the area value exceeds the maximum or minimum in area_values, it is clamped to the nearest boundary.
+        - If the tg value exceeds the maximum or minimum in tg_values, it is clamped to the nearest boundary.
+
           This command calculates and prints the interpolated tgPsi based on the provided water reserve, area, and tg values.
 
           Options:
