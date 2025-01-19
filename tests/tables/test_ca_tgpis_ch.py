@@ -2,10 +2,14 @@ import unittest
 from srcs.modules.tables.ca_tgpsi_ch import CaTgPsiCh
 
 
+
 class TestCaTgPsiCh(unittest.TestCase):
+    
+    
     @classmethod
     def setUpClass(cls):
         cls.kh = CaTgPsiCh()
+
 
     table_data = {
         100: {
@@ -46,10 +50,11 @@ class TestCaTgPsiCh(unittest.TestCase):
         },
     }
 
-    def test_get_coefficient(self):
+
+    def test_get_angle(self):
         for water, areas in self.table_data.items():
             for area, values in areas.items():
                 for tg, expected in values:
                     with self.subTest(water=water, area=area, tg=tg):
-                        result = self.kh.get_coefficient(water=water, area=area, tg=tg)
+                        result = self.kh.get_angle(water=water, area=area, tg=tg)
                         self.assertAlmostEqual(result, expected, places=5)

@@ -3,10 +3,14 @@ from srcs.modules.managers.ca_configurator import CaConfigurator
 from srcs.modules.managers.ca_register import CaRegister
 
 
+
 class TestCaRegister(unittest.TestCase):
+ 
+ 
     def setUp(self):
         self.configurator = CaConfigurator()
         self.register = CaRegister(self.configurator)
+
 
     def test_register_single_command(self):
         def test_func(): pass

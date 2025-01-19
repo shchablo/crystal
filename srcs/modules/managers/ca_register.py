@@ -1,43 +1,44 @@
 import inspect
-from pathlib import Path
 
 
-class CaRegister:
-    """
-    A class to manage and register commands, provide help functionality, and generate configuration files.
-    """
 
-    def __init__(self, configurator):
+class CaTopRegister:
+
+
+    def __init__(self, core):
         """
-
-        Initializes the command registry with an empty command dictionary and a configurator.
-
-        :param configurator (CaConfigurator): An instance of the configuration manager.
-
+        Initializes the top-level class with entry points for various actions.
+        :param core (CaCore): An instance of the core manager.
         """
-        self.commands = {}
-        self.configurator = configurator
+        self.core = core
 
-    def add_command(self, name, func) -> None:
+
+    def generate_config_file(self, path: str = None, verbose: str = "y") -> None:
         """
+        Save the current configuration to a specified file.
 
-        Registers a command or a list of commands with a corresponding function.
+          This command saves the current configuration to a file.
+          It supports saving in JSON or YAML formats.
+          Requires a valid file path as input.
 
-        :param name (str | list): The name(s) of the command(s) to register.
-        :param func (callable): The function to associate with the command(s).
-
+          Options:
+            --path    | TEXT | Path to save the configuration file (e.g., output.json or output.yaml).
+            --verbose | TEXT | Enable or disable output messages (default: "y"; verbose: "1|y|yes|true", no-verbose: "any").
+          
+          Example:
+            crystal [cmd] --path /path/to/output/file.json
         """
-        if isinstance(name, str):
-            self.commands[name] = func
-        elif isinstance(name, list) and all(isinstance(alias, str) for alias in name):
-            for alias in name:
-                self.commands[alias] = func
-        else:
-            raise TypeError("The command name must be a string or a list of strings.")
+        generated_config = self.core.register.generate_config_file(path)
+
+        self.core.configurator.update(generated_config)
+        self.core.configurator.download(path)
+        
+        if str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}:
+            print(f"Configuration file successfully generated and saved to: {path}")
+
 
     def help_command(self, cmd: str = None) -> None:
         """
-
         Display help for a specific command or list all commands.
 
           This command provides detailed help for a specified command if its name is given.
@@ -48,11 +49,10 @@ class CaRegister:
 
           Example:
             crystal [cmd] --cmd man
-
         """
         if cmd:
-            if cmd in self.commands:
-                doc = inspect.getdoc(self.commands[cmd])
+            if cmd in self.core.register.commands:
+                doc = inspect.getdoc(self.core.register.commands[cmd])
                 if doc:
                     print(f"Help for command '{cmd}': {doc}")
                 else:
@@ -60,7 +60,8 @@ class CaRegister:
             else:
                 print(f"Command '{cmd}' not found.")
         else:
-            self._print_commands(self.commands)
+            self._print_commands(self.core.register.commands)
+
 
     def _print_commands(self, commands):
         """
@@ -100,21 +101,68 @@ class CaRegister:
         print("\nExample:")
         print("  crystal help --cmd man")
 
-    def generate_config_file(self, path: str = None) -> None:
+
+
+class CaRegister:
+    """
+    A class to manage and register commands, provide help functionality, and generate configuration files.
+    """
+
+
+    def __init__(self, configurator):
         """
+        Initializes the command registry with an empty command dictionary and a configurator.
 
-        Save the current configuration to a specified file.
-
-          This command saves the current configuration to a file.
-          It supports saving in JSON or YAML formats.
-          Requires a valid file path as input.
-
-          Options:
-            --path | TEXT | Path to save the configuration file (e.g., output.json or output.yaml).
-
-          Example:
-            crystal [cmd] --path /path/to/output/file.json
+        :param configurator: An instance of the configuration manager.
         """
+        self.commands = {}
+        self.configurator = configurator
+
+
+    def add_command(self, name, func) -> None:
+        """
+        Registers a command or a list of commands with a corresponding function.
+        
+        :param name: The name(s) of the command(s) to register.
+        :param func: The function to associate with the command(s).
+        
+        :raises TypeError: If the command name is not a string or a list of strings.
+        """
+        
+        if isinstance(name, str):
+            self.commands[name] = func
+        elif isinstance(name, list) and all(isinstance(alias, str) for alias in name):
+            for alias in name:
+                self.commands[alias] = func
+        else:
+            raise TypeError("The command name must be a string or a list of strings.")
+
+
+    def find_command_name(self, func):
+       """
+       Finds the name of a command associated with the given function.
+       
+       :param func: The function whose associated command name is being searched.
+       
+       :return: The name of the command associated with the function, or None if not found.
+       """
+       for command_name, registered_func in self.commands.items():
+           if registered_func == func:
+               return command_name
+       
+       return None
+
+
+    def generate_config_file(self, path: str) -> None:
+        """
+        Generates a configuration dictionary for all registered commands based on their signatures and default values.
+
+        :param path: The output file path for the configuration file.
+
+        :raises ValueError: If the path argument is not provided.
+
+        :return: A dictionary containing default and loaded values for all commands.
+        """       
 
         if not path:
             raise ValueError("Please provide the path to the output configuration file using --path.")
@@ -139,6 +187,4 @@ class CaRegister:
 
             generated_config[command_name] = command_config
 
-        self.configurator.update_config(generated_config)
-        self.configurator.upload_config(path)
-        print(f"Configuration file successfully generated and saved to: {path}")
+        return generated_config 

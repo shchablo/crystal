@@ -2,22 +2,23 @@ import inspect
 from typing import List, Dict, Callable, Tuple, Any
 
 
+
 class CaParser:
     """
     A class to parse commands and their arguments, ensuring compatibility with registered commands and their signatures.
     """
 
+
     def parse_commands(self, args: List[str], commands: Dict[str, Callable]) -> List[Tuple[str, Dict[str, Any]]]:
         """
-
         Parses commands and their arguments and returns a list of tuples with parsed arguments.
 
         :param args: A list of command-line arguments.
         :param commands: A dictionary mapping command names to their respective functions.
 
         :return list: A list of tuples where each tuple contains the command name and a dictionary of its parsed arguments.
-
         """
+        
         parsed_commands = []
         current_command = None
         command_args = []
@@ -39,7 +40,8 @@ class CaParser:
             parsed_commands.append((current_command, parsed_args))
 
         return parsed_commands
-
+    
+    
     def _prepare_args(self, command: str, command_args: List[str], commands: Dict[str, Callable]) -> Dict[str, Any]:
         """
         Parses the arguments for a specific command.

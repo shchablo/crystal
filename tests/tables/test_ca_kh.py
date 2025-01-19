@@ -1,9 +1,14 @@
 import unittest
 from srcs.modules.tables.ca_kh import CaKh
 
+
+
 class TestCaKh(unittest.TestCase):
+    
+    
     def setUp(self):
         self.kh = CaKh()
+
 
     def test_get_coefficient(self):
         

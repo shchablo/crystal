@@ -1,13 +1,18 @@
+import os
 from pathlib import Path
 
 import unittest
 import pandas as pd
 
-from srcs.modules.analyzers.ca_handler import CaHandler
+from srcs.modules.processors.ca_handler import CaHandler
 
 
-class TestCaDataHandler(unittest.TestCase):
+
+class TestCaHandler(unittest.TestCase):
+    
+    
     def setUp(self):
+        
         self.instance = CaHandler()
 
         self.path = str(Path(__file__).resolve().parent / "data_ca_handler")
@@ -40,6 +45,7 @@ class TestCaDataHandler(unittest.TestCase):
                 663.262168635
             ],
         })
+        
         self.expected_profile_28 = pd.DataFrame({
             "ColA": [
                 0.0, 
@@ -64,6 +70,7 @@ class TestCaDataHandler(unittest.TestCase):
                 497.746029123
             ],
         })
+        
         self.expected_inputs = pd.DataFrame({
             "name": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34],
             "type": ['O', 'L', 'O', 'L', 'O', 'L', 'O', 'O', 'O', 'O', 'O', 'L', 'O', 'L', 'L', 'O', 'O', 'O', 'O', 'O', 'L', 'O', 'O', 'L', 'O', 'O', 'L', 'L', 'L', 'O', 'O', 'O', 'O', 'L'],
@@ -80,23 +87,50 @@ class TestCaDataHandler(unittest.TestCase):
             "dist": [881, 120, 862, 823, 854, 873, 940, 692, 1138, 1359, 673, 445, 464, 189, 480, 555, 521, 590, 599]
         })
 
+
     def test_execute(self):
-        self.instance.execute(
-            path=self.path,
-            profiles_path_postfix="profiles",
-            profile_extension=".txt",
-            profile_separator="\t",
-            profile_decimal=",",
-            profile_column_aliases={"ColA": "X", "ColB" : "Feature Profile 1"},
-            input_path_postfix="input.csv",
-            input_extension=".csv",
-            input_separator=";",
-            input_decimal=",",
-            object_path_postfix="objects.csv",
-            object_extension=".csv",
-            object_separator=",",
-            object_decimal=".",
+        
+        self.instance.path =  self.instance.extract(str(self.path))
+
+        profiles_path_postfix="profiles"
+        profile_extension=".txt"
+        profile_separator="\t"
+        profile_decimal=","
+        profile_column_aliases={"ColA": "X", "ColB" : "Feature Profile 1"}
+        input_path_postfix="input.csv"
+        input_extension=".csv"
+        input_separator=";"
+        input_decimal=","
+        object_path_postfix="objects.csv"
+        object_extension=".csv"
+        object_separator=","
+        object_decimal="."
+
+        profiles_path = os.path.join(self.instance.path, profiles_path_postfix)
+        self.instance.profiles = self.instance.profiles = self.instance.load_profiles(
+            profiles_path,
+            file_extension=profile_extension,
+            separator=profile_separator,
+            decimal=profile_decimal,
+            column_aliases=profile_column_aliases
         )
+
+        inputs_path = os.path.join(self.instance.path, input_path_postfix)
+        self.instance.inputs = self.instance.inputs = self.instance.load_csv(
+            inputs_path,
+            file_extension=input_extension,
+            separator=input_separator,
+            decimal=input_decimal
+        )
+
+        objects_path = os.path.join(self.instance.path, object_path_postfix)
+        self.instance.objects = self.instance.load_csv(
+            objects_path,
+            file_extension=object_extension,
+            separator=object_separator,
+            decimal=object_decimal
+        )
+
         pd.testing.assert_frame_equal(self.instance.profiles["34"], self.expected_profile_34)
         pd.testing.assert_frame_equal(self.instance.profiles["28"], self.expected_profile_28)
         pd.testing.assert_frame_equal(self.instance.inputs, self.expected_inputs)

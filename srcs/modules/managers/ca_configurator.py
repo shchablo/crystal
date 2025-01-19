@@ -1,65 +1,82 @@
+import os
 import json
 import yaml
-from pathlib import Path
+from typing import Optional, Dict, Any
 
-from typing import Dict, Any
+from pathlib import Path
 
 
 class CaTopConfigurator:
 
+
     def __init__(self, core):
         """
-
         Initializes the top-level class with entry points for various actions.
-
         :param core (CaCore): An instance of the core manager.
-
         """
         self.core = core
 
-    def load_conf_and_generate_conf(self, **kwargs) -> None:
-        """
-        Load configuration and generate a new file in one command.
+    
+    def find_config_file(self, path: str = None, verbose: str = "y") -> str:
+        
+        config_file = self.core.configurator.find_config_file(path)
 
-          A wrapper command that executes cfg.load and cfg.gen sequentially.
-          Allows separate arguments for loading and generating configurations using prefixes load_ and gen_.
+        if str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}:
+            print(f"Configuration file found: {config_file}.")
+
+        return config_file 
+
+    def upload(self, path: str = None, verbose: str = "y") -> None:
+        """
+        Loads a configuration file into the manager.
+
+          This command allows uploading a configuration file in JSON or YAML format. 
+          Supported file formats include: .json, .yaml, .yml.
 
           Options:
-            --load_<KEY> | VALUE | Arguments for loading configuration (default: None, e.g., --load_path path/to/file).
-            --gen_<KEY>  | VALUE | Arguments for generating configuration (default: None, e.g., --gen_path path/to/file).
-            **kwargs     | ARGS  | Additional arguments passed to the internal execution command.
-                                   Need to add prefix load_ or gen_ for corresponding execution command.
+            --path    | TEXT | Path to the configuration file (default: None; [name].[json|yaml].
+            --verbose | TEXT | Enable or disable output messages (default: "y"; verbose: "1|y|yes|true", no-verbose: "any").
 
           Example:
-            crystal [cmd] --load_path path/to/file.json --gen_path path/to/file.yamp
+            crystal [cmd] --path path/to/file.json
+         """
 
-          Note: For a detailed list of keys, refer to the help section: 'crystal help --cmd cfg.load'.
+        isVerbose = str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}
 
+        if (path == None):
+            path = self.core.configurator.default_path
+            if isVerbose:
+                print(f"Loading the default file: {path}.")
+        
+        self.core.configurator.upload(path)
+        
+        if isVerbose:
+            print(f"Configuration successfully loaded from {path}.")
+
+        return self.core.configurator.config
+
+
+    def download(self, path: str = None, verbose: str = "y") -> None:
         """
+        Saves the current configuration to a specified file.
 
-        load_args: Dict[str, Any] = {
-            key[5:]: value[0] if isinstance(value, list) else value
-            for key, value in kwargs.items()
-            if key.startswith("load_")
-        }
-        print("Executing 'cfg.load' command with arguments:", load_args)
-        self.core.execute_command(
-            command="cfg.load",
-            command_args=load_args,
-            commands=self.core.register.commands
-        )
+          This command allows uploading a configuration file in JSON or YAML format. 
+          Supported file formats include: .json, .yaml, .yml.
 
-        gen_args: Dict[str, Any] = {
-            key[4:]: value[0] if isinstance(value, list) else value
-            for key, value in kwargs.items()
-            if key.startswith("gen_")
-        }
-        print("Executing 'cfg.gen' command with arguments:", gen_args)
-        self.core.execute_command(
-            command="cfg.gen",
-            command_args=gen_args,
-            commands=self.core.register.commands
-        )
+          Options:
+            --path    | TEXT | Path to the configuration file (default: None, e.g., [name].[json|yaml].
+            --verbose | TEXT | Enable or disable output messages (default: "y", verbose: "1|y|yes|true", no-verbose: "any").
+
+          Example:
+            crystal [cmd] --path path/to/file.json
+         """
+        
+        self.core.configurator.download(path)
+        if str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}:
+            print(f"Configuration successfully saved to {path}.")
+
+        return self.core.configurator.config
+
 
 
 class CaConfigurator:
@@ -68,31 +85,51 @@ class CaConfigurator:
     Provides functionality to load, modify, and save configurations.
     """
 
+
     def __init__(self):
         """
         Initializes the configuration manager with an empty configuration dictionary.
         """
+        
+        self.default_path: str
         self.config = {}
 
-    def load_config(self, path: str = None) -> None:
+
+    def find_config_file(self, directory_path: str) -> Optional[str]:
         """
-        Load a configuration file into the manager.
+        Search for a single JSON or YAML file in the specified directory.
 
-          This command loads a configuration file in JSON or YAML format.
-          It validates the file's existence and checks its format.
-          Supported formats: .json, .yaml, .yml.
-
-          Options:
-            --path | TEXT | Path to the configuration file (default: None, e.g., config.json or config.yaml).
-
-          Example:
-            crystal [cmd] --path path/to/file.json
+        :param directory_path: Path to the directory where the search will be performed.
+        :return: The path to the file if exactly one JSON or YAML file is found; otherwise, None.
+        :raises ValueError: If the directory does not exist or is not a directory.
         """
+        if not os.path.isdir(directory_path):
+            raise ValueError(f"The provided path '{directory_path}' is not a valid directory.")
+
+        # Collect all .json, .yaml, and .yml files in the directory
+        config_files = [
+            os.path.join(directory_path, f) for f in os.listdir(directory_path)
+            if f.endswith(('.json', '.yaml', '.yml'))
+        ]
+
+        # Return the file path if exactly one file is found, otherwise None
+        return config_files[0] if len(config_files) == 1 else None
+
+
+    def upload(self, path: str) -> None:
+        """
+        Loads a configuration file (JSON or YAML) into the internal dictionary.
+        
+        :param path: Path to the configuration file.
+        
+        :raises FileNotFoundError: If the specified file does not exist.
+        :raises ValueError: If the file format is unsupported.
+        """       
         file_path = Path(path)
 
         if not file_path.is_file():
-            raise FileNotFoundError(f"File not found: {path}")
-
+            raise FileNotFoundError(f"File not found: {path}.")
+        
         extension = file_path.suffix.lower()
         with file_path.open("r", encoding="utf-8") as f:
             if extension == ".json":
@@ -102,15 +139,14 @@ class CaConfigurator:
             else:
                 raise ValueError(f"Unsupported file format: {extension}")
 
-        print(f"Configuration successfully loaded from {path}.")
 
-    def upload_config(self, path: str = None) -> None:
+    def download(self, path: str) -> None:
         """
-
-        Saves the current configuration to a specified file.
+        Saves the current configuration to a specified file in JSON or YAML format.
 
         :param path: The path to the output configuration file.
-
+        
+        :raises ValueError: If the file format is unsupported.
         """
         file_path = Path(path)
         extension = file_path.suffix.lower()
@@ -123,26 +159,25 @@ class CaConfigurator:
             else:
                 raise ValueError(f"Unsupported file format: {extension}")
 
-        print(f"Configuration successfully saved to {path}.")
 
-    def update_config(self, new_config: dict) -> None:
+    def update(self, new_config: dict) -> None:
         """
-
         Updates the internal configuration with the given dictionary.
 
         :param new_config: A dictionary containing new configuration values.
-
+        
+        :raises TypeError: If the provided new_config is not a dictionary.
         """
         if not isinstance(new_config, dict):
             raise TypeError("The new configuration must be a dictionary.")
 
         self.config.update(new_config)
-        print("Configuration successfully updated.")
 
-    def get_config(self) -> dict:
+
+    def get(self) -> dict:
         """
+        Retrieves a copy of the current configuration.
 
-        :param new_config: The current configuration.
-
+        :return: A dictionary containing the current configuration.
         """
         return self.config.copy()

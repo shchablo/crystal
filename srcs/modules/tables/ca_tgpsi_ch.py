@@ -4,14 +4,56 @@ import numpy as np
 from scipy.interpolate import RegularGridInterpolator
 
 
+
+class CaTopTgPsiCh:
+
+
+    def __init__(self, tgPsiCh):
+        """
+        Initializes the top-level class with entry points for various actions.
+        
+        :param tgPsiCh (CaTopTgPsiCh): An instance of the core manager.
+        """
+        
+        self.tgPsiCh = tgPsiCh
+
+
+    def print(self, w: float = None, a: float = None, tg: float = None) -> None:
+        """
+        Display the interpolated tgPsi of a channeled avalanche for given water reserve, area, and tg.
+
+          The function ensures that the input parameters are within the predefined ranges:
+            - If the water value exceeds the maximum or minimum in water_reserve, it is clamped to the nearest boundary.
+            - If the area value exceeds the maximum or minimum in area_values, it is clamped to the nearest boundary.
+            - If the tg value exceeds the maximum or minimum in tg_values, it is clamped to the nearest boundary.
+
+          This command calculates and prints the interpolated tgPsi based on the provided water reserve, area, and tg values.
+
+          Options:
+            --w  | FLOAT | Water reserve value (default: None).
+            --a  | FLOAT | Area value (default: None).
+            --tg | FLOAT | tg value (default: None).
+
+          Example:
+            crystal [cmd] --w 150.0 --a 20.0 --tg 0.5
+        """
+        
+        print(self.tgPsiCh.get_angle(w, a, tg))
+
+
+
 @dataclass
 class CaTgPsiChCoefficientTable:
     """
     Data class to hold base tables for water reserve, area, tg values, and coefficients.
     """
+    
     water_reserve: List[float] = field(default_factory=lambda: [100, 200, 300, 400, 500, 600])
+    
     area_values: List[float] = field(default_factory=lambda: [1, 2, 5, 10, 20, 30, 40, 50, 100])
+    
     tg_values: List[float] = field(default_factory=lambda: [25, 30, 35, 40])
+    
     coefficients: np.ndarray = field(default_factory=lambda: np.array([
         [
             [0.424, 0.505, 0.587, 0.668],
@@ -87,7 +129,9 @@ class CaTgPsiCh:
     Class to calculate coefficients based on water reserve, area, and tg values using interpolation.
     """
 
+
     def __init__(self):
+        
         self.table = CaTgPsiChCoefficientTable()
         self.interpolator = RegularGridInterpolator(
             (self.table.water_reserve, self.table.area_values, self.table.tg_values),
@@ -97,10 +141,10 @@ class CaTgPsiCh:
             fill_value=None,
         )
 
-    def get_coefficient(self, water: float, area: float, tg: float) -> float:
-        """
 
-        Fetch the interpolated coefficient for the given water reserve, area, and tg values.
+    def get_angle(self, water: float, area: float, tg: float) -> float:
+        """
+        Fetch the interpolated angle for the given water reserve, area, and tg values.
 
         The function ensures that the input parameters are within the predefined ranges:
         - If the water value exceeds the maximum or minimum in water_reserve, it is clamped to the nearest boundary.
@@ -111,10 +155,9 @@ class CaTgPsiCh:
         :param area: Area value to be used in the interpolation.
         :param tg: Angle value to be used in the interpolation.
 
-        :return: Interpolated coefficient for the provided inputs.
+        :return: Interpolated angle for the provided inputs.
 
         :raises ValueError: If any of the input parameters (water, area, or tg) is not provided.
-
         """
 
         if water is None or area is None or tg is None:
@@ -127,46 +170,23 @@ class CaTgPsiCh:
 
         return float(self.interpolator((water, area, tg)))
 
+
     def generate_table(
         self, waters: List[float], areas: List[float], tgs: List[float]
     ) -> List[Tuple[float, float, float, float]]:
         """
-
-        Generate a table of water reserve, area, tg values, and corresponding coefficients.
+        Generate a table of water reserve, area, tg values, and corresponding angle.
 
         :param waters: List of water reserve values.
         :param areas: List of area values.
         :param tgs: List of tg values.
 
-        :return: List of tuples (water_reserve, area, tg, coefficient).
-
+        :return: List of tuples (water_reserve, area, tg, tgPsiCh).
         """
+        
         return [
-            (water, area, tg, self.get_coefficient(water, area, tg))
+            (water, area, tg, self.get_angle(water, area, tg))
             for water in waters
             for area in areas
             for tg in tgs
         ]
-
-    def print(self, w: float = None, a: float = None, tg: float = None) -> None:
-        """
-
-        Display the interpolated tgPsi of a channeled avalanche for given water reserve, area, and tg.
-
-        The function ensures that the input parameters are within the predefined ranges:
-        - If the water value exceeds the maximum or minimum in water_reserve, it is clamped to the nearest boundary.
-        - If the area value exceeds the maximum or minimum in area_values, it is clamped to the nearest boundary.
-        - If the tg value exceeds the maximum or minimum in tg_values, it is clamped to the nearest boundary.
-
-          This command calculates and prints the interpolated tgPsi based on the provided water reserve, area, and tg values.
-
-          Options:
-            --w  | FLOAT | Water reserve value (default: None).
-            --a  | FLOAT | Area value (default: None).
-            --tg | FLOAT | tg value (default: None).
-
-          Example:
-            crystal [cmd] --w 150.0 --a 20.0 --tg 0.5
-
-        """
-        print(self.get_coefficient(w, a, tg))

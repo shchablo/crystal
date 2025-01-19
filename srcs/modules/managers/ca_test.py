@@ -4,15 +4,10 @@ import sys
 
 def ca_test():
     """
-
     Execute all unit tests in the 'tests' directory.
 
       This command discovers and runs all unit tests located in the "tests" directory using the unittest module.
       If any test fails, the program exits with a non-zero status code.
-
-      Options:
-        No additional options.
-
     """
 
     loader = unittest.TestLoader()

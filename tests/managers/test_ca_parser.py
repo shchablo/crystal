@@ -2,11 +2,16 @@ import unittest
 from srcs.modules.managers.ca_parser import CaParser
 
 
+
 class TestCaParser(unittest.TestCase):
+ 
+ 
     def setUp(self):
         self.parser = CaParser()
 
+
     def test_parse_single_command(self):
+        
         commands = {"test": lambda arg1=None: {"arg1": arg1}}
         args = ["test", "--arg1", "value1"]
 
