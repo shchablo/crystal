@@ -59,8 +59,8 @@ def main():
 
     calculator = CaCalculator(handler, kh, kf, tgpsi_ch, tgpsi_unch)
     top_calculator = CaTopCalculator(core, calculator)
-    core.register.add_command("calc.proc.input", top_calculator.process_inputs)
-    core.register.add_command("calc.proc.profiles", top_calculator.process_profiles)
+    core.register.add_command("calc.input", top_calculator.process_inputs)
+    core.register.add_command("calc.profiles", top_calculator.process_profiles)
 
 
     top_runner = CaTopRunner(core, top_configurator, top_handler, top_calculator)
