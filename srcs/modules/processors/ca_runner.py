@@ -9,18 +9,20 @@ from pathlib import Path
 class CaTopRunner:
 
 
-    def __init__(self, core, cfg, handler):
+    def __init__(self, core, cfg, handler, calculator):
         """
         Initializes the top-level class with entry points for various actions.
 
         :param core (CaCore): An instance of the core manager.
         :param cfg (CaTopConfigurator): An instance of the top configurator manager.
         :param handler (CaTopHandler): An instance of the top handler manager.
+        :param calculator (CaTopCalculator): An instance of the top claculator manager.
         """
         
         self.core = core
         self.cfg = cfg
         self.handler = handler
+        self.calculator = calculator
 
 
     def main(self, path: str = None, verbose: str = "y", **kwargs) -> None:
@@ -108,5 +110,51 @@ class CaTopRunner:
         self.core.execute_command(
             command=handler_read_name,
             command_args=handler_read_args,
+            commands=self.core.register.commands
+        )
+        
+       # proccesing input table 
+        calc_input_name = self.core.register.find_command_name(self.calculator.process_inputs)
+        calc_input_args: Dict[str, Any] = {
+            key[len(calc_input_name) + 1:]: value[0] if isinstance(value, list) else value
+            for key, value in kwargs.items()
+            if key.startswith(calc_input_name + ".")
+        }
+        if not (isVerbose):
+            calc_input_args["verbose"] = verbose[0]
+        self.core.execute_command(
+            command=calc_input_name,
+            command_args=calc_input_args,
+            commands=self.core.register.commands
+        )
+
+        # proccessing profiles tables
+        calc_profiles_name = self.core.register.find_command_name(self.calculator.process_profiles)
+        calc_profiles_args: Dict[str, Any] = {
+            key[len(calc_profiles_name) + 1:]: value[0] if isinstance(value, list) else value
+            for key, value in kwargs.items()
+            if key.startswith(calc_profiles_name + ".")
+        }
+        if not (isVerbose):
+            calc_input_args["verbose"] = verbose[0]
+        self.core.execute_command(
+            command=calc_profiles_name,
+            command_args=calc_profiles_args,
+            commands=self.core.register.commands
+        )
+
+        
+        # print data that was loaded and proccesed
+        handler_print_name = self.core.register.find_command_name(self.handler.print)
+        handler_print_args: Dict[str, Any] = {
+            key[len(handler_print_name) + 1:]: value[0] if isinstance(value, list) else value
+            for key, value in kwargs.items()
+            if key.startswith(handler_print_name + ".")
+        }
+        if not (isVerbose):
+            handler_read_args["verbose"] = verbose[0]
+        self.core.execute_command(
+            command=handler_print_name,
+            command_args=handler_print_args,
             commands=self.core.register.commands
         )

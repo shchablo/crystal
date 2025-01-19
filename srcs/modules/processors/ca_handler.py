@@ -49,15 +49,24 @@ class CaTopHandler:
             profile_extension: str = ".txt",
             profile_separator: str = "\t",
             profile_decimal: str = ",",
-            profile_column_aliases: Optional[Dict[str, str]] = { "x": "X", "alt" : "Feature Profile 1"  },
+            profile_column_aliases: Optional[Dict[str, str]] = { "x": "X", 
+                                                                 "alt" : "Feature Profile 1"  },
             input_extension: str = ".csv",
             input_separator: str = ";",
             input_decimal: str = ",",
-            input_column_aliases: Optional[Dict[str, str]] = None,
+            input_column_aliases: Optional[Dict[str, str]] = { "name": "name", 
+                                                                "type" : "type",
+                                                                "area" : "area",
+                                                                "slope" : "slope",
+                                                                "W" : "W",
+                                                                "hi" : "hi",
+                                                                "cat" : "cat" },
             object_extension: str = ".csv",
             object_separator: str = ",",
             object_decimal: str = ".",
-            object_column_aliases: Optional[Dict[str, str]] = None,
+            object_column_aliases: Optional[Dict[str, str]] = { "name": "name",
+                                                                "object" : "object",
+                                                                "dist" : "dist" },
     ) -> None:
         """
         Prepare the folder or archive for processing and load all data.
@@ -115,25 +124,21 @@ class CaTopHandler:
         )
 
 
-    def read(self, path: str = None, mode: str = "sample", profiles: str = "'any'", verbose: str = "y", **kwargs) -> None:
+    def read(self, path: str = None, verbose: str = "y", **kwargs) -> None:
         """
           This command reads and loads data from a specified path.
-          Displays a summary based on the chosen mode in case of verbose.
-          The display mode can show either the "head" or "tail" of the data.
-          Supports specifying the index of the profile to display.
 
           Options:
-            --path     | TEXT | Path to the folder file containing the data (default: None).
-            --mode     | TEXT | Display mode for the data. Options are "head", "tail", "info", "describe", "sample" (default: sample).
-            --profiles | TEXT | Name of the profile to display (default: ""; "['1', '2']" , "'all'", "'any'").
-            --verbose  | TEXT | Enable or disable output messages (default: "y"; verbose: "1|y|yes|true", no-verbose: "any").
-            **kwargs   | ARGS | Additional arguments passed to the internal execution command.
+            --path    | TEXT | Path to the folder file containing the data (default: None).
+            --verbose | TEXT | Enable or disable output messages (default: "y"; verbose: "1|y|yes|true", no-verbose: "any").
+            **kwargs  | ARGS | Additional arguments passed to the internal execution command.
 
           Example:
             crystal [cmd] --path path/to/data
             crystal [cmd] --path path/to/data --input_extension .txt
         """
 
+    
         self.handler.path = self.handler.extract(path)
 
         args: Dict[str, Any] = {
@@ -145,49 +150,70 @@ class CaTopHandler:
             command_args=args,
             commands=self.core.register.commands
         )
-
         if str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}:
-                supported_modes = {"head", "tail", "info", "describe", "sample"}
-                if mode in supported_modes:
-                    print("Input:\n", getattr(self.handler.inputs, mode)())
-                    print("Object:\n", getattr(self.handler.objects, mode)())
-                    
-                    print(f"Number of Profiles: {len(self.handler.profiles)}")
-                    try:
-                          # Parse profile string into a list
-                          parsed_profile = ast.literal_eval(profiles) if profiles else []
-                          
-                          selected_profiles = []
-                          if isinstance(parsed_profile, str) and parsed_profile == "all":
-                              selected_profiles = self.handler.profiles.keys()
-                          elif parsed_profile == "any":
-                            if self.handler.profiles:
-                                selected_profiles = [random.choice(list(self.handler.profiles.keys()))]
-                            else:
-                                print("No profiles available for selection.")
-                          elif isinstance(parsed_profile, list):
-                              selected_profiles = [p.strip() for p in parsed_profile]
-                          else:
-                              raise ValueError("Invalid format for profile.")
-                    
-                    except (SyntaxError, ValueError):
-                        print("Error: Profile must be a valid string, list, or 'all'.")
-                        return
-
-                    for profile_name in selected_profiles:
-                        if profile_name in self.handler.profiles:
-                            method = getattr(self.handler.profiles[profile_name], mode, None)
-                            if callable(method):
-                                print(f"Profile {profile_name}:\n", method())
-                            else:
-                                print(f"Mode '{mode}' is not callable for the profile '{profile_name}'.")
-                        else:
-                            print(f"Profile '{profile_name}' does not exist.")
-                else:
-                    print(f"Invalid mode: {mode}. Supported modes: {', '.join(supported_modes)}.")
-
+            print(f"Data was read and loaded from: {self.handler.path}.")
 
     
+    def print(self, mode: str = "sample", profiles: str = "'any'", verbose: str = "y") -> None:
+        """
+          Displays a summary based on the chosen mode.
+          The display mode can show either the "head" or "tail" of the data.
+          Supports specifying the names of the profile to display.
+
+          Options:
+            --mode     | TEXT | Display mode for the data. Options are "head", "tail", "info", "describe", "sample" (default: sample).
+            --profiles | TEXT | Name of the profile to display (default: ""; "['1', '2']" , "'all'", "'any'").
+            --verbose  | TEXT | Enable or disable output messages (default: "y"; verbose: "1|y|yes|true", no-verbose: "any").
+
+          Example:
+            crystal [cmd] --mode head
+            crystal [cmd] --mode head --profiles "['1', '[name]']" 
+        """
+        
+        if str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}:
+            
+            supported_modes = {"head", "tail", "info", "describe", "sample"}
+        
+            if mode in supported_modes:
+                
+                print(f"Number of Profiles: {len(self.handler.profiles)}")
+                try:
+                      # Parse profile string into a list
+                      parsed_profile = ast.literal_eval(profiles) if profiles else []
+
+                      selected_profiles = []
+                      if isinstance(parsed_profile, str) and parsed_profile == "all":
+                          selected_profiles = self.handler.profiles.keys()
+                      elif parsed_profile == "any":
+                        if self.handler.profiles:
+                            selected_profiles = [random.choice(list(self.handler.profiles.keys()))]
+                        else:
+                            print("No profiles available for selection.")
+                      elif isinstance(parsed_profile, list):
+                          selected_profiles = [p.strip() for p in parsed_profile]
+                      else:
+                          raise ValueError("Invalid format for profile.")
+
+                except (SyntaxError, ValueError):
+                    print("Error: Profile must be a valid string, list, or 'all'.")
+                    return
+
+                for profile_name in selected_profiles:
+                    if profile_name in self.handler.profiles:
+                        method = getattr(self.handler.profiles[profile_name], mode, None)
+                        if callable(method):
+                            print(f"Profile {profile_name}:\n", method())
+                        else:
+                            print(f"Mode '{mode}' is not callable for the profile '{profile_name}'.")
+                    else:
+                        print(f"Profile '{profile_name}' does not exist.")
+                
+                print("Input:\n", getattr(self.handler.inputs, mode)())
+                print("Objects:\n", getattr(self.handler.objects, mode)())
+            
+            else:
+                print(f"Invalid mode: {mode}. Supported modes: {', '.join(supported_modes)}.")
+
 
 
 class CaHandler:

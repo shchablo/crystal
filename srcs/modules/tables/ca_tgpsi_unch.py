@@ -17,7 +17,7 @@ class CaTopTgPsiUnCh:
         self.tgPsiUnCh = tgPsiUnCh
 
 
-    def print(self, tg: float = None, w: float = None) -> None:
+    def print(self, w: float = None, tg: float = None) -> None:
         """
         Display the interpolated tgPsi of a unchanneled avalanche for given tg and water reserve.
 
@@ -28,14 +28,14 @@ class CaTopTgPsiUnCh:
           This command calculates and prints the interpolated tgPsi based on the provided tg and water reserve values.
 
           Options:
-            --tg | FLOAT | tg value (default: None).
+            --tg | FLOAT | slope tg value (default: None).
             --w  | FLOAT | Water reserve value (default: None).
 
           Example:
             crystal [cmd] --tg 0.7 --w 100.0
         """
         
-        print(self.tgPsiUnCh.get_angle(tg, w))
+        print(self.tgPsiUnCh.get_angle(w, tg))
 
 
 
@@ -77,7 +77,7 @@ class CaTgPsiUnCh:
         )
 
 
-    def get_angle(self, tg: float, water: float) -> float:
+    def get_angle(self, water: float, tg: float) -> float:
         """
         Fetch the interpolated angle for the given tg and water reserve.
 
@@ -86,7 +86,7 @@ class CaTgPsiUnCh:
         - If the tg value exceeds the maximum or minimum in tg_values, it is clamped to the nearest boundary.
 
         :param water: Water reserve value to be used in the interpolation.
-        :param tg: Angle value to be used in the interpolation.
+        :param tg: Angle value to be used in the interpolation (slope).
 
         :return: Interpolated coefficient for the given tg and water reserve.
         """
@@ -99,20 +99,3 @@ class CaTgPsiUnCh:
         tg = max(min(tg, max(self.table.tg_values)), min(self.table.tg_values))
 
         return float(self.interpolator((water, tg)))
-
-
-    def generate_table(self, tgs: List[float], waters: List[float]) -> List[Tuple[float, float, float]]:
-        """
-        Generate a table of tg, water reserve values, and corresponding angle.
-
-        :param tgs: List of tg values.
-        :param waters: List of water reserve values.
-
-        :return: List of tuples (tg, water_reserve, tgPsiUnCh).
-        """
-        
-        return [
-            (tg, water, self.get_angle(tg, water))
-            for water in waters
-            for tg in tgs
-        ]

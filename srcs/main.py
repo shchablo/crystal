@@ -11,6 +11,7 @@ from srcs.modules.tables.ca_tgpsi_unch import CaTgPsiUnCh, CaTopTgPsiUnCh
 
 
 from srcs.modules.processors.ca_handler import CaHandler, CaTopHandler
+from srcs.modules.processors.ca_calculator import CaCalculator, CaTopCalculator
 from srcs.modules.processors.ca_runner import CaTopRunner
 
 
@@ -32,30 +33,37 @@ def main():
     core.register.add_command("cfg.upload", top_configurator.upload)
     core.register.add_command("cfg.download", top_configurator.download)
     
-    kH = CaKh()
-    top_kH = CaTopKh(kH)
-    core.register.add_command("kH.print", top_kH.print)
+    kh = CaKh()
+    top_kh = CaTopKh(kh)
+    core.register.add_command("kh.print", top_kh.print)
 
-    kF = CaKf()
-    top_kF = CaTopKf(kF)
-    core.register.add_command("kF.print", top_kF.print)
+    kf = CaKf()
+    top_kf = CaTopKf(kf)
+    core.register.add_command("kf.print", top_kf.print)
 
     tgpsi_ch = CaTgPsiCh()
     top_tgpsi_ch = CaTopTgPsiCh(tgpsi_ch)
-    core.register.add_command("tgCh.print", top_tgpsi_ch.print)
+    core.register.add_command("tg.ch.print", top_tgpsi_ch.print)
 
     tgpsi_unch = CaTgPsiUnCh()
     top_tgpsi_unch = CaTopTgPsiUnCh(tgpsi_unch)
-    core.register.add_command("tgUnCh.print", top_tgpsi_unch.print)
+    core.register.add_command("tg.unch.print", top_tgpsi_unch.print)
 
-    data_handler = CaHandler()
-    top_data_handler = CaTopHandler(core, data_handler)
-    core.register.add_command("hand.extract", top_data_handler.extract)
-    core.register.add_command("hand.execute", top_data_handler.execute)
-    core.register.add_command("hand.read", top_data_handler.read)
+    handler = CaHandler()
+    top_handler = CaTopHandler(core, handler)
+    core.register.add_command("hand.extract", top_handler.extract)
+    core.register.add_command("hand.execute", top_handler.execute)
+    core.register.add_command("hand.read", top_handler.read)
+    core.register.add_command("hand.print", top_handler.print)
     
 
-    top_runner = CaTopRunner(core, top_configurator, top_data_handler)
+    calculator = CaCalculator(handler, kh, kf, tgpsi_ch, tgpsi_unch)
+    top_calculator = CaTopCalculator(core, calculator)
+    core.register.add_command("calc.proc.input", top_calculator.process_inputs)
+    core.register.add_command("calc.proc.profiles", top_calculator.process_profiles)
+
+
+    top_runner = CaTopRunner(core, top_configurator, top_handler, top_calculator)
     core.register.add_command("run", top_runner.main)
     
     core.run()

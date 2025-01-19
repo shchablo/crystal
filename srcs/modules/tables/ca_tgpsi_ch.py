@@ -18,27 +18,27 @@ class CaTopTgPsiCh:
         self.tgPsiCh = tgPsiCh
 
 
-    def print(self, w: float = None, a: float = None, tg: float = None) -> None:
+    def print(self, w: float = None, tg: float = None, a: float = None) -> None:
         """
         Display the interpolated tgPsi of a channeled avalanche for given water reserve, area, and tg.
 
           The function ensures that the input parameters are within the predefined ranges:
             - If the water value exceeds the maximum or minimum in water_reserve, it is clamped to the nearest boundary.
             - If the area value exceeds the maximum or minimum in area_values, it is clamped to the nearest boundary.
-            - If the tg value exceeds the maximum or minimum in tg_values, it is clamped to the nearest boundary.
+            - If the slope tg value exceeds the maximum or minimum in tg_values, it is clamped to the nearest boundary.
 
           This command calculates and prints the interpolated tgPsi based on the provided water reserve, area, and tg values.
 
           Options:
             --w  | FLOAT | Water reserve value (default: None).
             --a  | FLOAT | Area value (default: None).
-            --tg | FLOAT | tg value (default: None).
+            --tg | FLOAT | slope tg value (default: None).
 
           Example:
             crystal [cmd] --w 150.0 --a 20.0 --tg 0.5
         """
         
-        print(self.tgPsiCh.get_angle(w, a, tg))
+        print(self.tgPsiCh.get_angle(w, tg, a))
 
 
 
@@ -142,7 +142,7 @@ class CaTgPsiCh:
         )
 
 
-    def get_angle(self, water: float, area: float, tg: float) -> float:
+    def get_angle(self, water: float, tg: float, area: float) -> float:
         """
         Fetch the interpolated angle for the given water reserve, area, and tg values.
 
@@ -153,7 +153,7 @@ class CaTgPsiCh:
 
         :param water: Water reserve value to be used in the interpolation.
         :param area: Area value to be used in the interpolation.
-        :param tg: Angle value to be used in the interpolation.
+        :param tg: Slope angle value to be used in the interpolation.
 
         :return: Interpolated angle for the provided inputs.
 
@@ -169,24 +169,3 @@ class CaTgPsiCh:
         tg = max(min(tg, max(self.table.tg_values)), min(self.table.tg_values))
 
         return float(self.interpolator((water, area, tg)))
-
-
-    def generate_table(
-        self, waters: List[float], areas: List[float], tgs: List[float]
-    ) -> List[Tuple[float, float, float, float]]:
-        """
-        Generate a table of water reserve, area, tg values, and corresponding angle.
-
-        :param waters: List of water reserve values.
-        :param areas: List of area values.
-        :param tgs: List of tg values.
-
-        :return: List of tuples (water_reserve, area, tg, tgPsiCh).
-        """
-        
-        return [
-            (water, area, tg, self.get_angle(water, area, tg))
-            for water in waters
-            for area in areas
-            for tg in tgs
-        ]

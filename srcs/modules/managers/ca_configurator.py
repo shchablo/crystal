@@ -48,10 +48,14 @@ class CaTopConfigurator:
             if isVerbose:
                 print(f"Loading the default file: {path}.")
         
-        self.core.configurator.upload(path)
+        isLoaded = self.core.configurator.upload(path)
         
         if isVerbose:
-            print(f"Configuration successfully loaded from {path}.")
+            if (isLoaded):
+                print(f"Configuration successfully loaded from {path}.")
+            else:
+                print(f"Configuration completed with default signatures.")
+
 
         return self.core.configurator.config
 
@@ -116,19 +120,19 @@ class CaConfigurator:
         return config_files[0] if len(config_files) == 1 else None
 
 
-    def upload(self, path: str) -> None:
+    def upload(self, path: str) -> bool:
         """
         Loads a configuration file (JSON or YAML) into the internal dictionary.
         
         :param path: Path to the configuration file.
         
-        :raises FileNotFoundError: If the specified file does not exist.
         :raises ValueError: If the file format is unsupported.
         """       
         file_path = Path(path)
 
         if not file_path.is_file():
-            raise FileNotFoundError(f"File not found: {path}.")
+            return False
+            #raise FileNotFoundError(f"File not found: {path}.")
         
         extension = file_path.suffix.lower()
         with file_path.open("r", encoding="utf-8") as f:
@@ -138,6 +142,8 @@ class CaConfigurator:
                 self.config.update(yaml.safe_load(f))
             else:
                 raise ValueError(f"Unsupported file format: {extension}")
+        
+        return True
 
 
     def download(self, path: str) -> None:
