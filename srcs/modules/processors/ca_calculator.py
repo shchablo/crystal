@@ -33,22 +33,40 @@ class CaTopCalculator:
         if isVerbose:
             print("Processing profiles...")
 
-
-
         for key, df in self.calculator.handler.profiles.items():
+
+            atype = self.calculator.find_in_inputs(key, "type")
+            tgpsi = self.calculator.find_in_inputs(key, "tg_psi")
+            pa = self.calculator.find_in_inputs(key, "p_a")
+            volume = self.calculator.find_in_inputs(key, "volume")
+            hi = self.calculator.find_in_inputs(key, "hi")
+            try:
+                hi = float(hi)
+            except (ValueError, TypeError):
+                hi = None
+
+            try:
+                first_index = df[df["h"] != 0].index[0]
+                h0 = df.loc[first_index, "h"]
+            except (KeyError, IndexError, ValueError, TypeError):
+                h0 = None
 
             df["tg"] = df.apply(lambda row: self.calculator.calculate_profile_tg(row, df), axis=1)
             df["rad"] = df.apply(self.calculator.calculate_profile_atan, axis=1)
             df["deg"] = df.apply(self.calculator.calculate_profile_deg, axis=1)
-            df["tg_psi"] = df.apply(lambda row: self.calculator.find_profile_tgpsi(key), axis=1)
+            df["tg_psi"] = tgpsi
             df["estim_1"] = df.apply(self.calculator.calculate_profile_estim_1, axis=1)
-            df["h_sec"] = df.apply(lambda row: self.calculator.calculate_profile_hsec(row, df), axis=1)
+            df["h_sec"] = df.apply(lambda row: self.calculator.calculate_profile_hsec(row, h0), axis=1)
             df["estim_2"] = df.apply(self.calculator.calculate_profile_estim_2, axis=1)
             df["velocity"] = df.apply(self.calculator.calculate_profile_v, axis=1)
-            df["p_a"] = df.apply(lambda row: self.calculator.find_profile_pa(key), axis=1)
+            df["p_a"] = pa
             df["P"] = df.apply(self.calculator.calculate_profile_P, axis=1)
             df["P_peak"] = df.apply(self.calculator.calculate_profile_Ppeak, axis=1)
-            df["h_front"] = df.apply(lambda row: self.calculator.calculate_profile_hfront(row, key), axis=1)
+
+            if (self.calculator._isCh(atype)) == True:
+                df["h_front"] = df.apply(lambda row: self.calculator.calculate_profile_hfront_ch(row, volume), axis=1)
+            elif (self.calculator._isCh(atype)) == False:
+                df["h_front"] = 3 * hi
 
         if isVerbose:
             print("All profiles have been processed.")
@@ -67,6 +85,15 @@ class CaCalculator:
         self.tgpsi_unch = tgpsi_unch
 
 
+    def find_in_inputs(self, key, param):
+        try:
+            result = self.handler.inputs.loc[self.handler.inputs['name'].astype(str) == str(key), str(param)]
+            result = result.values[0] if not result.empty else None
+            return result
+        except (KeyError, IndexError, ValueError, TypeError):
+            return None
+
+
     def calculate_input_v(self, row):
         try:
             h0 = float(row["hi"]) * self.kh.get_coefficient(float(row["hi"]), str(row["cat"]))
@@ -75,23 +102,32 @@ class CaCalculator:
         except (KeyError, IndexError, ValueError, TypeError):
             return None
 
+    def _isCh(self, atype: str = None):
+        atype = str(atype).strip().lower()
+        if atype in {"1", "lotok", "ch", "channaled", "l", "channal"}:
+            return True
+        elif atype in {"0", "ostov", "unch", "unchannaled", "o", "unchannal"}:
+            return False
+        else:
+            return None
 
     def calculate_input_tg(self, row):
         try:
-            row_type = str(row['type']).strip().lower()
-            if row_type in {"1", "lotok", "ch", "channaled", "l", "channal"}:
+
+            if self._isCh(row['type']) == True:
                 return self.tgpsi_ch.get_angle(
                     float(row["W"]),
                     float(row["slope"]),
                     float(row["area"])
                 )
-            elif row_type in {"0", "ostov", "unch", "unchannaled", "o", "unchannal"}:
+            elif self._isCh(row['type']) == False:
                 return self.tgpsi_unch.get_angle(
                     float(row["W"]),
                     float(row["slope"])
                 )
         except (KeyError, IndexError, ValueError, TypeError):
             return None
+
 
     def calculate_profile_tg(self, row, df):
         try:
@@ -128,28 +164,19 @@ class CaCalculator:
             return None
 
 
-    def find_profile_tgpsi(self, key):
-        try:
-            result = self.handler.inputs.loc[self.handler.inputs['name'].astype(str) == str(key), 'tg_psi']
-            result = result.values[0] if not result.empty else None
-            return result
-        except (KeyError, IndexError, ValueError, TypeError):
-            return None
-
-
     def calculate_profile_estim_1(self, row):
         try:
             return float(row["l"]) * float(row["tg_psi"])
         except (KeyError, IndexError, ValueError, TypeError):
             return None
 
-    def calculate_profile_hsec(self, row, df):
+
+    def calculate_profile_hsec(self, row, h0):
         try:
-            first_index = df[df["h"] != 0].index[0]
-            h0 = float(df.loc[first_index, "h"])
-            return h0 - float(row["estim_1"])
+            return float(h0) - float(row["estim_1"])
         except (KeyError, IndexError, ValueError, TypeError):
             return None
+
 
     def calculate_profile_estim_2(self, row):
         try:
@@ -165,19 +192,12 @@ class CaCalculator:
             return None
 
 
-    def find_profile_pa(self, key):
-        try:
-            result = self.handler.inputs.loc[self.handler.inputs['name'].astype(str) == str(key), 'p_a']
-            result = result.values[0] if not result.empty else None
-            return result
-        except (KeyError, IndexError, ValueError, TypeError):
-            return None
-
     def calculate_profile_P(self, row):
         try:
             return float(row["velocity"]) * math.pow(float(row["p_a"]), 2) / 1000
         except (KeyError, IndexError, ValueError, TypeError):
             return None
+
 
     def calculate_profile_Ppeak(self, row):
         try:
@@ -185,28 +205,11 @@ class CaCalculator:
         except (KeyError, IndexError, ValueError, TypeError):
             return None
 
-    def calculate_profile_hfront(self, row, key):
+
+    def calculate_profile_hfront_ch(self, row, volume):
         try:
-            atype = self.handler.inputs.loc[self.handler.inputs['name'].astype(str) == str(key), 'type']
-            atype = atype.values[0] if not atype.empty else None
-            atype = str(atype).strip().lower()
-            if atype in {"1", "lotok", "ch", "channaled", "l", "channal"}:
-
-                volume = self.handler.inputs.loc[self.handler.inputs['name'].astype(str) == str(key), 'volume']
-                volume = volume.values[0] if not volume.empty else None
-                volume = float(volume) * 1000
-
-                velocity = float(row["velocity"])
-
-                return (0.08 * (math.log(volume) - 0.1)) * math.pow(velocity, 0.74 + 0.12)
-
-            elif atype in {"0", "ostov", "unch", "unchannaled", "o", "unchannal"}:
-
-                hi = self.handler.inputs.loc[self.handler.inputs['name'].astype(str) == str(key), 'hi']
-                hi = hi.values[0] if not hi.empty else None
-                hi = float(hi)
-
-                return hi * 3
-
+            volume = float(volume) * 1000
+            velocity = float(row["velocity"])
+            return (0.08 * (math.log(volume) - 0.1)) * math.pow(velocity, 0.74 + 0.12)
         except (KeyError, IndexError, ValueError, TypeError):
             return None
