@@ -79,7 +79,7 @@ class TestCaHandler(unittest.TestCase):
             "W": [350] * 34,
             "hi": [0.9] * 34,
             "cat": ['dry'] * 34,
-            "p_a": [300] * 34
+            "plt": [300] * 34
         })
         
         self.expected_objects = pd.DataFrame({
@@ -98,7 +98,7 @@ class TestCaHandler(unittest.TestCase):
         profile_separator="\t"
         profile_decimal=","
         profile_column_aliases={"ColA": "X", "ColB" : "Feature Profile 1"}
-        input_path_postfix="input.csv"
+        input_path_postfix="main.csv"
         input_extension=".csv"
         input_separator=";"
         input_decimal=","

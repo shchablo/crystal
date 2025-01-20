@@ -17,8 +17,13 @@ class CaTopCalculator:
         self.calculator = calculator
 
 
-    def process_inputs(self, verbose: str = "y") -> None:
-
+    def process_main(self, verbose: str = "y") -> None:
+        
+        self.calculator.handler.inputs['area'] = self.calculator.handler.inputs['area'].astype(float).round(2)
+        self.calculator.handler.inputs['slope'] = self.calculator.handler.inputs['slope'].astype(float).round(1)
+        self.calculator.handler.inputs['W'] = self.calculator.handler.inputs['W'].astype(float).round(0)
+        self.calculator.handler.inputs['hi'] = self.calculator.handler.inputs['hi'].astype(float).round(2)
+        self.calculator.handler.inputs['plt'] = self.calculator.handler.inputs['plt'].astype(float).round(0)
         self.calculator.handler.inputs['tg_psi'] = self.calculator.handler.inputs.apply(self.calculator.calculate_input_tg, axis=1)
         self.calculator.handler.inputs['volume'] = self.calculator.handler.inputs.apply(self.calculator.calculate_input_v, axis=1)
 
@@ -38,7 +43,7 @@ class CaTopCalculator:
 
             atype = self.calculator.find_in_inputs(key, "type")
             tgpsi = self.calculator.find_in_inputs(key, "tg_psi")
-            pa = self.calculator.find_in_inputs(key, "p_a")
+            plt = self.calculator.find_in_inputs(key, "plt")
             volume = self.calculator.find_in_inputs(key, "volume")
             hi = self.calculator.find_in_inputs(key, "hi")
             try:
@@ -52,6 +57,8 @@ class CaTopCalculator:
             except (KeyError, IndexError, ValueError, TypeError):
                 h0 = None
 
+            df['l'] = df['l'].astype(float).round(3)
+            df['h'] = df['h'].astype(float).round(3)
             df["tg"] = df.apply(lambda row: self.calculator.calculate_profile_tg(row, df), axis=1)
             df["rad"] = df.apply(self.calculator.calculate_profile_atan, axis=1)
             df["deg"] = df.apply(self.calculator.calculate_profile_deg, axis=1)
@@ -60,7 +67,7 @@ class CaTopCalculator:
             df["h_sec"] = df.apply(lambda row: self.calculator.calculate_profile_hsec(row, h0), axis=1)
             df["estim_2"] = df.apply(self.calculator.calculate_profile_estim_2, axis=1)
             df["velocity"] = df.apply(self.calculator.calculate_profile_v, axis=1)
-            df["p_a"] = pa
+            df["plt"] = plt
             df["P"] = df.apply(self.calculator.calculate_profile_P, axis=1)
             df["P_peak"] = df.apply(self.calculator.calculate_profile_Ppeak, axis=1)
 
@@ -74,7 +81,7 @@ class CaTopCalculator:
 
         return
 
-    def process_objects(self, verbose: str = "y") -> None:
+    def analysis_profiles(self, verbose: str = "y") -> None:
 
         isVerbose = verbose.strip().lower() in {"1", "y", "yes", "true"}
 
@@ -97,7 +104,10 @@ class CaTopCalculator:
                     self.calculator.handler.objects.loc[idx, 'P'] = closest_row['P']
                     self.calculator.handler.objects.loc[idx, 'P_peak'] = closest_row['P_peak']
                     self.calculator.handler.objects.loc[idx, 'h_front'] = closest_row['h_front']
-                    self.calculator.handler.objects.loc[idx, 'L'] = self.calculator.find_intersection(df)
+                    self.calculator.handler.objects.loc[idx, 'L_max'] = self.calculator.find_intersection(df)
+            
+            self.calculator.handler.inputs['L_max'] = self.calculator.find_intersection(df)
+            
 
         if isVerbose:
             print("All objects have been processed.")
@@ -127,7 +137,7 @@ class CaCalculator:
         try:
             h0 = float(row["hi"]) * self.kh.get_coefficient(float(row["hi"]), str(row["cat"]))
             kf = self.kf.get_coefficient(h0, float(row["area"]), str(row["cat"]))
-            return h0 * kf * float(row["area"]) * 10
+            return round((h0 * kf * float(row["area"]) * 10), 1)
         except (KeyError, IndexError, ValueError, TypeError):
             return None
 
@@ -144,16 +154,16 @@ class CaCalculator:
         try:
 
             if self._isCh(row['type']) == True:
-                return self.tgpsi_ch.get_angle(
+                return round((self.tgpsi_ch.get_angle(
                     float(row["W"]),
                     float(row["slope"]),
                     float(row["area"])
-                )
+                )), 3)
             elif self._isCh(row['type']) == False:
-                return self.tgpsi_unch.get_angle(
+                return round((self.tgpsi_unch.get_angle(
                     float(row["W"]),
                     float(row["slope"])
-                )
+                )), 3)
         except (KeyError, IndexError, ValueError, TypeError):
             return None
 
@@ -174,63 +184,63 @@ class CaCalculator:
             if x2 == x1:
                 raise ValueError("Division by zero: x2 and x1 are equal.")
 
-            return (y1 - y2) / (x2 - x1)
+            return round(((y1 - y2) / (x2 - x1)), 3)
         except (KeyError, IndexError, ValueError, TypeError):
             return None
 
 
     def calculate_profile_atan(self, row):
         try:
-            return math.atan(row["tg"])
+            return round((math.atan(row["tg"])), 3)
         except (KeyError, IndexError, ValueError, TypeError):
             return None
 
 
     def calculate_profile_deg(self, row):
         try:
-            return math.degrees(row["rad"])
+            return round((math.degrees(row["rad"])), 3)
         except (KeyError, IndexError, ValueError, TypeError):
             return None
 
 
     def calculate_profile_estim_1(self, row):
         try:
-            return float(row["l"]) * float(row["tg_psi"])
+            return round((float(row["l"]) * float(row["tg_psi"])), 1)
         except (KeyError, IndexError, ValueError, TypeError):
             return None
 
 
     def calculate_profile_hsec(self, row, h0):
         try:
-            return float(h0) - float(row["estim_1"])
+            return round((float(h0) - float(row["estim_1"])), 1)
         except (KeyError, IndexError, ValueError, TypeError):
             return None
 
 
     def calculate_profile_estim_2(self, row):
         try:
-            return float(row["h"]) - float(row["h_sec"])
+            return round((float(row["h"]) - float(row["h_sec"])), 1)
         except (KeyError, IndexError, ValueError, TypeError):
             return None
 
 
     def calculate_profile_v(self, row):
         try:
-            return math.pow(20 * float(row["estim_2"]), 0.5)
+            return round((math.pow(20 * float(row["estim_2"]), 0.5)), 1)
         except (KeyError, IndexError, ValueError, TypeError):
             return None
 
 
     def calculate_profile_P(self, row):
         try:
-            return float(row["velocity"]) * math.pow(float(row["p_a"]), 2) / 1000
+            return round((float(row["velocity"]) * math.pow(float(row["plt"]), 2) / 1000), 1)
         except (KeyError, IndexError, ValueError, TypeError):
             return None
 
 
     def calculate_profile_Ppeak(self, row):
         try:
-            return float(row["P"]) * 3
+            return round((float(row["P"]) * 3), 1)
         except (KeyError, IndexError, ValueError, TypeError):
             return None
 
@@ -239,43 +249,30 @@ class CaCalculator:
         try:
             volume = float(volume) * 1000
             velocity = float(row["velocity"])
-            return (0.08 * (math.log(volume) - 0.1)) * math.pow(velocity, 0.74 + 0.12)
+            return round(((0.08 * (math.log(volume) - 0.1)) * math.pow(velocity, 0.74 + 0.12)), 1)
         except (KeyError, IndexError, ValueError, TypeError):
             return None
         
     def find_intersection(self, df):
-        """
-        Находит пересечения двух кривых, исключая точку с l=0, и возвращает
-        координату l самой дальней точки пересечения.
-        """
-        # Создаем линии для h и h_sec, используя x из столбца l, исключая x=0
         line_h = LineString([(x, h) for x, h in zip(df['l'], df['h']) if x != 0])
         line_h_sec = LineString([(x, h) for x, h in zip(df['l'], df['h_sec']) if x != 0])
-    
-        # Находим пересечение линий
+
         intersection = line_h.intersection(line_h_sec)
-    
-        # Если пересечений нет, возвращаем None
+
         if intersection.is_empty:
             return None
-    
-        # Определяем точки пересечения
+
         if isinstance(intersection, Point):
-            # Одно пересечение
             intersection_points = [intersection]
         elif isinstance(intersection, MultiPoint):
-            # Несколько пересечений
             intersection_points = list(intersection.geoms)
         else:
-            # Обработка других случаев (например, MultiLineString)
             intersection_points = [
                 geom for geom in intersection.geoms if isinstance(geom, Point)
             ]
-    
-        # Если есть пересечения, возвращаем l (x-координату) самой дальней точки
+
         if intersection_points:
             furthest_point = max(intersection_points, key=lambda p: p.x)
-            return furthest_point.x
-    
-        # Если пересечений нет, возвращаем None
+            return round(float(furthest_point.x), 0)
+
         return None

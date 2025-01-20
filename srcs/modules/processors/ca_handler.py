@@ -44,7 +44,7 @@ class CaTopHandler:
     def execute(
             self,
             profiles_path_postfix: str = "profiles",
-            input_path_postfix: str = "input.csv",
+            input_path_postfix: str = "main.csv",
             object_path_postfix: str = "objects.csv",
             profile_extension: str = ".txt",
             profile_separator: str = "\t",

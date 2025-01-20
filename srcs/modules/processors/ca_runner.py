@@ -116,17 +116,17 @@ class CaTopRunner:
         )
 
        # proccesing input table
-        calc_input_name = self.core.register.find_command_name(self.calculator.process_inputs)
-        calc_input_args: Dict[str, Any] = {
-            key[len(calc_input_name) + 1:]: value[0] if isinstance(value, list) else value
+        calc_main_name = self.core.register.find_command_name(self.calculator.process_main)
+        calc_main_args: Dict[str, Any] = {
+            key[len(calc_main_name) + 1:]: value[0] if isinstance(value, list) else value
             for key, value in kwargs.items()
-            if key.startswith(calc_input_name + ".")
+            if key.startswith(calc_main_name + ".")
         }
         if not (isVerbose):
-            calc_input_args["verbose"] = verbose[0]
+            calc_main_args["verbose"] = verbose[0]
         self.core.execute_command(
-            command=calc_input_name,
-            command_args=calc_input_args,
+            command=calc_main_name,
+            command_args=calc_main_args,
             commands=self.core.register.commands
         )
 
@@ -138,7 +138,7 @@ class CaTopRunner:
             if key.startswith(calc_profiles_name + ".")
         }
         if not (isVerbose):
-            calc_input_args["verbose"] = verbose[0]
+            calc_main_args["verbose"] = verbose[0]
         self.core.execute_command(
             command=calc_profiles_name,
             command_args=calc_profiles_args,
@@ -146,17 +146,17 @@ class CaTopRunner:
         )
 
         # proccessing objects tables
-        calc_objects_name = self.core.register.find_command_name(self.calculator.process_objects)
-        calc_objects_args: Dict[str, Any] = {
-            key[len(calc_objects_name) + 1:]: value[0] if isinstance(value, list) else value
+        anls_profiles_name = self.core.register.find_command_name(self.calculator.analysis_profiles)
+        anls_profiles_args: Dict[str, Any] = {
+            key[len(anls_profiles_name) + 1:]: value[0] if isinstance(value, list) else value
             for key, value in kwargs.items()
-            if key.startswith(calc_objects_name + ".")
+            if key.startswith(anls_profiles_name + ".")
         }
         if not (isVerbose):
-            calc_objects_args["verbose"] = verbose[0]
+            anls_profiles_args["verbose"] = verbose[0]
         self.core.execute_command(
-            command=calc_objects_name,
-            command_args=calc_objects_args,
+            command=anls_profiles_name,
+            command_args=anls_profiles_args,
             commands=self.core.register.commands
         )
 

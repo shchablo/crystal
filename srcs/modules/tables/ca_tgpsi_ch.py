@@ -18,27 +18,27 @@ class CaTopTgPsiCh:
         self.tgPsiCh = tgPsiCh
 
 
-    def print(self, w: float = None, tg: float = None, a: float = None) -> None:
+    def print(self, water: float = None, slope: float = None, area: float = None) -> None:
         """
-        Display the interpolated tgPsi of a channeled avalanche for given water reserve, area, and tg.
+        Display the interpolated tgPsi of a channeled avalanche for given water reserve, area, and slope.
 
           The function ensures that the input parameters are within the predefined ranges:
             - If the water value exceeds the maximum or minimum in water_reserve, it is clamped to the nearest boundary.
             - If the area value exceeds the maximum or minimum in area_values, it is clamped to the nearest boundary.
             - If the slope tg value exceeds the maximum or minimum in tg_values, it is clamped to the nearest boundary.
 
-          This command calculates and prints the interpolated tgPsi based on the provided water reserve, area, and tg values.
+          This command calculates and prints the interpolated tgPsi based on the provided water reserve, area, and slope values.
 
           Options:
-            --w  | FLOAT | Water reserve value (default: None).
-            --a  | FLOAT | Area value (default: None).
-            --tg | FLOAT | slope tg value (default: None).
+            --water | FLOAT | Water reserve value (default: None).
+            --slope | FLOAT | Slope value (default: None).
+            --area  | FLOAT | Area value (default: None).
 
           Example:
-            crystal [cmd] --w 150.0 --a 20.0 --tg 0.5
+            crystal [cmd] --wiater 150.0 --slope 20.0 --area 0.5
         """
         
-        print(self.tgPsiCh.get_angle(w, tg, a))
+        print(self.tgPsiCh.get_angle(water, slope, area))
 
 
 
@@ -52,7 +52,7 @@ class CaTgPsiChCoefficientTable:
     
     area_values: List[float] = field(default_factory=lambda: [1, 2, 5, 10, 20, 30, 40, 50, 100])
     
-    tg_values: List[float] = field(default_factory=lambda: [25, 30, 35, 40])
+    slope_values: List[float] = field(default_factory=lambda: [25, 30, 35, 40])
     
     coefficients: np.ndarray = field(default_factory=lambda: np.array([
         [
@@ -134,7 +134,7 @@ class CaTgPsiCh:
         
         self.table = CaTgPsiChCoefficientTable()
         self.interpolator = RegularGridInterpolator(
-            (self.table.water_reserve, self.table.area_values, self.table.tg_values),
+            (self.table.water_reserve, self.table.area_values, self.table.slope_values),
             self.table.coefficients,
             method="linear",
             bounds_error=False,
@@ -142,30 +142,30 @@ class CaTgPsiCh:
         )
 
 
-    def get_angle(self, water: float, tg: float, area: float) -> float:
+    def get_angle(self, water: float, slope: float, area: float) -> float:
         """
-        Fetch the interpolated angle for the given water reserve, area, and tg values.
+        Fetch the interpolated angle for the given water reserve, area, and slope values.
 
         The function ensures that the input parameters are within the predefined ranges:
         - If the water value exceeds the maximum or minimum in water_reserve, it is clamped to the nearest boundary.
         - If the area value exceeds the maximum or minimum in area_values, it is clamped to the nearest boundary.
-        - If the tg value exceeds the maximum or minimum in tg_values, it is clamped to the nearest boundary.
+        - If the slope value exceeds the maximum or minimum in slope_values, it is clamped to the nearest boundary.
 
         :param water: Water reserve value to be used in the interpolation.
+        :param slope: Slope angle value to be used in the interpolation.
         :param area: Area value to be used in the interpolation.
-        :param tg: Slope angle value to be used in the interpolation.
 
         :return: Interpolated angle for the provided inputs.
 
-        :raises ValueError: If any of the input parameters (water, area, or tg) is not provided.
+        :raises ValueError: If any of the input parameters (water, area, or slope) is not provided.
         """
 
-        if water is None or area is None or tg is None:
+        if water is None or slope is None or area is None:
             raise ValueError("All parameters (water, area, tg) must be provided.")
 
         # Clamp values to the nearest range
         water = max(min(water, max(self.table.water_reserve)), min(self.table.water_reserve))
+        slope = max(min(slope, max(self.table.slope_values)), min(self.table.slope_values))
         area = max(min(area, max(self.table.area_values)), min(self.table.area_values))
-        tg = max(min(tg, max(self.table.tg_values)), min(self.table.tg_values))
 
-        return float(self.interpolator((water, area, tg)))
+        return float(self.interpolator((water, area, slope)))

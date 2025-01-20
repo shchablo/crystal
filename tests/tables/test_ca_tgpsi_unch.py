@@ -32,7 +32,7 @@ class TestCaTgPsiUcCh(unittest.TestCase):
 
     def test_get_angle(self):
         for water, values in self.table_data.items():
-            for tg, expected in values:
-                with self.subTest(water=water, tg=tg):
-                    result = self.tgpsi_ch.get_angle(tg=tg, water=water)
+            for slope, expected in values:
+                with self.subTest(water=water, slope=slope):
+                    result = self.tgpsi_ch.get_angle(water=water, slope=slope)
                     self.assertAlmostEqual(result, expected, places=4)

@@ -54,7 +54,7 @@ class TestCaTgPsiCh(unittest.TestCase):
     def test_get_angle(self):
         for water, areas in self.table_data.items():
             for area, values in areas.items():
-                for tg, expected in values:
-                    with self.subTest(water=water, area=area, tg=tg):
-                        result = self.kh.get_angle(water=water, area=area, tg=tg)
+                for slope, expected in values:
+                    with self.subTest(water=water, slope=slope, area=area):
+                        result = self.kh.get_angle(water=water, slope=slope, area=area)
                         self.assertAlmostEqual(result, expected, places=5)

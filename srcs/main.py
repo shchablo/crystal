@@ -52,17 +52,17 @@ def main():
 
     handler = CaHandler()
     top_handler = CaTopHandler(core, handler)
-    core.register.add_command("hand.extract", top_handler.extract)
-    core.register.add_command("hand.execute", top_handler.execute)
+    core.register.add_command("hand.extr", top_handler.extract)
+    core.register.add_command("hand.exec", top_handler.execute)
     core.register.add_command("hand.read", top_handler.read)
-    core.register.add_command("hand.print", top_handler.print)
+    core.register.add_command("hand.dump", top_handler.print)
 
 
     calculator = CaCalculator(handler, kh, kf, tgpsi_ch, tgpsi_unch)
     top_calculator = CaTopCalculator(core, calculator)
-    core.register.add_command("calc.input", top_calculator.process_inputs)
-    core.register.add_command("calc.profiles", top_calculator.process_profiles)
-    core.register.add_command("calc.objects", top_calculator.process_objects)
+    core.register.add_command("calc.main", top_calculator.process_main)
+    core.register.add_command("calc.prof", top_calculator.process_profiles)
+    core.register.add_command("anls.prof", top_calculator.analysis_profiles)
 
     plotter = CaPlotter(handler)
     top_plotter = CaTopPlotter(core, plotter)
