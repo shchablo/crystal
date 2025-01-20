@@ -11,7 +11,7 @@ cd ~
 sudo apt install -y python3-pip
 sudo apt install -y build-essential libssl-dev libffi-dev python3-dev
 python3 -m venv cold
-source crystal_venv/bin/activate
+source ~/cold/bin/activate
 ```
 > add source crystal_venv/bin/activate at the end of `.bashrc`.
 > ```bash

@@ -143,6 +143,21 @@ class CaTopRunner:
             commands=self.core.register.commands
         )
 
+        # proccessing objects tables
+        calc_objects_name = self.core.register.find_command_name(self.calculator.process_objects)
+        calc_objects_args: Dict[str, Any] = {
+            key[len(calc_objects_name) + 1:]: value[0] if isinstance(value, list) else value
+            for key, value in kwargs.items()
+            if key.startswith(calc_objects_name + ".")
+        }
+        if not (isVerbose):
+            calc_objects_args["verbose"] = verbose[0]
+        self.core.execute_command(
+            command=calc_objects_name,
+            command_args=calc_objects_args,
+            commands=self.core.register.commands
+        )
+
 
 
         # print data that was loaded and proccesed

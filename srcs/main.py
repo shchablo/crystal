@@ -20,19 +20,19 @@ def main():
     Entry point of the application.
     Initializes and runs the core application.
     """
-    
+
     core = CaCore()
     core.register.add_command(["test"], ca_test)
-    
+
     top_register = CaTopRegister(core)
     core.register.add_command(["man", "help"], top_register.help_command)
     core.register.add_command("cfg.gen", top_register.generate_config_file)
-    
+
     top_configurator = CaTopConfigurator(core)
     core.register.add_command("cfg.find", top_configurator.find_config_file)
     core.register.add_command("cfg.upload", top_configurator.upload)
     core.register.add_command("cfg.download", top_configurator.download)
-    
+
     kh = CaKh()
     top_kh = CaTopKh(kh)
     core.register.add_command("kh.print", top_kh.print)
@@ -55,17 +55,18 @@ def main():
     core.register.add_command("hand.execute", top_handler.execute)
     core.register.add_command("hand.read", top_handler.read)
     core.register.add_command("hand.print", top_handler.print)
-    
+
 
     calculator = CaCalculator(handler, kh, kf, tgpsi_ch, tgpsi_unch)
     top_calculator = CaTopCalculator(core, calculator)
     core.register.add_command("calc.input", top_calculator.process_inputs)
     core.register.add_command("calc.profiles", top_calculator.process_profiles)
+    core.register.add_command("calc.objects", top_calculator.process_objects)
 
 
     top_runner = CaTopRunner(core, top_configurator, top_handler, top_calculator)
     core.register.add_command("run", top_runner.main)
-    
+
     core.run()
 
 

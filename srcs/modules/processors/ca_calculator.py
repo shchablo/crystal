@@ -73,6 +73,33 @@ class CaTopCalculator:
 
         return
 
+    def process_objects(self, verbose: str = "y") -> None:
+
+        isVerbose = verbose.strip().lower() in {"1", "y", "yes", "true"}
+
+        if isVerbose:
+            print("Processing objects...")
+
+
+        for key, df in self.calculator.handler.profiles.items():
+            matching_objects = self.calculator.handler.objects.loc[
+                self.calculator.handler.objects['name'].astype(str) == str(key)
+            ]
+
+            if not matching_objects.empty:
+                for idx, obj_row in matching_objects.iterrows():
+                    dist_value = obj_row['dist']
+
+                    closest_row = df.iloc[(df['l'] - dist_value).abs().idxmin()]
+
+                    self.calculator.handler.objects.loc[idx, 'velocity'] = closest_row['velocity']
+                    self.calculator.handler.objects.loc[idx, 'P'] = closest_row['P']
+                    self.calculator.handler.objects.loc[idx, 'P_peak'] = closest_row['P_peak']
+                    self.calculator.handler.objects.loc[idx, 'h_front'] = closest_row['h_front']
+
+        if isVerbose:
+            print("All objects have been processed.")
+
 
 class CaCalculator:
     def __init__(self, handler, kh, kf, tgpsi_ch, tgpsi_unch):
