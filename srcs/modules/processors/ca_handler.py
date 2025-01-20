@@ -214,6 +214,7 @@ class CaTopHandler:
             else:
                 print(f"Invalid mode: {mode}. Supported modes: {', '.join(supported_modes)}.")
 
+            self.handler.save_dfs_to_csv()   
 
 
 class CaHandler:
@@ -340,3 +341,20 @@ class CaHandler:
             return extraction_folder
         else:
             return path
+        
+    def save_dfs_to_csv(self):
+          # Ensure the base save_path exists
+          save_path = os.path.join(self.path, "result")
+          os.makedirs(save_path, exist_ok=True)
+
+          self.inputs.to_csv(os.path.join(save_path, "inputs.csv"), index=False)
+          self.objects.to_csv(os.path.join(save_path, "objects.csv"), index=False)
+          
+          # Save profiles DataFrames in 'profiles' directory
+          profiles_dir = os.path.join(save_path, "profiles")
+          os.makedirs(profiles_dir, exist_ok=True)
+          for name, df in self.profiles.items():
+              if isinstance(df, pd.DataFrame):
+                  df.to_csv(os.path.join(profiles_dir, f"{name}.csv"), index=False)
+
+          print(f"Profiles saved to: {profiles_dir}")

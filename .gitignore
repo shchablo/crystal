@@ -6,6 +6,7 @@
 !cfgs/def.yaml
 !cfgs/def.yml
 
+tests/processors/data_ca_handler/result
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

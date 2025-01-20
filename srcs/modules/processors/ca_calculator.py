@@ -1,4 +1,5 @@
 import pandas as pd
+from shapely.geometry import LineString, Point, MultiPoint
 import math
 
 class CaTopCalculator:
@@ -96,6 +97,7 @@ class CaTopCalculator:
                     self.calculator.handler.objects.loc[idx, 'P'] = closest_row['P']
                     self.calculator.handler.objects.loc[idx, 'P_peak'] = closest_row['P_peak']
                     self.calculator.handler.objects.loc[idx, 'h_front'] = closest_row['h_front']
+                    self.calculator.handler.objects.loc[idx, 'L'] = self.calculator.find_intersection(df)
 
         if isVerbose:
             print("All objects have been processed.")
@@ -240,3 +242,40 @@ class CaCalculator:
             return (0.08 * (math.log(volume) - 0.1)) * math.pow(velocity, 0.74 + 0.12)
         except (KeyError, IndexError, ValueError, TypeError):
             return None
+        
+    def find_intersection(self, df):
+        """
+        Находит пересечения двух кривых, исключая точку с l=0, и возвращает
+        координату l самой дальней точки пересечения.
+        """
+        # Создаем линии для h и h_sec, используя x из столбца l, исключая x=0
+        line_h = LineString([(x, h) for x, h in zip(df['l'], df['h']) if x != 0])
+        line_h_sec = LineString([(x, h) for x, h in zip(df['l'], df['h_sec']) if x != 0])
+    
+        # Находим пересечение линий
+        intersection = line_h.intersection(line_h_sec)
+    
+        # Если пересечений нет, возвращаем None
+        if intersection.is_empty:
+            return None
+    
+        # Определяем точки пересечения
+        if isinstance(intersection, Point):
+            # Одно пересечение
+            intersection_points = [intersection]
+        elif isinstance(intersection, MultiPoint):
+            # Несколько пересечений
+            intersection_points = list(intersection.geoms)
+        else:
+            # Обработка других случаев (например, MultiLineString)
+            intersection_points = [
+                geom for geom in intersection.geoms if isinstance(geom, Point)
+            ]
+    
+        # Если есть пересечения, возвращаем l (x-координату) самой дальней точки
+        if intersection_points:
+            furthest_point = max(intersection_points, key=lambda p: p.x)
+            return furthest_point.x
+    
+        # Если пересечений нет, возвращаем None
+        return None

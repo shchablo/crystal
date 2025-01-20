@@ -78,7 +78,8 @@ class TestCaHandler(unittest.TestCase):
             "slope": [28, 28, 31, 31, 30, 31, 30, 25, 28, 29, 35, 36, 27, 33, 34, 35, 33, 35, 35, 32, 31, 31, 27, 31, 31, 31, 29, 27, 27, 26, 28, 27, 29, 35],
             "W": [350] * 34,
             "hi": [0.9] * 34,
-            "cat": ['dry'] * 34
+            "cat": ['dry'] * 34,
+            "p_a": [300] * 34
         })
         
         self.expected_objects = pd.DataFrame({

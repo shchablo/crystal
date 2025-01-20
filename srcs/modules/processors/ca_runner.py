@@ -9,7 +9,7 @@ from pathlib import Path
 class CaTopRunner:
 
 
-    def __init__(self, core, cfg, handler, calculator):
+    def __init__(self, core, cfg, handler, calculator, plotter):
         """
         Initializes the top-level class with entry points for various actions.
 
@@ -17,12 +17,14 @@ class CaTopRunner:
         :param cfg (CaTopConfigurator): An instance of the top configurator manager.
         :param handler (CaTopHandler): An instance of the top handler manager.
         :param calculator (CaTopCalculator): An instance of the top claculator manager.
+        :param plotter (CaTopPlotter): An instance of the plotter manager.
         """
 
         self.core = core
         self.cfg = cfg
         self.handler = handler
         self.calculator = calculator
+        self.plotter = plotter
 
 
     def main(self, path: str = None, verbose: str = "y", **kwargs) -> None:
@@ -158,8 +160,6 @@ class CaTopRunner:
             commands=self.core.register.commands
         )
 
-
-
         # print data that was loaded and proccesed
         handler_print_name = self.core.register.find_command_name(self.handler.print)
         handler_print_args: Dict[str, Any] = {
@@ -172,5 +172,21 @@ class CaTopRunner:
         self.core.execute_command(
             command=handler_print_name,
             command_args=handler_print_args,
+            commands=self.core.register.commands
+        )
+
+
+        # print data that was loaded and proccesed
+        plot_all_name = self.core.register.find_command_name(self.plotter.all)
+        plot_all_args: Dict[str, Any] = {
+            key[len(plot_all_name) + 1:]: value[0] if isinstance(value, list) else value
+            for key, value in kwargs.items()
+            if key.startswith(plot_all_name + ".")
+        }
+        if not (isVerbose):
+            plot_all_args["verbose"] = verbose[0]
+        self.core.execute_command(
+            command=plot_all_name,
+            command_args=plot_all_args,
             commands=self.core.register.commands
         )

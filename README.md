@@ -8,8 +8,10 @@
 
 ```bash
 cd ~
+sudo apt update
 sudo apt install -y python3-pip
 sudo apt install -y build-essential libssl-dev libffi-dev python3-dev
+sudo apt install python3.10-venv
 python3 -m venv cold
 source ~/cold/bin/activate
 ```

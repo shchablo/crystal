@@ -12,6 +12,7 @@ from srcs.modules.tables.ca_tgpsi_unch import CaTgPsiUnCh, CaTopTgPsiUnCh
 
 from srcs.modules.processors.ca_handler import CaHandler, CaTopHandler
 from srcs.modules.processors.ca_calculator import CaCalculator, CaTopCalculator
+from srcs.modules.processors.ca_plotter import CaPlotter, CaTopPlotter
 from srcs.modules.processors.ca_runner import CaTopRunner
 
 
@@ -63,8 +64,11 @@ def main():
     core.register.add_command("calc.profiles", top_calculator.process_profiles)
     core.register.add_command("calc.objects", top_calculator.process_objects)
 
+    plotter = CaPlotter(handler)
+    top_plotter = CaTopPlotter(core, plotter)
+    core.register.add_command("plot.all", top_plotter.all)
 
-    top_runner = CaTopRunner(core, top_configurator, top_handler, top_calculator)
+    top_runner = CaTopRunner(core, top_configurator, top_handler, top_calculator, top_plotter)
     core.register.add_command("run", top_runner.main)
 
     core.run()
