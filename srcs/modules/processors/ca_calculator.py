@@ -19,13 +19,13 @@ class CaTopCalculator:
 
     def process_main(self, verbose: str = "y") -> None:
         
-        self.calculator.handler.inputs['area'] = self.calculator.handler.inputs['area'].astype(float).round(2)
-        self.calculator.handler.inputs['slope'] = self.calculator.handler.inputs['slope'].astype(float).round(1)
-        self.calculator.handler.inputs['W'] = self.calculator.handler.inputs['W'].astype(float).round(0)
-        self.calculator.handler.inputs['hi'] = self.calculator.handler.inputs['hi'].astype(float).round(2)
-        self.calculator.handler.inputs['plt'] = self.calculator.handler.inputs['plt'].astype(float).round(0)
-        self.calculator.handler.inputs['tg_psi'] = self.calculator.handler.inputs.apply(self.calculator.calculate_input_tg, axis=1)
-        self.calculator.handler.inputs['volume'] = self.calculator.handler.inputs.apply(self.calculator.calculate_input_v, axis=1)
+        self.calculator.handler.main['area'] = self.calculator.handler.main['area'].astype(float).round(2)
+        self.calculator.handler.main['slope'] = self.calculator.handler.main['slope'].astype(float).round(1)
+        self.calculator.handler.main['W'] = self.calculator.handler.main['W'].astype(float).round(0)
+        self.calculator.handler.main['hi'] = self.calculator.handler.main['hi'].astype(float).round(2)
+        self.calculator.handler.main['plt'] = self.calculator.handler.main['plt'].astype(float).round(0)
+        self.calculator.handler.main['tg_psi'] = self.calculator.handler.main.apply(self.calculator.calculate_input_tg, axis=1)
+        self.calculator.handler.main['volume'] = self.calculator.handler.main.apply(self.calculator.calculate_input_v, axis=1)
 
         if str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}:
             print("Input data has been processed.")
@@ -41,11 +41,11 @@ class CaTopCalculator:
 
         for key, df in self.calculator.handler.profiles.items():
 
-            atype = self.calculator.find_in_inputs(key, "type")
-            tgpsi = self.calculator.find_in_inputs(key, "tg_psi")
-            plt = self.calculator.find_in_inputs(key, "plt")
-            volume = self.calculator.find_in_inputs(key, "volume")
-            hi = self.calculator.find_in_inputs(key, "hi")
+            atype = self.calculator.find_in_main(key, "type")
+            tgpsi = self.calculator.find_in_main(key, "tg_psi")
+            plt = self.calculator.find_in_main(key, "plt")
+            volume = self.calculator.find_in_main(key, "volume")
+            hi = self.calculator.find_in_main(key, "hi")
             try:
                 hi = float(hi)
             except (ValueError, TypeError):
@@ -106,7 +106,7 @@ class CaTopCalculator:
                     self.calculator.handler.objects.loc[idx, 'h_front'] = closest_row['h_front']
                     self.calculator.handler.objects.loc[idx, 'L_max'] = self.calculator.find_intersection(df)
             
-            self.calculator.handler.inputs['L_max'] = self.calculator.find_intersection(df)
+            self.calculator.handler.main['L_max'] = self.calculator.find_intersection(df)
             
 
         if isVerbose:
@@ -124,9 +124,9 @@ class CaCalculator:
         self.tgpsi_unch = tgpsi_unch
 
 
-    def find_in_inputs(self, key, param):
+    def find_in_main(self, key, param):
         try:
-            result = self.handler.inputs.loc[self.handler.inputs['name'].astype(str) == str(key), str(param)]
+            result = self.handler.main.loc[self.handler.main['name'].astype(str) == str(key), str(param)]
             result = result.values[0] if not result.empty else None
             return result
         except (KeyError, IndexError, ValueError, TypeError):

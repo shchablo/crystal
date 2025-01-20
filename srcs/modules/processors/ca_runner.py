@@ -176,7 +176,23 @@ class CaTopRunner:
         )
 
 
-        # print data that was loaded and proccesed
+        # save results
+        handler_save_name = self.core.register.find_command_name(self.handler.save_dfs_to_csv)
+        handler_save_args: Dict[str, Any] = {
+            key[len(handler_save_name) + 1:]: value[0] if isinstance(value, list) else value
+            for key, value in kwargs.items()
+            if key.startswith(handler_save_name + ".")
+        }
+        if not (isVerbose):
+            handler_save_args["verbose"] = verbose[0]
+        self.core.execute_command(
+            command=handler_save_name,
+            command_args=handler_save_args,
+            commands=self.core.register.commands
+        )
+
+
+        # plot results
         plot_all_name = self.core.register.find_command_name(self.plotter.all)
         plot_all_args: Dict[str, Any] = {
             key[len(plot_all_name) + 1:]: value[0] if isinstance(value, list) else value

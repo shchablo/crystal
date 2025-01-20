@@ -56,6 +56,7 @@ def main():
     core.register.add_command("hand.exec", top_handler.execute)
     core.register.add_command("hand.read", top_handler.read)
     core.register.add_command("hand.dump", top_handler.print)
+    core.register.add_command("hand.save", top_handler.save_dfs_to_csv)
 
 
     calculator = CaCalculator(handler, kh, kf, tgpsi_ch, tgpsi_unch)

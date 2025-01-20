@@ -155,7 +155,7 @@ class CaTgPsiCh:
         :param slope: Slope angle value to be used in the interpolation.
         :param area: Area value to be used in the interpolation.
 
-        :return: Interpolated angle for the provided inputs.
+        :return: Interpolated angle for the provided main.
 
         :raises ValueError: If any of the input parameters (water, area, or slope) is not provided.
         """

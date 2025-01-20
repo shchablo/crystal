@@ -71,7 +71,7 @@ class TestCaHandler(unittest.TestCase):
             ],
         })
         
-        self.expected_inputs = pd.DataFrame({
+        self.expected_main = pd.DataFrame({
             "name": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34],
             "type": ['O', 'L', 'O', 'L', 'O', 'L', 'O', 'O', 'O', 'O', 'O', 'L', 'O', 'L', 'L', 'O', 'O', 'O', 'O', 'O', 'L', 'O', 'O', 'L', 'O', 'O', 'L', 'L', 'L', 'O', 'O', 'O', 'O', 'L'],
             "area": [8.6, 1.4, 1.4, 1.1, 1.6, 0.9, 7.1, 5.4, 14.5, 5.3, 4.7, 1, 8, 6.7, 1.8, 3.3, 5.1, 8.3, 7.3, 10.2, 3.8, 1.2, 3, 1.8, 1.3, 3.8, 1.7, 2.8, 0.7, 2.3, 1.6, 4.2, 5.3, 16],
@@ -116,9 +116,9 @@ class TestCaHandler(unittest.TestCase):
             column_aliases=profile_column_aliases
         )
 
-        inputs_path = os.path.join(self.instance.path, input_path_postfix)
-        self.instance.inputs = self.instance.inputs = self.instance.load_csv(
-            inputs_path,
+        main_path = os.path.join(self.instance.path, input_path_postfix)
+        self.instance.main = self.instance.main = self.instance.load_csv(
+            main_path,
             file_extension=input_extension,
             separator=input_separator,
             decimal=input_decimal
@@ -134,5 +134,5 @@ class TestCaHandler(unittest.TestCase):
 
         pd.testing.assert_frame_equal(self.instance.profiles["34"], self.expected_profile_34)
         pd.testing.assert_frame_equal(self.instance.profiles["28"], self.expected_profile_28)
-        pd.testing.assert_frame_equal(self.instance.inputs, self.expected_inputs)
+        pd.testing.assert_frame_equal(self.instance.main, self.expected_main)
         pd.testing.assert_frame_equal(self.instance.objects, self.expected_objects)

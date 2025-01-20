@@ -44,24 +44,23 @@ class CaTopHandler:
     def execute(
             self,
             profiles_path_postfix: str = "profiles",
-            input_path_postfix: str = "main.csv",
-            object_path_postfix: str = "objects.csv",
             profile_extension: str = ".txt",
             profile_separator: str = "\t",
             profile_decimal: str = ",",
             profile_column_aliases: Optional[Dict[str, str]] = { "l": "X",
                                                                  "h" : "Feature Profile 1"  },
-            input_extension: str = ".csv",
-            input_separator: str = ";",
-            input_decimal: str = ",",
-            input_column_aliases: Optional[Dict[str, str]] = { "name": "name",
+            main_path_postfix: str = "main.csv",
+            main_separator: str = ";",
+            main_decimal: str = ",",
+            main_column_aliases: Optional[Dict[str, str]] = { "name": "name",
                                                                 "type" : "type",
                                                                 "area" : "area",
                                                                 "slope" : "slope",
                                                                 "W" : "W",
                                                                 "hi" : "hi",
-                                                                "cat" : "cat" },
-            object_extension: str = ".csv",
+                                                                "cat" : "cat",
+                                                                "plt" : "plt" },
+            object_path_postfix: str = "objects.csv",
             object_separator: str = ",",
             object_decimal: str = ".",
             object_column_aliases: Optional[Dict[str, str]] = { "name": "name",
@@ -85,12 +84,10 @@ class CaTopHandler:
             --profile_decimal        | TEXT | Decimal character for profile files (default: ,).
             --profile_column_aliases | DICT | Optional column renaming dictionary for profiles.
 
-            --input_extension        | TEXT | File extension for the input CSV (default: .csv).
-            --input_separator        | TEXT | Separator for the input CSV (default: ;).
-            --input_decimal          | TEXT | Decimal character for the input CSV (default: ,).
-            --input_column_aliases   | DICT | Optional column renaming dictionary for the input CSV.
+            --main_separator         | TEXT | Separator for the input CSV (default: ;).
+            --main_decimal           | TEXT | Decimal character for the input CSV (default: ,).
+            --main_column_aliases    | DICT | Optional column renaming dictionary for the input CSV.
 
-            --object_extension       | TEXT | File extension for the objects CSV (default: .csv).
             --object_separator       | TEXT | Separator for the objects CSV (default: ,).
             --object_decimal         | TEXT | Decimal character for the objects CSV (default: .).
             --object_column_aliases  | DICT | Optional column renaming dictionary for the objects CSV.
@@ -105,19 +102,17 @@ class CaTopHandler:
             column_aliases=profile_column_aliases,
         )
 
-        inputs_path = os.path.join(self.handler.path, input_path_postfix)
-        self.handler.inputs = self.handler.load_csv(
-            inputs_path,
-            file_extension=input_extension,
-            separator=input_separator,
-            decimal=input_decimal,
-            column_aliases=input_column_aliases,
+        main_path = os.path.join(self.handler.path, main_path_postfix)
+        self.handler.main = self.handler.load_csv(
+            main_path,
+            separator=main_separator,
+            decimal=main_decimal,
+            column_aliases=main_column_aliases,
         )
 
         objects_path = os.path.join(self.handler.path, object_path_postfix)
         self.handler.objects = self.handler.load_csv(
             objects_path,
-            file_extension=object_extension,
             separator=object_separator,
             decimal=object_decimal,
             column_aliases=object_column_aliases,
@@ -208,13 +203,83 @@ class CaTopHandler:
                     else:
                         print(f"Profile '{profile_name}' does not exist.")
 
-                print("Input:\n", getattr(self.handler.inputs, mode)())
+                print("Input:\n", getattr(self.handler.main, mode)())
                 print("Objects:\n", getattr(self.handler.objects, mode)())
 
             else:
                 print(f"Invalid mode: {mode}. Supported modes: {', '.join(supported_modes)}.")
 
-            self.handler.save_dfs_to_csv()   
+
+    def save_dfs_to_csv(
+                self,
+                path_folder: str = "result",
+                profiles_path_postfix: str = "profiles",
+                profile_extension: str = ".txt",
+                profile_separator: str = ";",
+                profile_decimal: str = ",",
+                profile_column_aliases: Optional[Dict[str, str]] = { "l": "l",
+                                                                     "h" : "h"  },
+                main_path_postfix: str = "main.csv",
+                main_separator: str = ";",
+                main_decimal: str = ",",
+                main_column_aliases: Optional[Dict[str, str]] = { "name": "№ очага",
+                                                                    "type" : "Морфологический тип",
+                                                                    "area" : "Площадь, га",
+                                                                    "slope" : "Угол наклона зон зарождения и транзита, °",
+                                                                    "W" : "Водозапас, мм",
+                                                                    "hi" : "Высота снежного покрова, м",
+                                                                    "cat" : "Вид",
+                                                                    "plt" : "Pтл, кг/м3",
+                                                                    "tg_psi" : "Tgψ",
+                                                                    "volume" : "Объем, тыс. м3",
+                                                                    "L_max" : "Дальность выброса лавины, м"
+                                                                    },
+                object_path_postfix: str = "objects.csv",
+                object_separator: str = ";",
+                object_decimal: str = ",",
+                object_column_aliases: Optional[Dict[str, str]] = { "name": "name",
+                                                                    "object" : "object",
+                                                                    "dist" : "dist" },
+            ) -> None:
+
+            save_path = os.path.join(self.handler.path, path_folder)
+            os.makedirs(save_path, exist_ok=True)
+
+            input_path = os.path.join(save_path, main_path_postfix)
+            reversed_input_aliases = main_column_aliases
+            self.handler.main.rename(columns=main_column_aliases, inplace=True)
+            self.handler.main.to_csv(
+                input_path, 
+                index=False, 
+                sep=main_separator, 
+                decimal=main_decimal
+            )
+
+            object_path = os.path.join(save_path, object_path_postfix)
+            reversed_object_aliases = object_column_aliases
+            self.handler.objects.rename(columns=object_column_aliases, inplace=True)
+            self.handler.objects.to_csv(
+                object_path, 
+                index=False, 
+                sep=object_separator, 
+                decimal=object_decimal
+            )
+
+            profiles_dir = os.path.join(save_path, profiles_path_postfix)
+            os.makedirs(profiles_dir, exist_ok=True)
+            for name, df in self.handler.profiles.items():
+                if isinstance(df, pd.DataFrame):
+                    profile_path = os.path.join(profiles_dir, f"{name}{profile_extension}")
+                    df.rename(columns=profile_column_aliases, inplace=True)
+                    df.to_csv(
+                        profile_path, 
+                        index=False, 
+                        sep=profile_separator, 
+                        decimal=profile_decimal
+                    )
+
+            print(f"Data saved to: {save_path}")
+
 
 
 class CaHandler:
@@ -232,7 +297,7 @@ class CaHandler:
         self.config_file = None
         self.path = None
         self.profiles = {}
-        self.inputs = None
+        self.main = None
         self.objects = None
 
 
@@ -279,7 +344,6 @@ class CaHandler:
     def load_csv(
             self,
             file_path: str,
-            file_extension: str,
             separator: str,
             decimal: str,
             column_aliases: Optional[Dict[str, str]] = None,
@@ -299,8 +363,6 @@ class CaHandler:
         :raises ValueError: If the file does not have the expected extension.
 
         """
-        if not file_path.endswith(file_extension):
-            raise ValueError(f"File must have the extension {file_extension}")
         df = pd.read_csv(file_path, sep=separator, decimal=decimal)
         if column_aliases:
             df.rename(columns=self._reverse_dict(column_aliases), inplace=True)
@@ -342,19 +404,4 @@ class CaHandler:
         else:
             return path
         
-    def save_dfs_to_csv(self):
-          # Ensure the base save_path exists
-          save_path = os.path.join(self.path, "result")
-          os.makedirs(save_path, exist_ok=True)
-
-          self.inputs.to_csv(os.path.join(save_path, "inputs.csv"), index=False)
-          self.objects.to_csv(os.path.join(save_path, "objects.csv"), index=False)
-          
-          # Save profiles DataFrames in 'profiles' directory
-          profiles_dir = os.path.join(save_path, "profiles")
-          os.makedirs(profiles_dir, exist_ok=True)
-          for name, df in self.profiles.items():
-              if isinstance(df, pd.DataFrame):
-                  df.to_csv(os.path.join(profiles_dir, f"{name}.csv"), index=False)
-
-          print(f"Profiles saved to: {profiles_dir}")
+    
