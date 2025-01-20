@@ -20,11 +20,11 @@ class CaTopHandler:
         self.core = core
         self.handler = handler
 
-    
+
     def extract(self, path: str = None, verbose: str = "y") -> str:
         """
         Extracts the contents of a ZIP file into a directory with the same name as the archive.
-        It returns and saves into memory of programm the path to the extracted folder. 
+        It returns and saves into memory of programm the path to the extracted folder.
         If the file is not a ZIP archive, returns the original path.
 
           Options:
@@ -32,13 +32,13 @@ class CaTopHandler:
             --path    | TEXT | Path to a ZIP archive or a folder containing the data.
             --verbose | TEXT | Enable or disable output messages (default: "y"; verbose: "1|y|yes|true", no-verbose: "any").
         """
-        
+
         self.handler.path = self.handler.extract(path)
 
         if str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}:
             print(f"Data folder found {self.handler.path}.")
 
-        return self.handler.path 
+        return self.handler.path
 
 
     def execute(
@@ -49,12 +49,12 @@ class CaTopHandler:
             profile_extension: str = ".txt",
             profile_separator: str = "\t",
             profile_decimal: str = ",",
-            profile_column_aliases: Optional[Dict[str, str]] = { "x": "X", 
-                                                                 "alt" : "Feature Profile 1"  },
+            profile_column_aliases: Optional[Dict[str, str]] = { "l": "X",
+                                                                 "h" : "Feature Profile 1"  },
             input_extension: str = ".csv",
             input_separator: str = ";",
             input_decimal: str = ",",
-            input_column_aliases: Optional[Dict[str, str]] = { "name": "name", 
+            input_column_aliases: Optional[Dict[str, str]] = { "name": "name",
                                                                 "type" : "type",
                                                                 "area" : "area",
                                                                 "slope" : "slope",
@@ -138,7 +138,7 @@ class CaTopHandler:
             crystal [cmd] --path path/to/data --input_extension .txt
         """
 
-    
+
         self.handler.path = self.handler.extract(path)
 
         args: Dict[str, Any] = {
@@ -153,7 +153,7 @@ class CaTopHandler:
         if str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}:
             print(f"Data was read and loaded from: {self.handler.path}.")
 
-    
+
     def print(self, mode: str = "sample", profiles: str = "'any'", verbose: str = "y") -> None:
         """
           Displays a summary based on the chosen mode.
@@ -167,15 +167,15 @@ class CaTopHandler:
 
           Example:
             crystal [cmd] --mode head
-            crystal [cmd] --mode head --profiles "['1', '[name]']" 
+            crystal [cmd] --mode head --profiles "['1', '[name]']"
         """
-        
+
         if str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}:
-            
+
             supported_modes = {"head", "tail", "info", "describe", "sample"}
-        
+
             if mode in supported_modes:
-                
+
                 print(f"Number of Profiles: {len(self.handler.profiles)}")
                 try:
                       # Parse profile string into a list
@@ -207,10 +207,10 @@ class CaTopHandler:
                             print(f"Mode '{mode}' is not callable for the profile '{profile_name}'.")
                     else:
                         print(f"Profile '{profile_name}' does not exist.")
-                
+
                 print("Input:\n", getattr(self.handler.inputs, mode)())
                 print("Objects:\n", getattr(self.handler.objects, mode)())
-            
+
             else:
                 print(f"Invalid mode: {mode}. Supported modes: {', '.join(supported_modes)}.")
 
@@ -227,7 +227,7 @@ class CaHandler:
         """
         Initializes the CaHandler instance with empty profiles and CSV placeholders.
         """
-        
+
         self.config_file = None
         self.path = None
         self.profiles = {}
@@ -260,9 +260,9 @@ class CaHandler:
         :return: A dictionary where keys are filenames and values are corresponding DataFrames.
 
         """
-        
+
         profiles = {}
-        
+
         for filename in os.listdir(profiles_path):
             if filename.endswith(file_extension):
                 filepath = os.path.join(profiles_path, filename)
@@ -271,7 +271,7 @@ class CaHandler:
                     df.rename(columns=self._reverse_dict(column_aliases), inplace=True)
                 filename = os.path.splitext(os.path.basename(filepath))[0]
                 profiles[filename] = df
-        
+
         return profiles
 
 
@@ -303,18 +303,18 @@ class CaHandler:
         df = pd.read_csv(file_path, sep=separator, decimal=decimal)
         if column_aliases:
             df.rename(columns=self._reverse_dict(column_aliases), inplace=True)
-        
+
         return df
 
 
     def extract(self, path: str) -> str:
         """
-        Extracts the contents of a ZIP file into a directory with the same name as the archive and returns the path to the extracted folder. 
+        Extracts the contents of a ZIP file into a directory with the same name as the archive and returns the path to the extracted folder.
         If the file is not a ZIP archive, returns the original path.
 
         :param path Path to a ZIP archive or a folder containing the data.
         """
-        
+
         if not path:
             raise ValueError("Path must not be None or empty.")
 

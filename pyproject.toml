@@ -18,7 +18,8 @@ keywords = ["Avalanches"]
 dependencies = [
     "scipy==1.15.1",
     "pandas==2.2.3",
-    "numpy==1.23.5"
+    "numpy==1.23.5",
+    "PyYAML==6.0.2"
 ]
 
 [project.scripts]

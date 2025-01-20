@@ -5,10 +5,34 @@
 
 ## Installation
 
+
 ```bash
-python3 -m build
-pip install dist/crystal-[0.0.0]-py3-none-any.whl
+cd ~
+sudo apt install -y python3-pip
+sudo apt install -y build-essential libssl-dev libffi-dev python3-dev
+python3 -m venv crystal_venv
+source crystal_venv/bin/activate
 ```
+> add source crystal_venv/bin/activate at the end of `.bashrc`.
+> ```bash
+> vim ~/.bashrc
+>```
+
+```bash
+sudo apt update
+sudo apt install python3
+pip install build
+```
+
+
+```bash
+git clone [repository]
+cd path/to/crystal
+python3 -m build
+pip install dist/crystal-0.0.0-py3-none-any.whl
+```
+
+
 
 > ```bash
 > export PATH=$PATH:/path/to/your/bin

@@ -18,7 +18,7 @@ class CaTopRunner:
         :param handler (CaTopHandler): An instance of the top handler manager.
         :param calculator (CaTopCalculator): An instance of the top claculator manager.
         """
-        
+
         self.core = core
         self.cfg = cfg
         self.handler = handler
@@ -38,12 +38,12 @@ class CaTopRunner:
             crystal [cmd] --path path/to/data
             crystal [cmd] --path path/to/data --hand.read.verbose no
         """
-        
+
         # Start analysis of data step by step using the command list
-        isVerbose = str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}  
+        isVerbose = str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}
         if (isVerbose):
             print("Starting to process your data with the given crystal analysis.")
-    
+
         # Look for a directory with data and unzip if needed
         handler_extract_name = self.core.register.find_command_name(self.handler.extract)
         handler_extract_args: Dict[str, Any] = {
@@ -60,7 +60,7 @@ class CaTopRunner:
             command_args=handler_extract_args,
             commands=self.core.register.commands
         )
-        
+
         # Look for a configuration file in the data folder
         # Load the configuration file if it exists in the data folder; otherwise, use the default path.
         cfg_find_name = self.core.register.find_command_name(self.cfg.find_config_file)
@@ -78,7 +78,7 @@ class CaTopRunner:
             command_args=cfg_find_args,
             commands=self.core.register.commands
         )
-        
+
         # Upload the configuration file or proceed with default settings if not found
         cfg_upload_name = self.core.register.find_command_name(self.cfg.upload)
         cfg_upload_args: Dict[str, Any] = {
@@ -112,8 +112,8 @@ class CaTopRunner:
             command_args=handler_read_args,
             commands=self.core.register.commands
         )
-        
-       # proccesing input table 
+
+       # proccesing input table
         calc_input_name = self.core.register.find_command_name(self.calculator.process_inputs)
         calc_input_args: Dict[str, Any] = {
             key[len(calc_input_name) + 1:]: value[0] if isinstance(value, list) else value
@@ -143,7 +143,8 @@ class CaTopRunner:
             commands=self.core.register.commands
         )
 
-        
+
+
         # print data that was loaded and proccesed
         handler_print_name = self.core.register.find_command_name(self.handler.print)
         handler_print_args: Dict[str, Any] = {
