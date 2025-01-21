@@ -132,7 +132,6 @@ class CaConfigurator:
 
         if not file_path.is_file():
             return False
-            #raise FileNotFoundError(f"File not found: {path}.")
 
         extension = file_path.suffix.lower()
         with file_path.open("r", encoding="utf-8") as f:
