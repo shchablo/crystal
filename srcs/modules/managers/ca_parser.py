@@ -18,7 +18,7 @@ class CaParser:
 
         :return list: A list of tuples where each tuple contains the command name and a dictionary of its parsed arguments.
         """
-        
+
         parsed_commands = []
         current_command = None
         command_args = []
@@ -40,8 +40,8 @@ class CaParser:
             parsed_commands.append((current_command, parsed_args))
 
         return parsed_commands
-    
-    
+
+
     def _prepare_args(self, command: str, command_args: List[str], commands: Dict[str, Callable]) -> Dict[str, Any]:
         """
         Parses the arguments for a specific command.
@@ -58,7 +58,6 @@ class CaParser:
         func = commands[command]
         func_signature = inspect.signature(func)
 
-        # Check if the function accepts **kwargs
         accepts_kwargs = any(
             param.kind == inspect.Parameter.VAR_KEYWORD
             for param in func_signature.parameters.values()

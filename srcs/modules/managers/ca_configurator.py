@@ -16,21 +16,21 @@ class CaTopConfigurator:
         """
         self.core = core
 
-    
+
     def find_config_file(self, path: str = None, verbose: str = "y") -> str:
-        
+
         config_file = self.core.configurator.find_config_file(path)
 
         if str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}:
             print(f"Configuration file found: {config_file}.")
 
-        return config_file 
+        return config_file
 
     def upload(self, path: str = None, verbose: str = "y") -> None:
         """
         Loads a configuration file into the manager.
 
-          This command allows uploading a configuration file in JSON or YAML format. 
+          This command allows uploading a configuration file in JSON or YAML format.
           Supported file formats include: .json, .yaml, .yml.
 
           Options:
@@ -47,9 +47,9 @@ class CaTopConfigurator:
             path = self.core.configurator.default_path
             if isVerbose:
                 print(f"Loading the default file: {path}.")
-        
+
         isLoaded = self.core.configurator.upload(path)
-        
+
         if isVerbose:
             if (isLoaded):
                 print(f"Configuration successfully loaded from {path}.")
@@ -64,7 +64,7 @@ class CaTopConfigurator:
         """
         Saves the current configuration to a specified file.
 
-          This command allows uploading a configuration file in JSON or YAML format. 
+          This command allows uploading a configuration file in JSON or YAML format.
           Supported file formats include: .json, .yaml, .yml.
 
           Options:
@@ -74,7 +74,7 @@ class CaTopConfigurator:
           Example:
             crystal [cmd] --path path/to/file.json
          """
-        
+
         self.core.configurator.download(path)
         if str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}:
             print(f"Configuration successfully saved to {path}.")
@@ -94,7 +94,7 @@ class CaConfigurator:
         """
         Initializes the configuration manager with an empty configuration dictionary.
         """
-        
+
         self.default_path: str
         self.config = {}
 
@@ -123,17 +123,17 @@ class CaConfigurator:
     def upload(self, path: str) -> bool:
         """
         Loads a configuration file (JSON or YAML) into the internal dictionary.
-        
+
         :param path: Path to the configuration file.
-        
+
         :raises ValueError: If the file format is unsupported.
-        """       
+        """
         file_path = Path(path)
 
         if not file_path.is_file():
             return False
             #raise FileNotFoundError(f"File not found: {path}.")
-        
+
         extension = file_path.suffix.lower()
         with file_path.open("r", encoding="utf-8") as f:
             if extension == ".json":
@@ -142,7 +142,7 @@ class CaConfigurator:
                 self.config.update(yaml.safe_load(f))
             else:
                 raise ValueError(f"Unsupported file format: {extension}")
-        
+
         return True
 
 
@@ -151,7 +151,7 @@ class CaConfigurator:
         Saves the current configuration to a specified file in JSON or YAML format.
 
         :param path: The path to the output configuration file.
-        
+
         :raises ValueError: If the file format is unsupported.
         """
         file_path = Path(path)
@@ -165,19 +165,23 @@ class CaConfigurator:
             else:
                 raise ValueError(f"Unsupported file format: {extension}")
 
+        return
+
 
     def update(self, new_config: dict) -> None:
         """
         Updates the internal configuration with the given dictionary.
 
         :param new_config: A dictionary containing new configuration values.
-        
+
         :raises TypeError: If the provided new_config is not a dictionary.
         """
         if not isinstance(new_config, dict):
             raise TypeError("The new configuration must be a dictionary.")
 
         self.config.update(new_config)
+
+        return
 
 
     def get(self) -> dict:

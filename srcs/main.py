@@ -58,7 +58,6 @@ def main():
     core.register.add_command("hand.dump", top_handler.print)
     core.register.add_command("hand.save", top_handler.save_dfs_to_csv)
 
-
     calculator = CaCalculator(handler, kh, kf, tgpsi_ch, tgpsi_unch)
     top_calculator = CaTopCalculator(core, calculator)
     core.register.add_command("calc.main", top_calculator.process_main)
@@ -73,6 +72,8 @@ def main():
     core.register.add_command("run", top_runner.main)
 
     core.run()
+
+    return
 
 
 if __name__ == "__main__":

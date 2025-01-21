@@ -10,7 +10,7 @@ class CaTopCalculator:
         Initializes the top-level class with entry points for various actions.
 
         :param core (CaCore): An instance of the core manager.
-        :param handler (CaCalculator): An instance of the handler manager.
+        :param calculator (CaCalculator): An instance of the calculator manager.
 
         """
         self.core = core
@@ -18,7 +18,7 @@ class CaTopCalculator:
 
 
     def process_main(self, verbose: str = "y") -> None:
-        
+
         self.calculator.handler.main['area'] = self.calculator.handler.main['area'].astype(float).round(2)
         self.calculator.handler.main['slope'] = self.calculator.handler.main['slope'].astype(float).round(1)
         self.calculator.handler.main['W'] = self.calculator.handler.main['W'].astype(float).round(0)
@@ -105,9 +105,9 @@ class CaTopCalculator:
                     self.calculator.handler.objects.loc[idx, 'P_peak'] = closest_row['P_peak']
                     self.calculator.handler.objects.loc[idx, 'h_front'] = closest_row['h_front']
                     self.calculator.handler.objects.loc[idx, 'L_max'] = self.calculator.find_intersection(df)
-            
+
             self.calculator.handler.main['L_max'] = self.calculator.find_intersection(df)
-            
+
 
         if isVerbose:
             print("All objects have been processed.")
@@ -252,7 +252,7 @@ class CaCalculator:
             return round(((0.08 * (math.log(volume) - 0.1)) * math.pow(velocity, 0.74 + 0.12)), 1)
         except (KeyError, IndexError, ValueError, TypeError):
             return None
-        
+
     def find_intersection(self, df):
         line_h = LineString([(x, h) for x, h in zip(df['l'], df['h']) if x != 0])
         line_h_sec = LineString([(x, h) for x, h in zip(df['l'], df['h_sec']) if x != 0])

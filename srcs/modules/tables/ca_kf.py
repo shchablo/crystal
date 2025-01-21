@@ -9,10 +9,10 @@ class CaTopKf:
     def __init__(self, kf):
         """
         Initializes the top-level class with entry points for various actions.
-        
+
         :param kf (CaKf): An instance of the core manager.
         """
-        
+
         self.kf = kf
 
 
@@ -41,7 +41,7 @@ class CaKfCoefficientTable:
     """
     Data class to hold ranges and coefficients for avalanche types.
     """
-    
+
     height_zero_ranges: List[Tuple[float, float]] = field(default_factory=lambda: [
         (-float("inf"), 0.2),
         (0.2, 0.4),
@@ -51,7 +51,7 @@ class CaKfCoefficientTable:
         (1.5, 2.0),
         (2.0, float("inf")),
     ])
-    
+
     area_ranges: List[Tuple[float, float]] = field(default_factory=lambda: [
         (-float("inf"), 5),
         (5, 10),
@@ -59,7 +59,7 @@ class CaKfCoefficientTable:
         (20, 40),
         (40, float("inf")),
     ])
-    
+
     coefficients: dict = field(default_factory=lambda: {
         "dry": [
             [0.15, 0.12, 0.10, 0.07, 0.05],
@@ -97,11 +97,11 @@ class CaKf:
         """
         Get the index of the range to which the value belongs.
         """
-        
+
         for i, (low, high) in enumerate(ranges):
             if low <= value < high:
                 return i
-        
+
         raise ValueError(f"Value {value} out of range.")
 
 
@@ -115,13 +115,13 @@ class CaKf:
 
         :return: Corresponding kF coefficient for the given height and area.
         """
-        
+
         if avalanche_type not in self.table.coefficients:
             raise ValueError("Invalid avalanche type. Use 'dry' or 'wet'.")
 
         height_index = self._get_range_index(height_zero, self.table.height_zero_ranges)
         area_index = self._get_range_index(area, self.table.area_ranges)
-        
+
         return self.table.coefficients[avalanche_type][height_index][area_index]
 
 
@@ -135,7 +135,7 @@ class CaKf:
 
         :return: List of tuples (height, area, kF coefficient).
         """
-        
+
         return [
             (h, area, self.get_coefficient(h, area, avalanche_type))
             for h in heights_zero

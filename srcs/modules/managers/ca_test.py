@@ -18,3 +18,5 @@ def ca_test():
 
     if not result.wasSuccessful():
         sys.exit(1)
+
+    return

@@ -16,10 +16,10 @@ class CaCore:
 
     def __init__(self):
         """
-        Initializes the core application with a parser, configurator, and register. 
+        Initializes the core application with a parser, configurator, and register.
         Automatically registers default commands.
         """
-        
+
         self.parser = CaParser()
         self.configurator = CaConfigurator()
         self.register = CaRegister(self.configurator)
@@ -32,9 +32,11 @@ class CaCore:
         :param parsed_commands (list): List of parsed commands and their arguments.
         :param commands (dict): A dictionary mapping command names to functions.
         """
-        
+
         for command, command_args in parsed_commands:
             self.execute_command(command, command_args, commands)
+
+        return
 
 
     def execute_command(self, command: str, command_args: Dict[str, Any], commands: Dict[str, Any]) -> Any:
@@ -45,7 +47,7 @@ class CaCore:
         :param command_args: A dictionary of arguments for the command.
         :param commands: A dictionary mapping command names to functions.
         """
-        
+
         if command not in commands:
             print(f"Command '{command}' not found.")
             return
@@ -64,20 +66,10 @@ class CaCore:
             # Priority: Command arguments > Config file > Default value
             config_value = self.configurator.config.get(command, {}).get(param_name, param.default)
             kwargs[param_name] = command_args.get(param_name, config_value)
-        
+
         if accepts_kwargs:
             for key, value in command_args.items():
                 kwargs[key] = value
-
-
-        #if accepts_kwargs:
-        #    for key, value in command_args.items():
-        #        kwargs[key] = value
-        #else:
-        #    for param_name, param in func_signature.parameters.items():
-        #        # Priority: Command arguments > Config file > Default value
-        #        config_value = self.configurator.config.get(command, {}).get(param_name, param.default)
-        #        kwargs[param_name] = command_args.get(param_name, config_value)
 
         try:
             result = func(**kwargs)
@@ -90,7 +82,7 @@ class CaCore:
         """
         Runs the core application. Supports both CLI and interactive modes.
         """
-        
+
         if len(sys.argv) > 1:
             # Command-line mode
             args = sys.argv[1:]
@@ -117,3 +109,5 @@ class CaCore:
                     break
                 except Exception as e:
                     print(f"An error occurred: {e}")
+            return
+        return

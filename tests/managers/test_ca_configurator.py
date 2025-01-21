@@ -12,11 +12,11 @@ class TestCaConfigurator(unittest.TestCase):
 
 
     def setUp(self):
-        
+
         self.test_dir = tempfile.TemporaryDirectory()
         self.test_json = os.path.join(self.test_dir.name, "test_ca_configurator.json")
         self.test_yaml = os.path.join(self.test_dir.name, "test_ca_configurator.yaml")
-        
+
         self.configurator = CaConfigurator()
         self.configurator.config = {}
 
@@ -24,10 +24,14 @@ class TestCaConfigurator(unittest.TestCase):
     def tearDown(self):
         self.test_dir.cleanup()
 
+        return
+
 
     def test_download_config_json(self):
         self.configurator.config = {"key": "value"}
         self.configurator.download(self.test_json)
+
+        return
 
 
     def test_upload_config_json(self):
@@ -36,10 +40,14 @@ class TestCaConfigurator(unittest.TestCase):
         self.configurator.upload(self.test_json)
         self.assertEqual(self.configurator.config["key"], "value")
 
+        return
+
 
     def test_download_config_yaml(self):
         self.configurator.config = {"key": "value"}
         self.configurator.download(self.test_yaml)
+
+        return
 
 
     def test_upload_config_yaml(self):
@@ -47,3 +55,5 @@ class TestCaConfigurator(unittest.TestCase):
             f.write("key: value\n")
         self.configurator.upload(self.test_yaml)
         self.assertEqual(self.configurator.config["key"], "value")
+
+        return
