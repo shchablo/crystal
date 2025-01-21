@@ -27,13 +27,13 @@ class CaTopRunner:
         self.plotter = plotter
 
 
-    def execute_command(self, command_obj, command_key_prefix, kwargs, verbose, additional_args=None):
+    def execute_command(self, command_obj, verbose, additional_args, **kwargs):
        is_verbose = str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}
        command_name = self.core.register.find_command_name(command_obj)
        command_args = {
-           key[len(command_key_prefix) + 1:]: value[0] if isinstance(value, list) else value
+           key[len(command_name) + 1:]: value[0] if isinstance(value, list) else value
            for key, value in kwargs.items()
-           if key.startswith(command_key_prefix + ".")
+           if key.startswith(command_name + ".")
        }
        if not is_verbose:
            command_args["verbose"] = verbose[0]
@@ -65,40 +65,40 @@ class CaTopRunner:
             print("Welcome to the snow dance: a graceful performance of data processing and crystal-clear analysis.")
 
         # Look for a directory with data and unzip if needed
-        data_folder_path = self.execute_command( self.handler.extract, "handler.extract", kwargs, verbose,
-                                                 additional_args={"path": path[0]} if path else None )
+        data_folder_path = self.execute_command( self.handler.extract, verbose,
+                                                 {"path": path[0]} if path else None, **kwargs )
 
         # Look for a configuration file in the data folder
-        cfg_file = self.execute_command( self.cfg.find_config_file, "cfg.find_config_file", kwargs, verbose,
-                                         additional_args={"path": data_folder_path} if data_folder_path else None )
+        cfg_file = self.execute_command( self.cfg.find_config_file, verbose,
+                                         {"path": data_folder_path} if data_folder_path else None, **kwargs )
 
         # Upload the configuration file
-        self.execute_command( self.cfg.upload, "cfg.upload", kwargs, verbose,
-                              additional_args={"path": cfg_file} if cfg_file else None )
+        self.execute_command( self.cfg.upload, verbose,
+                              {"path": cfg_file} if cfg_file else None, **kwargs )
 
         # Load all data into data frames
-        self.execute_command( self.handler.read, "handler.read", kwargs, verbose,
-                              additional_args={"path": data_folder_path} if data_folder_path else None )
+        self.execute_command( self.handler.read, verbose,
+                              {"path": data_folder_path} if data_folder_path else None, **kwargs )
 
         # Process input table
-        self.execute_command(self.calculator.process_main, "calculator.process_main", kwargs, verbose)
+        self.execute_command(self.calculator.process_main, verbose, None, **kwargs)
 
         # Process profiles tables
-        self.execute_command(self.calculator.process_profiles, "calculator.process_profiles", kwargs, verbose)
+        self.execute_command(self.calculator.process_profiles, verbose, None, **kwargs)
 
         # Process objects tables
-        self.execute_command(self.calculator.analysis_profiles, "calculator.analysis_profiles", kwargs, verbose)
+        self.execute_command(self.calculator.analysis_profiles, verbose, None, **kwargs)
 
         # Print loaded and processed data
-        self.execute_command(self.handler.print, "handler.print", kwargs, verbose)
+        self.execute_command(self.handler.print, verbose, None, **kwargs)
 
         # Plot results
-        self.execute_command(self.plotter.all, "plotter.all", kwargs, verbose)
+        self.execute_command(self.plotter.all, verbose, None, **kwargs)
 
         # Save results
-        self.execute_command(self.handler.save_dfs_to_csv, "handler.save_dfs_to_csv", kwargs, verbose)
+        self.execute_command(self.handler.save_dfs_to_csv, verbose, None, **kwargs)
 
         if is_verbose:
-            print("Thank you for dancing with us in this enchanting blizzard of frost, ice, crystals.")
+            print("Thank you for dancing with us in this enchanting blizzard of frost, ice and crystals.")
 
         return

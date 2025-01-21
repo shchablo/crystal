@@ -18,7 +18,17 @@ class CaTopCalculator:
 
 
     def process_main(self, verbose: str = "y") -> None:
+        """
+        Process and round the main input data to specified precision levels.
 
+          This function applies rounding to various columns in the main dataset and calculates additional values.
+
+          Options:
+            --verbose | STRING | Controls the verbosity of the process (default: "y").
+                                 Accepted values: "y", "yes", "true", "1" for verbose output.
+          Example:
+            crystal process_main --verbose "yes"
+        """
         self.calculator.handler.main['area'] = self.calculator.handler.main['area'].astype(float).round(2)
         self.calculator.handler.main['slope'] = self.calculator.handler.main['slope'].astype(float).round(1)
         self.calculator.handler.main['W'] = self.calculator.handler.main['W'].astype(float).round(0)
@@ -33,7 +43,19 @@ class CaTopCalculator:
         return
 
     def process_profiles(self, verbose: str = "y") -> None:
+        """
+        Process profiles for the dataset, performing calculations and updates.
 
+          This function processes each profile in the dataset by applying a series of calculations to create new columns.
+          It also updates profile-specific parameters based on conditions.
+
+          Options:
+            --verbose | STRING | Controls the verbosity of the process (default: "y").
+                                 Accepted values: "y", "yes", "true", "1" for verbose output.
+
+          Example:
+            crystal process_profiles --verbose "1"
+        """
         isVerbose = verbose.strip().lower() in {"1", "y", "yes", "true"}
 
         if isVerbose:
@@ -41,6 +63,7 @@ class CaTopCalculator:
 
         for key, df in self.calculator.handler.profiles.items():
 
+            cat = self.calculator.find_in_main(key, "cat")
             atype = self.calculator.find_in_main(key, "type")
             tgpsi = self.calculator.find_in_main(key, "tg_psi")
             plt = self.calculator.find_in_main(key, "plt")
@@ -72,7 +95,7 @@ class CaTopCalculator:
             df["P_peak"] = df.apply(self.calculator.calculate_profile_Ppeak, axis=1)
 
             if (self.calculator._isCh(atype)) == True:
-                df["h_front"] = df.apply(lambda row: self.calculator.calculate_profile_hfront_ch(row, volume), axis=1)
+                df["h_front"] = df.apply(lambda row: self.calculator.calculate_profile_hfront_ch(row, volume, cat), axis=1)
             elif (self.calculator._isCh(atype)) == False:
                 df["h_front"] = 3 * hi
 
@@ -82,7 +105,19 @@ class CaTopCalculator:
         return
 
     def analysis_profiles(self, verbose: str = "y") -> None:
+        """
+        Analyze and associate profiles with objects.
 
+          This function identifies objects that match the profiles by name and calculates key values. 
+          It also updates the main dataset with maximum intersection lengths.
+
+          Options:
+            --verbose | STRING | Controls the verbosity of the process (default: "y").
+                                 Accepted values: "y", "yes", "true", "1" for verbose output.
+
+          Example:
+            crystal analysis_profiles --verbose "true"
+        """
         isVerbose = verbose.strip().lower() in {"1", "y", "yes", "true"}
 
         if isVerbose:
@@ -106,9 +141,8 @@ class CaTopCalculator:
                     self.calculator.handler.objects.loc[idx, 'h_front'] = closest_row['h_front']
                     self.calculator.handler.objects.loc[idx, 'L_max'] = self.calculator.find_intersection(df)
 
-            self.calculator.handler.main['L_max'] = self.calculator.find_intersection(df)
-
-
+            self.calculator.handler.main.loc[self.calculator.handler.main['name'].astype(str) == str(key), 'L_max'] = self.calculator.find_intersection(df)
+                    
         if isVerbose:
             print("All objects have been processed.")
 
@@ -244,13 +278,27 @@ class CaCalculator:
             return None
 
 
-    def calculate_profile_hfront_ch(self, row, volume):
-        try:
-            volume = float(volume) * 1000
-            velocity = float(row["velocity"])
-            return round(((0.08 * (math.log(volume) - 0.1)) * math.pow(velocity, 0.74 + 0.12)), 1)
-        except (KeyError, IndexError, ValueError, TypeError):
-            return None
+    def calculate_profile_hfront_ch(self, row, volume, cat):
+        
+        if (cat == "dry"):
+            try:
+                volume = float(volume) * 1000
+                velocity = float(row["velocity"])
+                log10_volume = math.log10(volume)
+                first_term = 0.08 * log10_volume - 0.1
+                exponent = 0.74 + 0.12 * log10_volume
+                second_term = math.pow(velocity, exponent)
+                result = first_term * second_term
+                return round(result, 1)
+            except (KeyError, IndexError, ValueError, TypeError):
+                return None
+        elif (cat == "wet"):
+            try:
+                volume = float(volume) * 1000
+                return round((0.25 * math.pow(velocity, 0.3)), 1)
+            except (KeyError, IndexError, ValueError, TypeError):
+                return None
+
 
     def find_intersection(self, df):
         line_h = LineString([(x, h) for x, h in zip(df['l'], df['h']) if x != 0])

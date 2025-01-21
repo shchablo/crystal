@@ -217,16 +217,18 @@ class CaTopHandler:
     def save_dfs_to_csv(
                 self,
                 path: str = "result",
+                encoding: str = 'cp1251',
+
                 profiles_path_postfix: str = "profiles",
                 profile_extension: str = ".txt",
                 profile_separator: str = ";",
                 profile_decimal: str = ",",
                 profile_column_aliases: Optional[Dict[str, str]] = { "l": "Гориз. проложение, м",
                                                                      "h" : "Абс. высота, м",
-                                                                     "tg" : "tg",
+                                                                     "tg" : "Тангенс",
                                                                      "rad" : "Угол, рад.",
                                                                      "deg" : "Угол, °",
-                                                                     "tg_psi" : "tgψ",
+                                                                     "tg_psi" : "Тангенс пси",
                                                                      "estim_1" : "Первая расчетная",
                                                                      "h_sec" : "Высота секущей, м",
                                                                      "estim_2" : "Вторая расчетная",
@@ -247,7 +249,7 @@ class CaTopHandler:
                                                                   "hi" : "Высота снежного покрова, м",
                                                                   "cat" : "Вид",
                                                                   "plt" : "Плотность, кг/м3",
-                                                                  "tg_psi" : "tgψ",
+                                                                  "tg_psi" : "Тангенс пси",
                                                                   "volume" : "Объем, тыс. м3",
                                                                   "L_max" : "Дальность выброса лавины, м"
                                                                   },
@@ -273,6 +275,9 @@ class CaTopHandler:
 
               Options:
 
+                --path                   | TEXT | Path to the folder to save the data (default: None).
+                --encoding               | TEXT | Encoding to read the configuration file (default: "utf-8", e.g., "utf-8", "cp1251").
+                
                 --profiles_path_postfix  | TEXT | Subfolder name where profiles are stored (default: profiles).
                 --input_path_postfix     | TEXT | Filename for the input CSV (default: input.csv).
                 --object_path_postfix    | TEXT | Filename for the objects CSV (default: objects.csv).
@@ -305,7 +310,8 @@ class CaTopHandler:
                 input_path,
                 index=False,
                 sep=main_separator,
-                decimal=main_decimal
+                decimal=main_decimal,
+                encoding=encoding
             )
 
             object_path = os.path.join(save_path, object_path_postfix)
@@ -314,7 +320,8 @@ class CaTopHandler:
                 object_path,
                 index=False,
                 sep=object_separator,
-                decimal=object_decimal
+                decimal=object_decimal,
+                encoding=encoding
             )
 
             profiles_dir = os.path.join(save_path, profiles_path_postfix)
@@ -327,7 +334,8 @@ class CaTopHandler:
                         profile_path,
                         index=False,
                         sep=profile_separator,
-                        decimal=profile_decimal
+                        decimal=profile_decimal,
+                        encoding=encoding
                     )
             if str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}:
                 print(f"All results was saved into: {save_path}.")

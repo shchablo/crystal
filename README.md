@@ -5,23 +5,37 @@
 
 ## Installation
 
+
+Update system packages
+
 ```bash
 cd ~
 sudo apt update
-sudo apt install -y python3-pip
-sudo apt install -y build-essential libssl-dev libffi-dev python3-dev
-sudo apt install python3.10-venv
-python3 -m venv cold
 ```
 
+Install Python pip and essential build dependencies
+
 ```bash
+sudo apt install -y python3-pip
+sudo apt install -y build-essential libssl-dev libffi-dev python3-dev
+```
+
+Set up a Python virtual environment
+
+```bash
+sudo apt install python3.10-venv
+python3 -m venv cold
 source ~/cold/bin/activate
 ```
 
-> add source crystal_venv/bin/activate at the end of `.bashrc`.
+> Add virtual environment activation to .bashrc
+> (Edit .bashrc to include the activation command)
+>
 > ```bash
 > vim ~/.bashrc
->```
+> ```
+
+Ensure Python and pip are properly installed
 
 ```bash
 sudo apt update
@@ -29,17 +43,23 @@ sudo apt install python3
 pip install build
 ```
 
+Clone the project repository
+
 ```bash
 git clone [repository]
 cd path/to/crystal
+```
+
+Build and install the project package
+
+```bash
 python3 -m build
 pip install dist/crystal-0.0.0-py3-none-any.whl
 ```
-
+> Add the application binary to the system PATH
 > ```bash
 > export PATH=$PATH:/path/to/your/bin
 > ```
-
 ## Before Start
 
 For a list of available commands, run:

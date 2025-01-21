@@ -18,7 +18,22 @@ class CaTopConfigurator:
 
 
     def find_config_file(self, path: str = None, verbose: str = "y") -> str:
+        """
+        Locate the configuration file based on the provided path.
 
+          This function searches for a configuration file using the specified path. 
+          If the path is not provided, it uses a default search mechanism. 
+          The located configuration file path is returned, and an optional verbose output confirms the found file.
+
+          Options:
+            --path    | STRING | Path to the configuration file (default: None).
+            --verbose | STRING | Controls the verbosity of the process (default: "y").
+                                 Accepted values: "y", "yes", "true", "1" for verbose output.
+        
+          Example:
+            crystal find_config_file --path "/path/to/config" --verbose "yes"
+        """
+        
         config_file = self.core.configurator.find_config_file(path)
 
         if str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}:
@@ -26,7 +41,7 @@ class CaTopConfigurator:
 
         return config_file
 
-    def upload(self, path: str = None, verbose: str = "y") -> None:
+    def upload(self, path: str = None, verbose: str = "y", encoding: str='cp1251') -> None:
         """
         Loads a configuration file into the manager.
 
@@ -34,8 +49,9 @@ class CaTopConfigurator:
           Supported file formats include: .json, .yaml, .yml.
 
           Options:
-            --path    | TEXT | Path to the configuration file (default: None; [name].[json|yaml].
-            --verbose | TEXT | Enable or disable output messages (default: "y"; verbose: "1|y|yes|true", no-verbose: "any").
+            --path     | TEXT | Path to the configuration file (default: None; [name].[json|yaml].
+            --encoding | TEXT | Encoding to read the configuration file (default: "utf-8", e.g., "utf-8", "cp1251").
+            --verbose  | TEXT | Enable or disable output messages (default: "y"; verbose: "1|y|yes|true", no-verbose: "any").
 
           Example:
             crystal [cmd] --path path/to/file.json
@@ -48,7 +64,7 @@ class CaTopConfigurator:
             if isVerbose:
                 print(f"Loading the default file: {path}.")
 
-        isLoaded = self.core.configurator.upload(path)
+        isLoaded = self.core.configurator.upload(path, encoding)
 
         if isVerbose:
             if (isLoaded):
@@ -60,7 +76,7 @@ class CaTopConfigurator:
         return self.core.configurator.config
 
 
-    def download(self, path: str = None, verbose: str = "y") -> None:
+    def download(self, path: str = None, verbose: str = "y", encoding: str='cp1251') -> None:
         """
         Saves the current configuration to a specified file.
 
@@ -68,14 +84,15 @@ class CaTopConfigurator:
           Supported file formats include: .json, .yaml, .yml.
 
           Options:
-            --path    | TEXT | Path to the configuration file (default: None, e.g., [name].[json|yaml].
-            --verbose | TEXT | Enable or disable output messages (default: "y", verbose: "1|y|yes|true", no-verbose: "any").
+            --path     | TEXT | Path to the configuration file (default: None, e.g., [name].[json|yaml].
+            --encoding | TEXT | Encoding to read the configuration file (default: "utf-8", e.g., "utf-8", "cp1251").
+            --verbose  | TEXT | Enable or disable output messages (default: "y", verbose: "1|y|yes|true", no-verbose: "any").
 
           Example:
             crystal [cmd] --path path/to/file.json
          """
 
-        self.core.configurator.download(path)
+        self.core.configurator.download(path, encoding)
         if str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}:
             print(f"Configuration successfully saved to {path}.")
 
@@ -120,7 +137,7 @@ class CaConfigurator:
         return config_files[0] if len(config_files) == 1 else None
 
 
-    def upload(self, path: str) -> bool:
+    def upload(self, path: str, encoding: str='cp1251') -> bool:
         """
         Loads a configuration file (JSON or YAML) into the internal dictionary.
 
@@ -134,7 +151,7 @@ class CaConfigurator:
             return False
 
         extension = file_path.suffix.lower()
-        with file_path.open("r", encoding="utf-8") as f:
+        with file_path.open("r", encoding=encoding) as f:
             if extension == ".json":
                 self.config.update(json.load(f))
             elif extension in {".yaml", ".yml"}:
@@ -145,7 +162,7 @@ class CaConfigurator:
         return True
 
 
-    def download(self, path: str) -> None:
+    def download(self, path: str, encoding: str='cp1251') -> None:
         """
         Saves the current configuration to a specified file in JSON or YAML format.
 
@@ -156,7 +173,7 @@ class CaConfigurator:
         file_path = Path(path)
         extension = file_path.suffix.lower()
 
-        with file_path.open("w", encoding="utf-8") as f:
+        with file_path.open("w", encoding=encoding) as f:
             if extension == ".json":
                 json.dump(self.config, f, indent=4)
             elif extension in {".yaml", ".yml"}:
