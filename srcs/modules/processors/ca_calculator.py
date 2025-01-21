@@ -230,10 +230,9 @@ class CaCalculator:
         except (KeyError, IndexError, ValueError, TypeError):
             return None
 
-
     def calculate_profile_P(self, row):
         try:
-            return round((float(row["velocity"]) * math.pow(float(row["plt"]), 2) / 1000), 1)
+            return round((float(row["plt"]) * math.pow(float(row["velocity"]), 2)) / 1000, 1)
         except (KeyError, IndexError, ValueError, TypeError):
             return None
 
