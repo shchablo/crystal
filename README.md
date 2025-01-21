@@ -5,7 +5,6 @@
 
 ## Installation
 
-
 ```bash
 cd ~
 sudo apt update
@@ -13,8 +12,12 @@ sudo apt install -y python3-pip
 sudo apt install -y build-essential libssl-dev libffi-dev python3-dev
 sudo apt install python3.10-venv
 python3 -m venv cold
+```
+
+```bash
 source ~/cold/bin/activate
 ```
+
 > add source crystal_venv/bin/activate at the end of `.bashrc`.
 > ```bash
 > vim ~/.bashrc
@@ -26,15 +29,12 @@ sudo apt install python3
 pip install build
 ```
 
-
 ```bash
 git clone [repository]
 cd path/to/crystal
 python3 -m build
 pip install dist/crystal-0.0.0-py3-none-any.whl
 ```
-
-
 
 > ```bash
 > export PATH=$PATH:/path/to/your/bin
@@ -131,12 +131,3 @@ We welcome contributions to the [GitHub repository](https://github.com/shchablo/
 - **Authors**: Konstantin Shchablo, Elizaveta Zhukova
 
 For questions or support, don't hesitate to reach out.
-
-## Extra
-
-```bash
-git stash
-git pull
-python3 -m build
-pip install --force-reinstall --break-system-packages dist/crystal-0.5.0-py3-none-any.whl
-```
