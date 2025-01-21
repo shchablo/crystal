@@ -219,7 +219,7 @@ class CaCalculator:
 
     def calculate_profile_estim_2(self, row):
         try:
-            return round((float(row["h"]) - float(row["h_sec"])), 1)
+            return round((float(row["h_sec"]) - float(row["h"])), 1)
         except (KeyError, IndexError, ValueError, TypeError):
             return None
 
