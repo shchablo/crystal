@@ -108,6 +108,7 @@ class CaTopHandler:
             decimal=main_decimal,
             column_aliases=main_column_aliases,
         )
+        self.handler.internal_main = self.handler.main
 
         objects_path = os.path.join(self.handler.path, object_path_postfix)
         self.handler.objects = self.handler.load_csv(
@@ -277,7 +278,7 @@ class CaTopHandler:
 
                 --path                   | TEXT | Path to the folder to save the data (default: None).
                 --encoding               | TEXT | Encoding to read the configuration file (default: "utf-8", e.g., "utf-8", "cp1251").
-                
+
                 --profiles_path_postfix  | TEXT | Subfolder name where profiles are stored (default: profiles).
                 --input_path_postfix     | TEXT | Filename for the input CSV (default: input.csv).
                 --object_path_postfix    | TEXT | Filename for the objects CSV (default: objects.csv).
@@ -360,7 +361,10 @@ class CaHandler:
         self.path = None
         self.profiles = {}
         self.main = None
+        self.internal_main = None
         self.objects = None
+
+
 
 
     def _reverse_dict(self, input_dict):

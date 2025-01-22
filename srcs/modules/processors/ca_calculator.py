@@ -108,7 +108,7 @@ class CaTopCalculator:
         """
         Analyze and associate profiles with objects.
 
-          This function identifies objects that match the profiles by name and calculates key values. 
+          This function identifies objects that match the profiles by name and calculates key values.
           It also updates the main dataset with maximum intersection lengths.
 
           Options:
@@ -139,10 +139,14 @@ class CaTopCalculator:
                     self.calculator.handler.objects.loc[idx, 'P'] = closest_row['P']
                     self.calculator.handler.objects.loc[idx, 'P_peak'] = closest_row['P_peak']
                     self.calculator.handler.objects.loc[idx, 'h_front'] = closest_row['h_front']
-                    self.calculator.handler.objects.loc[idx, 'L_max'] = self.calculator.find_intersection(df)
+                    self.calculator.handler.objects.loc[idx, 'L_max'] = self.calculator.find_intersection(df)[0]
 
-            self.calculator.handler.main.loc[self.calculator.handler.main['name'].astype(str) == str(key), 'L_max'] = self.calculator.find_intersection(df)
-                    
+
+            self.calculator.handler.main.loc[self.calculator.handler.main['name'].astype(str) == str(key), 'L_max'] = self.calculator.find_intersection(df)[0]
+            self.calculator.handler.internal_main.loc[self.calculator.handler.internal_main['name'].astype(str) == str(key), 'L_max_x'] = self.calculator.find_intersection(df)[0]
+            self.calculator.handler.internal_main.loc[self.calculator.handler.internal_main['name'].astype(str) == str(key), 'L_max_y'] = self.calculator.find_intersection(df)[1]
+
+
         if isVerbose:
             print("All objects have been processed.")
 
@@ -279,7 +283,7 @@ class CaCalculator:
 
 
     def calculate_profile_hfront_ch(self, row, volume, cat):
-        
+
         if (cat == "dry"):
             try:
                 volume = float(volume) * 1000
@@ -307,7 +311,7 @@ class CaCalculator:
         intersection = line_h.intersection(line_h_sec)
 
         if intersection.is_empty:
-            return None
+            return None, None
 
         if isinstance(intersection, Point):
             intersection_points = [intersection]
@@ -320,6 +324,6 @@ class CaCalculator:
 
         if intersection_points:
             furthest_point = max(intersection_points, key=lambda p: p.x)
-            return round(float(furthest_point.x), 0)
+            return round(float(furthest_point.x), 0), round(float(furthest_point.y), 0)
 
-        return None
+        return None, None
