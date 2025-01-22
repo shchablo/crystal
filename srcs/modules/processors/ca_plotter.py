@@ -184,7 +184,7 @@ class CaTopPlotter:
 
                             # Добавление аннотации угла
                             plt.annotate(
-                                f"tgψ={slope:.3f}", 
+                                f"tgψ={abs(slope):.3f}", 
                                 xy=(center_x + arc_radius * arc_annotation_color_offset_x, center_y - arc_radius * arc_annotation_color_offset_y), 
                                 color=arc_annotation_color,
                                 fontsize=arc_font_size,
