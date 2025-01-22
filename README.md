@@ -35,7 +35,9 @@ source ~/cold/bin/activate
 ```
 
 > Add virtual environment activation to .bashrc
+> ```text
 > source ~/cold/bin/activate
+> ```
 > (Edit .bashrc to include the activation command)
 >
 > ```bash
