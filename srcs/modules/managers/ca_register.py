@@ -32,7 +32,7 @@ class CaTopRegister:
         generated_config = self.core.register.generate_config_file(path)
 
         self.core.configurator.update(generated_config)
-        self.core.configurator.download(path, verbose, encoding)
+        self.core.configurator.download(path, encoding)
 
         if str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}:
             print(f"Configuration file successfully generated and saved to: {path}")
