@@ -5,6 +5,85 @@
 Crystal is an application designed for analyzing avalanche characteristics in specified locations.
 
 
+## Getting Started
+
+### Before Start
+
+For a list of available commands, run:
+
+```bash
+crystal man
+```
+
+For project tests using Crystal's built-in testing tools, run:
+
+```bash
+crystal test
+```
+
+For detailed help on a specific command, use:
+
+```bash
+crystal help --cmd [name]
+```
+
+
+1. **Interactive Mode**: Enter commands step-by-step during runtime.
+2. **Command-Line Mode**: Execute predefined commands in a single line.
+
+
+### Interactive Mode
+
+Run the program and input commands step-by-step:
+
+```bash
+crystal
+```
+
+Once the program starts, you can type commands like:
+
+```plaintext
+>> man
+>> help --cmd man
+>> cfg.load --path /path/to/config.json
+```
+
+### Command-Line Mode
+
+Run multiple actions in a single line. For examples:
+
+```bash
+crystal man
+```
+
+```bash
+crystal cfg.load --path /path/to/config.json help --cmd cfg.gen cfg.gen --path /path/to/output/file/of/config.yaml
+```
+
+## Input Data Formats
+
+The program processes input data in the following formats:
+
+- **Argis Data (main.csv)**: Spatial and geographical data.
+- **Profiles Data (profiles)**: Data containing details about avalanches or terrain profiles.
+- **Object List (objects.csv)**: A list of objects or locations to analyze.
+
+```bash
+|-- main.csv
+|-- objects.csv
+|-- profiles
+       |-- 1.txt
+       |-- 2.txt
+       |-- ...
+       |-- [name].txt
+       |-- ...
+       |-- n.txt
+```
+
+> Make sure your input data complies with the required format to ensure accurate results.
+
+
+
 ## Installation
 
 
@@ -70,82 +149,8 @@ pip install dist/crystal-0.0.0-py3-none-any.whl
 > ```bash
 > export PATH=$PATH:/path/to/your/bin
 > ```
-## Before Start
-
-For a list of available commands, run:
-
-```bash
-crystal man
-```
-
-For project tests using Crystal's built-in testing tools, run:
-
-```bash
-crystal test
-```
-
-For detailed help on a specific command, use:
-
-```bash
-crystal help --cmd [name]
-```
-
-## Input Data Formats
-
-The program processes input data in the following formats:
-
-- **Argis Data (main.csv)**: Spatial and geographical data.
-- **Profiles Data (profiles)**: Data containing details about avalanches or terrain profiles.
-- **Object List (objects.csv)**: A list of objects or locations to analyze.
-
-```bash
-|-- main.csv
-|-- objects.csv
-|-- profiles
-       |-- 1.txt
-       |-- 2.txt
-       |-- ...
-       |-- [name].txt
-       |-- ...
-       |-- n.txt
-```
-
-> Make sure your input data complies with the required format to ensure accurate results.
-
-## Getting Started
-
-1. **Interactive Mode**: Enter commands step-by-step during runtime.
-2. **Command-Line Mode**: Execute predefined commands in a single line.
 
 
-### Interactive Mode
-
-Run the program and input commands step-by-step:
-
-```bash
-crystal
-```
-
-Once the program starts, you can type commands like:
-
-```plaintext
->> man
->> help --cmd man
->> cfg.load --path /path/to/config.json
-```
-
-
-### Command-Line Mode
-
-Run multiple actions in a single line. For examples:
-
-```bash
-crystal man
-```
-
-```bash
-crystal cfg.load --path /path/to/config.json help --cmd cfg.gen cfg.gen --path /path/to/output/file/of/config.yaml
-```
 
 ## Unit Tests
 
