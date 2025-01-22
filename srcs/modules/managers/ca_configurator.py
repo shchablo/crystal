@@ -172,10 +172,9 @@ class CaConfigurator:
         """
         file_path = Path(path)
         extension = file_path.suffix.lower()
-
         with file_path.open("w", encoding=encoding) as f:
             if extension == ".json":
-                json.dump(self.config, f, indent=4)
+                json.dump(self.config, f, ensure_ascii=False, indent=4)
             elif extension in {".yaml", ".yml"}:
                 yaml.dump(self.config, f, default_flow_style=False, allow_unicode=True)
             else:

@@ -108,7 +108,12 @@ class CaTopHandler:
             decimal=main_decimal,
             column_aliases=main_column_aliases,
         )
-        self.handler.internal_main = self.handler.main
+        self.handler.internal_main = self.handler.load_csv(
+            main_path,
+            separator=main_separator,
+            decimal=main_decimal,
+            column_aliases=main_column_aliases,
+        )
 
         objects_path = os.path.join(self.handler.path, object_path_postfix)
         self.handler.objects = self.handler.load_csv(
