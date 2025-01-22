@@ -28,14 +28,20 @@ python3 -m venv cold
 source ~/cold/bin/activate
 ```
 
+Run virtual environment
+
+```bash
+source ~/cold/bin/activate
+```
+
 > Add virtual environment activation to .bashrc
+> source ~/cold/bin/activate
 > (Edit .bashrc to include the activation command)
 >
 > ```bash
 > vim ~/.bashrc
 > ```
-
-Ensure Python and pip are properly installed
+Install Python pip and essential build dependencies to virtual environment
 
 ```bash
 sudo apt update
