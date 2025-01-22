@@ -92,12 +92,12 @@ crystal help --cmd [name]
 
 The program processes input data in the following formats:
 
-- **Argis Data (input.csv)**: Spatial and geographical data.
+- **Argis Data (main.csv)**: Spatial and geographical data.
 - **Profiles Data (profiles)**: Data containing details about avalanches or terrain profiles.
 - **Object List (objects.csv)**: A list of objects or locations to analyze.
 
 ```bash
-|-- input.csv
+|-- main.csv
 |-- objects.csv
 |-- profiles
        |-- 1.txt
