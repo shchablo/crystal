@@ -32,7 +32,8 @@ class CaTopPlotter:
                 matching_objects = self.plotter.handler.objects.loc[
                     self.plotter.handler.objects['name'].astype(str) == str(key)
                 ]
-                
+
+                l_max = self.plotter.handler.main.loc[self.plotter.handler.main['name'].astype(str) == str(key), str('L_max')]
                 dist_values = {}
                 if not matching_objects.empty:
                     dist_values = {
@@ -40,25 +41,42 @@ class CaTopPlotter:
                         for idx, obj_row in matching_objects.iterrows()
                     }
 
+                # Находим значение ограничения графика.
+                offset = 50  # Смещение
+                l_cut = df['l'].max()
+                if dist_values:
+                    # Находим максимальное значение dist
+                    max_dist = max(value[0] for value in dist_values.values())
+
+                    # Преобразуем L_max в числовой формат для сравнения
+                    l_max_value = float(l_max.iloc[0]) if not l_max.empty else 0
+
+                    # Сравниваем max_dist с L_max
+                    if max_dist > l_max_value:
+                        l_cut = max_dist + offset
+                    else:
+                        l_cut = l_max_value + offset
+
                 plt.figure(figsize=(10, 6))
-                
+
                 # Настройки стилей
                 line_colors = {'h': '#1f77b4', 'h_sec': '#2ca02c'}  # Цвета линий
                 line_styles = {'h': '-.', 'h_sec': '--'}  # Стили линий
                 line_widths = {'h': 0.7, 'h_sec': 0.7}  # Ширина линий
                 line_labels = {'h': 'Height', 'h_sec': 'Secondary Height'}  # Подписи для легенды
-                
+
                 # Настройки точек
                 dist_marker_style = 'x'
                 dist_marker_color = '#d62728'  # Красный цвет для точек
                 text_offset = (5, -10)  # Смещение подписи
-                
+
                 for col in ['h', 'h_sec']:
                     if col in df:
-                        filtered_data = df[(df['l'] > 0) & (df[col] > 0)]
-                
+                        filtered_data = df[( (df['l'] >= 0) & (df['l'] <= l_cut) ) & (df[col] > 0)]
+                        #filtered_data = df[ ( (df['l'] >= 0) & (df['l'] <= l_cut) ) & (df[col] > 0)]
+
                         # Линия на графике
-                        plt.title(f"Профиль № {key}") 
+                        plt.title(f"Профиль № {key}")
                         plt.plot(
                             filtered_data['l'],
                             filtered_data[col],
@@ -67,7 +85,7 @@ class CaTopPlotter:
                             linewidth=line_widths.get(col, 0.7),
                             label=line_labels.get(col, col)  # Добавляем подпись для легенды
                         )
-                
+
                         # Добавляем точки для дистанций
                         if col == 'h' and dist_values:
                             for dist, obj_label in dist_values.values():
@@ -92,14 +110,14 @@ class CaTopPlotter:
                                     va='center',
                                     alpha=0.8
                                 )
-                
+
                 # Настройки осей
                 plt.xlabel("Distance", fontsize=12)
                 plt.ylabel("Height", fontsize=12)
-                
+
                 # Легенда
                 plt.legend(loc='upper right', fontsize=10)  # Легенда в правом верхнем углу
-                
+
                 # Общие настройки
                 plt.grid(True, which='both', linestyle='--', linewidth=0.5, alpha=0.7)
                 plt.tight_layout()
