@@ -36,12 +36,12 @@ source ~/cold/bin/activate
 
 > Add virtual environment activation to .bashrc
 > ```text
-> source ~/cold/bin/activate
+> vim ~/.bashrc
 > ```
 > (Edit .bashrc to include the activation command)
 >
 > ```bash
-> vim ~/.bashrc
+> source ~/cold/bin/activate
 > ```
 Install Python pip and essential build dependencies to virtual environment
 
