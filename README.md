@@ -1,8 +1,8 @@
 # CRYSTAL
 
-> **Calculation of Rates, Yield, and Stability of Avalanches in Locations**
+> **Calculation of Rate, Yield, and Stability of Avalanche in Location**
 
-Crystal is an application designed for analyzing avalanche characteristics in specified locations.
+Crystal is an application designed for analyzing avalanche characteristics in specified location.
 
 
 ## Getting Started
