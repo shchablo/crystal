@@ -2,9 +2,6 @@
 *.json
 *.yaml
 *.yml
-!cfgs/def.json
-!cfgs/def.yaml
-!cfgs/def.yml
 
 tests/processors/data_ca_handler/result
 

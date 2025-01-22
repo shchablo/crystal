@@ -29,7 +29,7 @@ class CaTopPlotter:
             
             line_colors: dict = {'h': '#1f77b4', 'h_sec': '#2ca02c'},
             line_styles: dict = {'h': '-.', 'h_sec': '--'},
-            line_widths: dict = {'h': 0.7, 'h_sec': 0.7},
+            line_widths: dict = {'h': 1, 'h_sec': 1},
             line_labels: dict = {'h': 'Продольный профиль', 'h_sec': 'Секущая профиля'},
             
             dist_marker_style: str = 'x',
@@ -47,20 +47,68 @@ class CaTopPlotter:
             grid_alpha: float = 0.7,
             
             offset_x: int = 50,
-            offset_y: int = -30,
+            offset_y: int = -10,
 
-            arc_radius = 20,
-            arc_width_factor = 6,
-            arc_height_factor = 2,
-            arc_arc_color = 'orange',
-            arc_linestyle = '-',
-            arc_linewidth = 1,
-            arc_annotation_color = 'orange',
-            arc_font_size = 10,
-            arc_font_weight = 'normal',
-            arc_annotation_color_offset_x = 4,
-            arc_annotation_color_offset_y = 0.2
+            arc_radius: float = 20,
+            arc_width_factor: float = 6,
+            arc_height_factor: float = 2,
+            arc_arc_color: str = 'orange',
+            arc_linestyle: str = '-',
+            arc_linewidth: int = 1,
+            arc_annotation_color: float = 'orange',
+            arc_font_size: int = 10,
+            arc_font_weight: str = 'normal',
+            arc_annotation_offset_x: float = 4,
+            arc_annotation_offset_y: float = 0.2
     ):
+        """
+        Generates and saves plots for a given dataset, customizing styles, labels, and annotations.
+
+        Options:
+
+            --verbose                 | TEXT   | Enable or disable output messages (default: "y"; verbose: "1|y|yes|true", no-verbose: "any").
+            --folder                  | TEXT   | Path to save the generated plots (default: "result/plots").
+            --extension               | TEXT   | File format for the saved plots (default: "png").
+            --figsize                 | TUPLE  | Dimensions of the plot figure in inches (default: (10, 6)).
+            --title-prefix            | TEXT   | Prefix for plot titles (default: "Профиль №").
+            --xlabel                  | TEXT   | Label for the x-axis (default: "Расстояние, м").
+            --ylabel                  | TEXT   | Label for the y-axis (default: "Абс. высота, м").
+
+            --line_colors             | DICT   | Colors for different line types (default: {'h': '#1f77b4', 'h_sec': '#2ca02c'}).
+            --line_styles             | DICT   | Line styles for different line types (default: {'h': '-.', 'h_sec': '--'}).
+            --line_widths             | DICT   | Line widths for different line types (default: {'h': 1, 'h_sec': 1}).
+            --line_labels             | DICT   | Labels for different line types (default: {'h': 'Продольный профиль', 'h_sec': 'Секущая профиля'}).
+
+            --dist_marker_style       | TEXT   | Marker style for distance markers (default: 'x').
+            --dist_marker_color       | TEXT   | Color for distance markers (default: '#d62728').
+            --text_offset             | TUPLE  | Offset for text annotations (default: (-5, -10)).
+
+            --xlabel_fontsize         | INT    | Font size for the x-axis label (default: 12).
+            --ylabel_fontsize         | INT    | Font size for the y-axis label (default: 12).
+
+            --legend_loc              | TEXT   | Location of the plot legend (default: 'upper right').
+            --legend_fontsize         | INT    | Font size of the legend text (default: 10).
+
+            --grid_linestyle          | TEXT   | Style of the grid lines (default: '--').
+            --grid_linewidth          | FLOAT  | Width of the grid lines (default: 0.5).
+            --grid_alpha              | FLOAT  | Transparency of the grid lines (default: 0.7).
+
+            --offset_x                | INT    | Offset for horizontal position adjustments (default: 50).
+            --offset_y                | INT    | Offset for vertical position adjustments (default: -10).
+
+            --arc_radius              | FLOAT  | Radius of the arc (default: 20).
+            --arc_width_factor        | FLOAT  | Width factor for arc scaling (default: 6).
+            --arc_height_factor       | FLOAT  | Height factor for arc scaling (default: 2).
+            --arc_arc_color           | TEXT   | Color of the arc (default: 'orange').
+            --arc_linestyle           | TEXT   | Style of the arc line (default: '-').
+            --arc_linewidth           | INT    | Width of the arc line (default: 1).
+            --arc_annotation_color    | TEXT   | Color of arc annotations (default: 'orange').
+            --arc_font_size           | INT    | Font size of arc annotations (default: 10).
+            --arc_font_weight         | TEXT   | Weight of the font for arc annotations (default: 'normal').
+            --arc_annotation_offset_x | FLOAT | Horizontal offset for arc annotations (default: 4).
+            --arc_annotation_offset_y | FLOAT | Vertical offset for arc annotations (default: 0.2).
+        """
+
         is_verbose = verbose.strip().lower() in {"1", "y", "yes", "true"}
 
         if is_verbose:
@@ -185,7 +233,7 @@ class CaTopPlotter:
                             # Добавление аннотации угла
                             plt.annotate(
                                 f"tgψ={abs(slope):.3f}", 
-                                xy=(center_x + arc_radius * arc_annotation_color_offset_x, center_y - arc_radius * arc_annotation_color_offset_y), 
+                                xy=(center_x + arc_radius * arc_annotation_offset_x, center_y - arc_radius * arc_annotation_offset_y), 
                                 color=arc_annotation_color,
                                 fontsize=arc_font_size,
                                 fontweight=arc_font_weight

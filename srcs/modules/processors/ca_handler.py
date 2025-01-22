@@ -81,7 +81,7 @@ class CaTopHandler:
             --profile_decimal        | TEXT | Decimal character for profile files (default: ,).
             --profile_column_aliases | DICT | Optional column renaming dictionary for profiles.
 
-            --main_path_postfix     | TEXT | Filename for the input CSV (default: input.csv).
+            --main_path_postfix      | TEXT | Filename for the input CSV (default: input.csv).
             --main_separator         | TEXT | Separator for the input CSV (default: ;).
             --main_decimal           | TEXT | Decimal character for the input CSV (default: ,).
             --main_column_aliases    | DICT | Optional column renaming dictionary for the input CSV.
