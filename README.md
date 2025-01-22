@@ -57,7 +57,7 @@ crystal help --cmd cfg.load help --cmd cfg.gen
 ```
 
 ```plaintext
-crystal cfg.load --path /path/to/config.json help --cmd cfg.gen cfg.gen --path /path/to/output/file/of/config.yaml
+crystal cfg.load --path /path/to/input/config.json help --cmd cfg.gen cfg.gen --path /path/to/output/config.yaml
 ```
 
 ## Input Data Formats
