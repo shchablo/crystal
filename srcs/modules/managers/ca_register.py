@@ -13,7 +13,7 @@ class CaTopRegister:
         self.core = core
 
 
-    def generate_config_file(self, path: str = None, verbose: str = "y") -> None:
+    def generate_config_file(self, path: str = None, verbose: str = "y", encoding: str='cp1251') -> None:
         """
         Save the current configuration to a specified file.
 
@@ -22,8 +22,9 @@ class CaTopRegister:
           Requires a valid file path as input.
 
           Options:
-            --path    | TEXT | Path to save the configuration file (e.g., output.json or output.yaml).
-            --verbose | TEXT | Enable or disable output messages (default: "y"; verbose: "1|y|yes|true", no-verbose: "any").
+            --path     | TEXT | Path to save the configuration file (e.g., output.json or output.yaml).
+            --encoding | TEXT | Encoding to read the configuration file (default: "utf-8", e.g., "utf-8", "cp1251").
+            --verbose  | TEXT | Enable or disable output messages (default: "y"; verbose: "1|y|yes|true", no-verbose: "any").
 
           Example:
             crystal [cmd] --path /path/to/output/file.json
@@ -31,7 +32,7 @@ class CaTopRegister:
         generated_config = self.core.register.generate_config_file(path)
 
         self.core.configurator.update(generated_config)
-        self.core.configurator.download(path)
+        self.core.configurator.download(path, verbose, encoding)
 
         if str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}:
             print(f"Configuration file successfully generated and saved to: {path}")
