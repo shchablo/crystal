@@ -12,7 +12,7 @@ Crystal is an application designed for analyzing avalanche characteristics in sp
 For a list of available commands, run:
 
 ```bash
-crystal man
+crystal help
 ```
 
 For project tests using Crystal's built-in testing tools, run:
@@ -36,7 +36,7 @@ crystal help --cmd [name]
 
 Run the program and input commands step-by-step:
 
-```bash
+```plaintext
 crystal
 ```
 
@@ -52,11 +52,11 @@ Once the program starts, you can type commands like:
 
 Run multiple actions in a single line. For examples:
 
-```bash
+```plaintext
 crystal help --cmd cfg.load help --cmd cfg.gen
 ```
 
-```bash
+```plaintext
 crystal cfg.load --path /path/to/config.json help --cmd cfg.gen cfg.gen --path /path/to/output/file/of/config.yaml
 ```
 
@@ -68,7 +68,7 @@ The program processes input data in the following formats:
 - **Profiles Data (profiles)**: Data containing details about avalanches or terrain profiles.
 - **Object List (objects.csv)**: A list of objects or locations to analyze.
 
-```bash
+```plaintext
 |-- main.csv
 |-- objects.csv
 |-- profiles
