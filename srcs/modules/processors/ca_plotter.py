@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 import pandas as pd
 import os
+import numpy as np
 
 class CaTopPlotter:
     def __init__(self, core, plotter):
@@ -13,18 +15,58 @@ class CaTopPlotter:
         self.core = core
         self.plotter = plotter
 
-    def all(self, verbose: str = "y"):
-        """
-        Plots all profiles stored in the plotter and saves them as PNG files.
+    def all(
+            self,
+            verbose: str = "y",
 
-        :param verbose: If 'y', 'yes', '1', or 'true', enables verbose output. Default is 'y'.
-        """
+            folder: str = "result/plots", 
+            extension: str = "png", 
+            figsize: tuple = (10, 6),
+            title_prefix: str = "Профиль №",
+            xlabel: str = "Расстояние, м",
+            ylabel: str = "Абс. высота, м",
+            
+            
+            line_colors: dict = {'h': '#1f77b4', 'h_sec': '#2ca02c'},
+            line_styles: dict = {'h': '-.', 'h_sec': '--'},
+            line_widths: dict = {'h': 0.7, 'h_sec': 0.7},
+            line_labels: dict = {'h': 'Продольный профиль', 'h_sec': 'Секущая профиля'},
+            
+            dist_marker_style: str = 'x',
+            dist_marker_color: str = '#d62728',
+            text_offset: tuple = (-5, -10),
+            
+            xlabel_fontsize: int = 12,
+            ylabel_fontsize: int = 12,
+            
+            legend_loc: str = 'upper right',
+            legend_fontsize: int = 10,
+            
+            grid_linestyle: str = '--',
+            grid_linewidth: float = 0.5,
+            grid_alpha: float = 0.7,
+            
+            offset_x: int = 50,
+            offset_y: int = -30,
+
+            arc_radius = 20,
+            arc_width_factor = 6,
+            arc_height_factor = 2,
+            arc_arc_color = 'orange',
+            arc_linestyle = '-',
+            arc_linewidth = 1,
+            arc_annotation_color = 'orange',
+            arc_font_size = 10,
+            arc_font_weight = 'normal',
+            arc_annotation_color_offset_x = 4,
+            arc_annotation_color_offset_y = 0.2
+    ):
         is_verbose = verbose.strip().lower() in {"1", "y", "yes", "true"}
 
         if is_verbose:
             print("Plotting profiles...")
 
-        plots_dir = os.path.join(self.plotter.handler.path, "result/plots")
+        plots_dir = os.path.join(self.plotter.handler.path, folder)
         os.makedirs(plots_dir, exist_ok=True)
 
         for key, df in self.plotter.handler.profiles.items():
@@ -41,25 +83,12 @@ class CaTopPlotter:
                         for idx, obj_row in matching_objects.iterrows()
                     }
 
-                plt.figure(figsize=(10, 6))
-
-                # Настройки стилей
-                line_colors = {'h': '#1f77b4', 'h_sec': '#2ca02c'}  # Цвета линий
-                line_styles = {'h': '-.', 'h_sec': '--'}  # Стили линий
-                line_widths = {'h': 0.7, 'h_sec': 0.7}  # Ширина линий
-                line_labels = {'h': 'Height', 'h_sec': 'Secondary Height'}  # Подписи для легенды
-
-                # Настройки точек
-                dist_marker_style = 'x'
-                dist_marker_color = '#d62728'  # Красный цвет для точек
-                text_offset = (5, -10)  # Смещение подписи
+                plt.figure(figsize=figsize)
 
                 h_cut = 0
                 l_cut = df['l'].max()
                 for col in ['h', 'h_sec']:
                     if col in df:
-
-                        #filtered_data = df[ ( (df['l'] >= 0) & (df['l'] <= l_cut) ) & (df[col] > 0)]
 
                         # Добавляем точки для дистанций
                         obj_heights = []
@@ -88,9 +117,7 @@ class CaTopPlotter:
                                     alpha=0.8
                                 )
 
-
                             # Находим значение ограничения графика.
-                            offset_x = 50  # Смещение
 
                             if dist_values:
                                 # Находим максимальное значение height
@@ -106,7 +133,6 @@ class CaTopPlotter:
                                     l_cut = l_max_value + offset_x
 
                             # Находим значение ограничения графика.
-                            offset_y = -10  # Смещение
                             l_max_y = self.plotter.handler.internal_main.loc[self.plotter.handler.internal_main['name'].astype(str) == str(key), 'L_max_y']
                             # Преобразуем L_max в числовой формат для сравнения
                             l_max_y_value = float(l_max_y.iloc[0]) if not l_max_y.empty else 0
@@ -124,7 +150,7 @@ class CaTopPlotter:
                         filtered_data = df[( (df['l'] >= 0) & (df['l'] <= l_cut) ) & ( (df[col] > h_cut) )]
 
                         # Линия на графике
-                        plt.title(f"Профиль № {key}")
+                        plt.title(f"{title_prefix} {key}")
                         plt.plot(
                             filtered_data['l'],
                             filtered_data[col],
@@ -133,17 +159,49 @@ class CaTopPlotter:
                             linewidth=line_widths.get(col, 0.7),
                             label=line_labels.get(col, col)  # Добавляем подпись для легенды
                         )
+
+                        if (col == "h_sec"):                        
+                            
+                            # Находим коэффициенты наклона линии
+                            x = filtered_data['l']
+                            y = filtered_data[col]
+                            coefficients = np.polyfit(x, y, 1)  # Линейная аппроксимация
+                            slope = coefficients[0]  # Наклон линии
+
+                            # Вычисление угла в радианах и градусах
+                            angle_radians = np.arctan(slope)
+                            angle_degrees = np.degrees(angle_radians)
+                            # Добавление арки для отображения угла
+                            center_x, center_y = x.iloc[0], y.iloc[0]  # Начальная точка
+                            arc = patches.Arc(
+                                (center_x, center_y),  # Центр
+                                width=arc_width_factor*arc_radius, height=arc_height_factor*arc_radius,  # Размер арки
+                                angle=0,  # Угол поворота арки
+                                theta1=angle_degrees, theta2=0,  # Углы начала и конца
+                                color=arc_arc_color, linestyle=arc_linestyle, linewidth=arc_linewidth
+                            )
+                            plt.gca().add_patch(arc)
+
+                            # Добавление аннотации угла
+                            plt.annotate(
+                                f"tgψ={slope:.3f}", 
+                                xy=(center_x + arc_radius * arc_annotation_color_offset_x, center_y - arc_radius * arc_annotation_color_offset_y), 
+                                color=arc_annotation_color,
+                                fontsize=arc_font_size,
+                                fontweight=arc_font_weight
+                            )
+
                 # Настройки осей
-                plt.xlabel("Distance", fontsize=12)
-                plt.ylabel("Height", fontsize=12)
+                plt.xlabel(xlabel, fontsize=xlabel_fontsize)
+                plt.ylabel(ylabel, fontsize=ylabel_fontsize)
 
                 # Легенда
-                plt.legend(loc='upper right', fontsize=10)  # Легенда в правом верхнем углу
+                plt.legend(loc=legend_loc, fontsize=legend_fontsize)  # Легенда в правом верхнем углу
 
                 # Общие настройки
-                plt.grid(True, which='both', linestyle='--', linewidth=0.5, alpha=0.7)
+                plt.grid(True, which='both', linestyle=grid_linestyle, linewidth=grid_linewidth, alpha=grid_alpha)
                 plt.tight_layout()
-                plt.savefig(os.path.join(plots_dir, f"{key}.png"))
+                plt.savefig(os.path.join(plots_dir, f"{key}.{extension}"))
                 plt.close()
 
             except Exception as e:
@@ -151,6 +209,7 @@ class CaTopPlotter:
 
         if is_verbose:
             print("All profiles have been saved.")
+
 
 
 class CaPlotter:
