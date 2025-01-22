@@ -53,7 +53,7 @@ Once the program starts, you can type commands like:
 Run multiple actions in a single line. For examples:
 
 ```bash
-crystal man
+crystal help --cmd cfg.load help --cmd cfg.gen
 ```
 
 ```bash
