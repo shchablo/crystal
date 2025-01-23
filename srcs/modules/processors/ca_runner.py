@@ -46,19 +46,37 @@ class CaTopRunner:
        )
 
 
-    def main(self, path: str = None, verbose: str = "y", **kwargs) -> None:
+    def main(self, path: str = None, list: str = "n", verbose: str = "y", **kwargs) -> None:
         """
         Main function to analyze data step by step.
 
           Options:
             --path    | TEXT | Path to the folder file containing the data (default: None).
             --verbose | TEXT | Enable or disable output messages (default: "y"; verbose: "1|y|yes|true", no-verbose: "any").
+            --list    | TEXT | Show list of the commands that will execute (default: "n": 1|y|yes|true).
             **kwargs  | ARGS | Additional arguments passed to the internal execution commands.
 
           Example:
             crystal [cmd] --path path/to/data
             crystal [cmd] --path path/to/data --hand.read.verbose no
         """
+        if str(list[0]).strip().lower() in {"1", "y", "yes", "true"}:
+            cmds = []
+            cmds.append(self.core.register.find_command_name(self.handler.extract))
+            cmds.append(self.core.register.find_command_name(self.cfg.find_config_file))
+            cmds.append(self.core.register.find_command_name(self.cfg.upload))
+            cmds.append(self.core.register.find_command_name(self.handler.read))
+            cmds.append(self.core.register.find_command_name(self.calculator.process_main))
+            cmds.append(self.core.register.find_command_name(self.calculator.process_profiles))
+            cmds.append(self.core.register.find_command_name(self.calculator.analysis_profiles))
+            cmds.append(self.core.register.find_command_name(self.handler.print))
+            cmds.append(self.core.register.find_command_name(self.plotter.all))
+            cmds.append(self.core.register.find_command_name(self.handler.save_dfs_to_csv))
+            
+            print(cmds)
+            
+            return
+
 
         is_verbose = str(verbose[0]).strip().lower() in {"1", "y", "yes", "true"}
         if is_verbose:

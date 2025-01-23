@@ -417,6 +417,7 @@ class CaHandler:
             file_path: str,
             separator: str,
             decimal: str,
+            encoding: str = "utf-8",
             column_aliases: Optional[Dict[str, str]] = None,
     ) -> pd.DataFrame:
         """
@@ -427,6 +428,7 @@ class CaHandler:
         :param file_extension: Expected file extension for the input file (e.g., ".csv").
         :param separator: Character used to separate values in the file (e.g., ",").
         :param decimal: Character used to denote decimals in numeric data.
+        :param encoding: Encoding of the CSV.
         :param column_aliases: Optional dictionary to rename columns in the CSV.
 
         :return: A DataFrame containing the loaded data.
@@ -434,7 +436,7 @@ class CaHandler:
         :raises ValueError: If the file does not have the expected extension.
 
         """
-        df = pd.read_csv(file_path, sep=separator, decimal=decimal)
+        df = pd.read_csv(file_path, sep=separator, decimal=decimal, encoding=encoding)
         if column_aliases:
             df.rename(columns=self._reverse_dict(column_aliases), inplace=True)
 

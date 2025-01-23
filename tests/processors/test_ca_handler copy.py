@@ -84,7 +84,7 @@ class TestCaHandler(unittest.TestCase):
 
         self.expected_objects = pd.DataFrame({
             "name": [1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
-            "object": ["garage", "budka", "garage", "garage", "garage", "garage", "garage", "garage", "garage", "garage", "garage", "budka", "budka", "budka", "budka", "budka", "budka", "budka", "budka"],
+            "object": ["garage", "Будка", "garage", "garage", "garage", "garage", "garage", "garage", "garage", "garage", "garage", "budka", "budka", "budka", "budka", "budka", "budka", "budka", "budka"],
             "dist": [881, 120, 862, 823, 854, 873, 940, 692, 1138, 1359, 673, 445, 464, 189, 480, 555, 521, 590, 599]
         })
 

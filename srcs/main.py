@@ -15,6 +15,8 @@ from srcs.modules.processors.ca_calculator import CaCalculator, CaTopCalculator
 from srcs.modules.processors.ca_plotter import CaPlotter, CaTopPlotter
 from srcs.modules.processors.ca_runner import CaTopRunner
 
+def version():
+    print ("crystal version 0.9.0")
 
 def main():
     """
@@ -23,6 +25,7 @@ def main():
     """
 
     core = CaCore()
+    core.register.add_command(["version", "v"], version)
     core.register.add_command(["test"], ca_test)
 
     top_register = CaTopRegister(core)
