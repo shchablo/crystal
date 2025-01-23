@@ -142,6 +142,8 @@ class CaTopCalculator:
                     self.calculator.handler.objects.loc[idx, 'L_max'] = self.calculator.find_intersection(df)[0]
 
 
+            closest_row = df.iloc[(df['l'] - dist_value).abs().idxmin()]
+            self.calculator.handler.main.loc[self.calculator.handler.main['name'].astype(str) == str(key), 'velocity_max'] = df['velocity'].max() 
             self.calculator.handler.main.loc[self.calculator.handler.main['name'].astype(str) == str(key), 'L_max'] = self.calculator.find_intersection(df)[0]
             self.calculator.handler.internal_main.loc[self.calculator.handler.internal_main['name'].astype(str) == str(key), 'L_max_x'] = self.calculator.find_intersection(df)[0]
             self.calculator.handler.internal_main.loc[self.calculator.handler.internal_main['name'].astype(str) == str(key), 'L_max_y'] = self.calculator.find_intersection(df)[1]

@@ -257,7 +257,8 @@ class CaTopHandler:
                                                                   "plt" : "Плотность, кг/м3",
                                                                   "tg_psi" : "Тангенс пси",
                                                                   "volume" : "Объем, тыс. м3",
-                                                                  "L_max" : "Дальность выброса лавины, м"
+                                                                  "L_max" : "Дальность выброса лавины, м",
+                                                                  "velocity_max" : "Максимальная скорость, м/с"
                                                                   },
                 object_path_postfix: str = "objects.csv",
                 object_separator: str = ";",
