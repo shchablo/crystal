@@ -96,11 +96,7 @@ source ~/cold/bin/activate
 > ```text
 > vim ~/.bashrc
 > ```
-> (Edit .bashrc to include the activation command)
->
-> ```bash
-> source ~/cold/bin/activate
-> ```
+
 Install Python pip and essential build dependencies to virtual environment
 
 ```bash
