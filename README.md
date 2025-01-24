@@ -127,8 +127,6 @@ pip install dist/crystal-0.0.0-py3-none-any.whl
 > export PATH=$PATH:/path/to/your/bin
 > ```
 
-
-
 ## Unit Tests
 
 ```bash
