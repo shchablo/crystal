@@ -27,29 +27,6 @@ For detailed help on a specific command, use:
 crystal help --cmd [name]
 ```
 
-
-1. **Interactive Mode**: Enter commands step-by-step during runtime.
-2. **Command-Line Mode**: Execute predefined commands in a single line.
-
-
-### Interactive Mode
-
-Run the program and input commands step-by-step:
-
-```plaintext
-crystal
-```
-
-Once the program starts, you can type commands like:
-
-```plaintext
->> man
->> help --cmd man
->> cfg.load --path /path/to/config.json
-```
-
-### Command-Line Mode
-
 Run multiple actions in a single line. For examples:
 
 ```plaintext

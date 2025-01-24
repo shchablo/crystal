@@ -89,25 +89,5 @@ class CaCore:
             parsed_commands = self.parser.parse_commands(args, self.register.commands)
             self.execute_commands(parsed_commands, self.register.commands)
         else:
-            # Interactive mode
-            print("Interactive Mode. Type 'help' for a list of commands or 'exit' to quit.")
-            while True:
-                try:
-                    user_input = input(">> ").strip()
-                    if user_input.lower() in {"exit"}:
-                        print("Exiting...")
-                        break
-                    if not user_input:
-                        continue
-
-                    # Parse and execute the user's input
-                    args = user_input.split()
-                    parsed_commands = self.parser.parse_commands(args, self.register.commands)
-                    self.execute_commands(parsed_commands, self.register.commands)
-                except KeyboardInterrupt:
-                    print("\nExiting...")
-                    break
-                except Exception as e:
-                    print(f"An error occurred: {e}")
-            return
+            print("Calculation of Rate, Yield, and Stability of Avalanche in Location.")
         return
