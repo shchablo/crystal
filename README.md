@@ -83,7 +83,6 @@ Set up a Python virtual environment
 ```bash
 sudo apt install python3.10-venv
 python3 -m venv cold
-source ~/cold/bin/activate
 ```
 
 Run virtual environment
