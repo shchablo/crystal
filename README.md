@@ -27,11 +27,13 @@ For detailed help on a specific command, use:
 crystal help --cmd [name]
 ```
 
-Run multiple actions in a single line. For examples:
+Run multiple actions in a single line: 
 
 ```plaintext
 crystal help --cmd cfg.load help --cmd cfg.gen
 ```
+
+For examples: 
 
 ```plaintext
 crystal cfg.load --path /path/to/input/config.json help --cmd cfg.gen cfg.gen --path /path/to/output/config.yaml
@@ -49,12 +51,12 @@ The program processes input data in the following formats:
 |-- main.csv
 |-- objects.csv
 |-- profiles
-       |-- 1.txt
-       |-- 2.txt
+       |-- 1.csv
+       |-- 2.csv
        |-- ...
-       |-- [name].txt
+       |-- [name].csv
        |-- ...
-       |-- n.txt
+       |-- n.csv
 ```
 
 > Make sure your input data complies with the required format to ensure accurate results.

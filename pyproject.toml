@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "crystal"
-version = "0.9.1"
+version = "1.0.0"
 requires-python = ">=3.7"
 authors = [
     {name = "Shchablo Konstantin", email = "shchablo@gmail.com"},
