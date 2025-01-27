@@ -5,9 +5,7 @@
 Crystal is an application designed for analyzing avalanche characteristics in specified location.
 
 
-## Getting Started
-
-### Before Start
+## Quick Start
 
 For a list of available commands, run:
 
