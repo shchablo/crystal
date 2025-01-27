@@ -105,8 +105,8 @@ class CaTopPlotter:
             --arc_annotation_color    | TEXT   | Color of arc annotations (default: 'orange').
             --arc_font_size           | INT    | Font size of arc annotations (default: 10).
             --arc_font_weight         | TEXT   | Weight of the font for arc annotations (default: 'normal').
-            --arc_annotation_offset_x | FLOAT | Horizontal offset for arc annotations (default: 4).
-            --arc_annotation_offset_y | FLOAT | Vertical offset for arc annotations (default: 0.2).
+            --arc_annotation_offset_x | FLOAT  | Horizontal offset for arc annotations (default: 4).
+            --arc_annotation_offset_y | FLOAT  | Vertical offset for arc annotations (default: 0.2).
         """
 
         is_verbose = verbose.strip().lower() in {"1", "y", "yes", "true"}
