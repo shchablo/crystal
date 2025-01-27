@@ -10,13 +10,13 @@ Crystal is an application designed for analyzing avalanche characteristics in sp
 For a list of available commands, run:
 
 ```bash
-crystal help
+crystal test
 ```
 
 For project tests using Crystal's built-in testing tools, run:
 
 ```bash
-crystal test
+crystal help
 ```
 
 For detailed help on a specific command, use:
