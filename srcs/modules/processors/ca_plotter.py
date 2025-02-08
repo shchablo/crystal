@@ -34,7 +34,7 @@ class CaTopPlotter:
             
             dist_marker_style: str = 'x',
             dist_marker_color: str = '#d62728',
-            text_offset: tuple = (-5, -10),
+            text_offset: tuple = (-5, -7),
             
             xlabel_fontsize: int = 12,
             ylabel_fontsize: int = 12,
@@ -49,17 +49,18 @@ class CaTopPlotter:
             offset_x: int = 50,
             offset_y: int = -10,
 
+            arc_is: str = "n",
             arc_radius: float = 20,
             arc_width_factor: float = 6,
             arc_height_factor: float = 2,
             arc_arc_color: str = 'orange',
             arc_linestyle: str = '-',
             arc_linewidth: int = 1,
-            arc_annotation_color: float = 'orange',
+            arc_annotation_color: str = 'orange',
             arc_font_size: int = 10,
             arc_font_weight: str = 'normal',
-            arc_annotation_offset_x: float = 4,
-            arc_annotation_offset_y: float = 0.2
+            arc_annotation_offset_x: float = 3,
+            arc_annotation_offset_y: float = 1
     ):
         """
         Generates and saves plots for a given dataset, customizing styles, labels, and annotations.
@@ -96,6 +97,7 @@ class CaTopPlotter:
             --offset_x                | INT    | Offset for horizontal position adjustments (default: 50).
             --offset_y                | INT    | Offset for vertical position adjustments (default: -10).
 
+            --arc_is                  | TEXT   | Flag to plot arc (default: n, [y|n]).
             --arc_radius              | FLOAT  | Radius of the arc (default: 20).
             --arc_width_factor        | FLOAT  | Width factor for arc scaling (default: 6).
             --arc_height_factor       | FLOAT  | Height factor for arc scaling (default: 2).
@@ -133,6 +135,7 @@ class CaTopPlotter:
 
                 plt.figure(figsize=figsize)
 
+                h_max = 0
                 h_cut = 0
                 l_cut = df['l'].max()
                 for col in ['h', 'h_sec']:
@@ -140,7 +143,7 @@ class CaTopPlotter:
 
                         # Добавляем точки для дистанций
                         obj_heights = []
-                        if col == 'h' and dist_values:
+                        if col == 'h':
                             for dist, obj_label in dist_values.values():
                                 # Найти ближайшее значение высоты
                                 closest_row = df.iloc[(df['l'] - dist).abs().idxmin()]
@@ -165,20 +168,19 @@ class CaTopPlotter:
                                     alpha=0.8
                                 )
 
-                            # Находим значение ограничения графика.
+                            # Преобразуем L_max в числовой формат для сравнения
+                            l_max_value = float(l_max.iloc[0]) if not l_max.empty else 0
 
+                            # Находим значение ограничения графика.
                             if dist_values:
                                 # Находим максимальное значение height
                                 max_dist = max(value[0] for value in dist_values.values())
 
-                                # Преобразуем L_max в числовой формат для сравнения
-                                l_max_value = float(l_max.iloc[0]) if not l_max.empty else 0
-
                                 # Сравниваем max_dist с L_max
                                 if max_dist > l_max_value:
                                     l_cut = max_dist + offset_x
-                                else:
-                                    l_cut = l_max_value + offset_x
+                            else:
+                                l_cut = l_max_value + offset_x
 
                             # Находим значение ограничения графика.
                             l_max_y = self.plotter.handler.internal_main.loc[self.plotter.handler.internal_main['name'].astype(str) == str(key), 'L_max_y']
@@ -192,12 +194,24 @@ class CaTopPlotter:
                                     h_cut = min_height + offset_y
                                 else:
                                     h_cut = l_max_y_value + offset_y
+                            else:
+                                h_cut = l_max_y_value + offset_y
 
-
+                        
+                        
                         # перед тем как строит находим минимальную высоту объекта и фильтруем данные
-                        filtered_data = df[( (df['l'] >= 0) & (df['l'] <= l_cut) ) & ( (df[col] > h_cut) )]
-
-                        # Линия на графике
+                        if (l_max_y_value > 0):
+                            if (col == "h_sec"):
+                                filtered_data = df[( (df['l'] >= 0) & (df['l'] <= l_cut) ) & ( (df[col] >= l_max_y_value) )]
+                            else:
+                                filtered_data = df[( (df['l'] >= 0) & (df['l'] <= l_cut) ) & ( (df[col] > h_cut) )]
+                        else:
+                            filtered_data = df
+                            
+                        if (col == "h_sec"):
+                            h_max = filtered_data[col].max()
+                            
+                        # линия на графике
                         plt.title(f"{title_prefix} {key}")
                         plt.plot(
                             filtered_data['l'],
@@ -205,11 +219,11 @@ class CaTopPlotter:
                             color=line_colors.get(col, 'black'),
                             linestyle=line_styles.get(col, '-'),
                             linewidth=line_widths.get(col, 0.7),
-                            label=line_labels.get(col, col)  # Добавляем подпись для легенды
+                            label=line_labels.get(col, col)  # добавляем подпись для легенды
                         )
 
                         if (col == "h_sec"):                        
-                            
+
                             # Находим коэффициенты наклона линии
                             x = filtered_data['l']
                             y = filtered_data[col]
@@ -228,7 +242,8 @@ class CaTopPlotter:
                                 theta1=angle_degrees, theta2=0,  # Углы начала и конца
                                 color=arc_arc_color, linestyle=arc_linestyle, linewidth=arc_linewidth
                             )
-                            plt.gca().add_patch(arc)
+                            if (arc == "y"):
+                                plt.gca().add_patch(arc)
 
                             # Добавление аннотации угла
                             plt.annotate(
@@ -238,6 +253,10 @@ class CaTopPlotter:
                                 fontsize=arc_font_size,
                                 fontweight=arc_font_weight
                             )
+                
+                
+                plt.ylim(top=h_max)
+                plt.xlim(left=0)
 
                 # Настройки осей
                 plt.xlabel(xlabel, fontsize=xlabel_fontsize)

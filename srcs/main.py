@@ -16,7 +16,7 @@ from srcs.modules.processors.ca_plotter import CaPlotter, CaTopPlotter
 from srcs.modules.processors.ca_runner import CaTopRunner
 
 def version():
-    print ("crystal version 1.0.0")
+    print ("crystal version 1.0.1")
 
 def main():
     """
